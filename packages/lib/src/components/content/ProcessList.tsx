@@ -58,14 +58,16 @@ export const ProcessList: React.FC<ProcessListProps> = ({
           width: "7rem",
           align: "right",
           sortable: true,
-          render: (row) => formatBytes(row.memory),
+          render: (row) => formatBytes(row.memory as number),
         },
         {
           key: "status",
           label: "Status",
           width: "7rem",
           render: (row) => (
-            <span className={statusColors[row.status]}>{row.status}</span>
+            <span className={statusColors[row.status as Process["status"]]}>
+              {row.status as string}
+            </span>
           ),
         },
         {
@@ -77,14 +79,14 @@ export const ProcessList: React.FC<ProcessListProps> = ({
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => onRestart?.(row.pid)}
+                onClick={() => onRestart?.(row.pid as number)}
               >
                 Restart
               </Button>
               <Button
                 size="sm"
                 variant="danger"
-                onClick={() => onTerminate?.(row.pid)}
+                onClick={() => onTerminate?.(row.pid as number)}
               >
                 Kill
               </Button>

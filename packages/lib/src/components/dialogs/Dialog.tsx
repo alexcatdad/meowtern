@@ -2,7 +2,11 @@ import type React from "react";
 import { cn } from "../../utils/cn";
 import { type Action, ActionBar } from "../navigation/ActionBar";
 
-export interface DialogProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface DialogProps
+  extends Omit<
+    React.DialogHTMLAttributes<HTMLDialogElement>,
+    "open" | "title"
+  > {
   open: boolean;
   title: string;
   description?: string;

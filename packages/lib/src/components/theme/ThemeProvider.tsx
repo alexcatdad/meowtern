@@ -15,7 +15,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   ...props
 }) => {
   const theme = getTerminalTheme(preset);
-  const cssVars: React.CSSProperties = {
+  const cssVars = {
     "--terminal-bg": theme.background,
     "--terminal-fg": theme.foreground,
     "--terminal-accent": theme.accent,
@@ -29,7 +29,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     backgroundColor: theme.background,
     color: theme.foreground,
     ...style,
-  };
+  } as React.CSSProperties;
 
   return (
     <div

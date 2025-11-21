@@ -12,7 +12,10 @@ export interface Command {
 }
 
 export interface CommandPaletteProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<
+    React.DialogHTMLAttributes<HTMLDialogElement>,
+    "open" | "onSelect"
+  > {
   commands: Command[];
   open: boolean;
   onClose: () => void;

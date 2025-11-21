@@ -7,7 +7,8 @@ export interface SelectOption {
   description?: string;
 }
 
-export interface SelectDialogProps extends Omit<DialogProps, "actions"> {
+export interface SelectDialogProps
+  extends Omit<DialogProps, "actions" | "onSelect"> {
   options: SelectOption[];
   onSelect: (option: SelectOption) => void;
 }

@@ -14,16 +14,17 @@ export const ScrollableArea = forwardRef<HTMLDivElement, ScrollableAreaProps>(
     { className, children, autoStick = false, maxHeight = 320, ...props },
     ref,
   ) => {
-    const internalRef = useRef<HTMLDivElement>(null);
+    const internalRef = useRef<HTMLDivElement | null>(null);
     /* c8 ignore next */
     useAutoScroll(internalRef, { stickToBottom: autoStick });
 
-    const handleRef = (node: HTMLDivElement) => {
+    const handleRef = (node: HTMLDivElement | null) => {
       internalRef.current = node;
       if (typeof ref === "function") {
         ref(node);
       } else if (ref) {
-        ref.current = node;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (ref as any).current = node;
       }
     };
     return (

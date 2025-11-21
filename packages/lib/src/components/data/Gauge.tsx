@@ -15,25 +15,6 @@ export interface GaugeProps extends React.HTMLAttributes<HTMLDivElement> {
   blockCount?: number;
 }
 
-const createArcPath = (
-  centerX: number,
-  centerY: number,
-  radius: number,
-  startAngle: number,
-  endAngle: number,
-): string => {
-  const start = {
-    x: centerX + radius * Math.cos((startAngle * Math.PI) / 180),
-    y: centerY + radius * Math.sin((startAngle * Math.PI) / 180),
-  };
-  const end = {
-    x: centerX + radius * Math.cos((endAngle * Math.PI) / 180),
-    y: centerY + radius * Math.sin((endAngle * Math.PI) / 180),
-  };
-  const largeArcFlag = endAngle - startAngle > 180 ? 1 : 0;
-  return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x} ${end.y}`;
-};
-
 export const Gauge: React.FC<GaugeProps> = ({
   className,
   value,

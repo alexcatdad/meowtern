@@ -41,10 +41,10 @@ export const TerminalPanel: React.FC<TerminalPanelProps> = ({
   const content = split
     ? items.map((item, index) => {
         const childKey =
-          (React.isValidElement(item) && item.key) ?? `panel-${index}`;
+          (React.isValidElement(item) && item.key) || `panel-${index}`;
         return (
           <button
-            key={childKey}
+            key={childKey || `panel-${index}`}
             type="button"
             onClick={() => onActiveChange?.(index)}
             className={cn(
