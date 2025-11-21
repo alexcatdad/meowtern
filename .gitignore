@@ -1,0 +1,54 @@
+# Dependencies
+/node_modules
+**/node_modules
+
+# Build outputs
+dist/
+build/
+.out/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Coverage
+**/coverage/
+*.lcov
+.nyc_output/
+.coverage/
+
+# Biome
+.biome/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# KiloCode
+.kilocode/
+
+# Temp
+tmp/
+temp/

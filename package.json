@@ -1,0 +1,21 @@
+{
+  "name": "web-tui-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "dev": "bun run --filter web-tui-demo dev",
+    "build": "bun run --filter '*' build",
+    "test": "bun test",
+    "lint": "biome check .",
+    "format": "biome check --apply ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/prismjs": "^1.26.5",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "prismjs": "^1.30.0"
+  }
+}

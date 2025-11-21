@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
+  <!-- Simple cat face for Meowtern -->
+  <path d="M20 80 Q50 60 80 80 L80 90 L20 90 Z" fill="#333" stroke="#666" stroke-width="2"/>
+  <circle cx="35" cy="50" r="8" fill="#666"/>
+  <circle cx="65" cy="50" r="8" fill="#666"/>
+  <path d="M30 70 Q50 65 70 70" stroke="#999" stroke-width="4" fill="none"/>
+  <line x1="40" y1="30" x2="60" y2="30" stroke="#999" stroke-width="3"/>
+  <line x1="25" y1="40" x2="75" y2="40" stroke="#999" stroke-width="2"/>
+</svg>
