@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd packages/demo && bun run build",
+  "buildCommand": "bun install && bun run --filter web-tui-demo build",
   "outputDirectory": "packages/demo/dist",
   "installCommand": "bun install",
   "framework": "vite",
