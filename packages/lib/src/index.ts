@@ -64,6 +64,7 @@ export * from "./hooks/useSyncedScroll";
 export * from "./hooks/useAutoScroll";
 export * from "./hooks/useMediaQuery";
 export * from "./hooks/useControlledState";
+export * from "./hooks/useMenuKeyboard";
 export * from "./utils/cn";
 export * from "./utils/format";
 export * from "./utils/ansi";
