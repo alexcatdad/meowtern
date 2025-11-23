@@ -8,12 +8,9 @@ describe("Avatar", () => {
       container: document.createElement("div"),
     };
 
-    const initials = "John Doe"
-      .trim()
-      .split(/\s+/)
-      .map((part, i) => (i === 0 ? part[0] : part[part.length - 1]))
-      .join("")
-      .toUpperCase();
+    const name = "John Doe";
+    const parts = name.trim().split(/\s+/);
+    const initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 
     expect(initials).toBe("JD");
   });
