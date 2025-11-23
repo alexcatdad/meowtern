@@ -120,28 +120,24 @@ describe("DataGrid", () => {
   });
 
   it("selects all rows", () => {
-    const selected = new Set<number>();
-    testData.forEach((row) => selected.add(row.id));
+    const selected = new Set<number>(testData.map((row) => row.id));
 
     expect(selected.size).toBe(testData.length);
-    testData.forEach((row) => {
+    testData.map((row) => {
       expect(selected.has(row.id)).toBe(true);
     });
   });
 
   it("deselects all rows", () => {
-    const selected = new Set<number>();
-    testData.forEach((row) => selected.add(row.id));
+    const selected = new Set<number>(testData.map((row) => row.id));
     selected.clear();
 
     expect(selected.size).toBe(0);
   });
 
   it("determines all selected state", () => {
-    const selected = new Set<number>();
     const pageData = testData.slice(0, 2);
-
-    pageData.forEach((row) => selected.add(row.id));
+    const selected = new Set<number>(pageData.map((row) => row.id));
 
     const allSelected = pageData.every((row) => selected.has(row.id));
     expect(allSelected).toBe(true);
