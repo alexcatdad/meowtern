@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useMemo,
   useOptimistic,
@@ -539,17 +540,19 @@ function App() {
   const [activeTab, setActiveTabState] = useState("layout");
 
   // Use transitions for non-blocking updates
-  const setThemePreset = (preset: TerminalThemeName) => {
+  const setThemePreset = useCallback((preset: TerminalThemeName) => {
     startTransition(() => {
       setThemePresetState(preset);
     });
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startTransition is stable
+  }, []);
 
-  const setActiveTab = (tab: string) => {
+  const setActiveTab = useCallback((tab: string) => {
     startTransition(() => {
       setActiveTabState(tab);
     });
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startTransition is stable
+  }, []);
   const [dualPaneActive, setDualPaneActive] = useState<"left" | "right">(
     "left",
   );
@@ -624,7 +627,8 @@ function App() {
       setHistoryPoints(nextFrame.history);
       setLineGraphValues(nextFrame.line);
     });
-  }, [dataFrameIndex, startTransition]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startTransition is stable
+  }, [dataFrameIndex]);
 
   const menuItems = useMemo(
     () => [
@@ -657,7 +661,7 @@ function App() {
         onSelect: () => setDialogOpen(true),
       },
     ],
-    [],
+    [setThemePreset],
   );
 
   const handleContextMenuAction = (message: string) => {
