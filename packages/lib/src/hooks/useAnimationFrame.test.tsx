@@ -82,11 +82,11 @@ describe("useAnimationFrame", () => {
     });
 
     expect(spy.length).toBeGreaterThan(0);
-    
+
     // Disable and verify no more callbacks
     rerender({ enabled: false });
     const callbackCountBefore = rafIdMap.size;
-    
+
     act(() => {
       // Should not process any new callbacks after disabling
       shouldProcessRaf = false;
