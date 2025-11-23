@@ -93,9 +93,11 @@ function DataGridInner<T extends Record<string, unknown>>(
 
   const sortedData = useMemo(() => {
     if (!sort.key) return data;
-    const cloned = [...data];
+    // Check if column exists for current sort key
     const column = columns.find((col) => col.key === sort.key);
-    if (!column) return cloned;
+    if (!column) return data;
+
+    const cloned = [...data];
     cloned.sort((a, b) => {
       const aValue = a[sort.key as keyof T];
       const bValue = b[sort.key as keyof T];
@@ -107,7 +109,7 @@ function DataGridInner<T extends Record<string, unknown>>(
         : String(bValue).localeCompare(String(aValue));
     });
     return cloned;
-  }, [columns, data, sort.direction, sort.key]);
+  }, [data, sort.direction, sort.key, columns]);
 
   const totalPages = Math.ceil(sortedData.length / pageSize);
   const paginatedData = pagination

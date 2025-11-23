@@ -7,8 +7,9 @@ import {
   useEffect,
   useId,
   useRef,
-  useState,
 } from "react";
+import { useControlledState } from "../../hooks/useControlledState";
+import { useMenuKeyboard } from "../../hooks/useMenuKeyboard";
 import { cn } from "../../utils/cn";
 
 export interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -33,25 +34,28 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     },
     ref,
   ) => {
-    const [internalOpen, setInternalOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const menuId = useId();
 
-    const isControlled = controlledOpen !== undefined;
-    const open = isControlled ? controlledOpen : internalOpen;
-
-    const setOpen = useCallback(
-      (value: boolean) => {
-        if (!isControlled) {
-          setInternalOpen(value);
-        }
-        onOpenChange?.(value);
-      },
-      [isControlled, onOpenChange],
+    const [open, setOpen] = useControlledState(
+      controlledOpen,
+      false,
+      onOpenChange,
     );
 
-    const [focusedIndex, setFocusedIndex] = useState(-1);
+    const getMenuItems = useCallback(() => {
+      if (!menuRef.current) return [];
+      return Array.from(
+        menuRef.current.querySelectorAll('[role="menuitem"]:not([disabled])'),
+      ) as HTMLElement[];
+    }, []);
+
+    const { handleKeyDown, resetFocus } = useMenuKeyboard(
+      open,
+      setOpen,
+      getMenuItems,
+    );
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -83,68 +87,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     // Reset focus index when menu closes
     useEffect(() => {
       if (!open) {
-        setFocusedIndex(-1);
+        resetFocus();
       }
-    }, [open]);
-
-    const getMenuItems = useCallback(() => {
-      if (!menuRef.current) return [];
-      return Array.from(
-        menuRef.current.querySelectorAll('[role="menuitem"]:not([disabled])'),
-      ) as HTMLElement[];
-    }, []);
-
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-      if (!open) {
-        if (
-          event.key === "ArrowDown" ||
-          event.key === "Enter" ||
-          event.key === " "
-        ) {
-          event.preventDefault();
-          setOpen(true);
-        }
-        return;
-      }
-
-      const items = getMenuItems();
-      if (items.length === 0) return;
-
-      switch (event.key) {
-        case "ArrowDown": {
-          event.preventDefault();
-          const nextIndex =
-            focusedIndex < items.length - 1 ? focusedIndex + 1 : 0;
-          setFocusedIndex(nextIndex);
-          items[nextIndex]?.focus();
-          break;
-        }
-        case "ArrowUp": {
-          event.preventDefault();
-          const prevIndex =
-            focusedIndex > 0 ? focusedIndex - 1 : items.length - 1;
-          setFocusedIndex(prevIndex);
-          items[prevIndex]?.focus();
-          break;
-        }
-        case "Home": {
-          event.preventDefault();
-          setFocusedIndex(0);
-          items[0]?.focus();
-          break;
-        }
-        case "End": {
-          event.preventDefault();
-          setFocusedIndex(items.length - 1);
-          items[items.length - 1]?.focus();
-          break;
-        }
-        case "Tab": {
-          setOpen(false);
-          break;
-        }
-      }
-    };
+    }, [open, resetFocus]);
 
     // Clone trigger to add accessibility props
     const triggerElement = isValidElement(trigger)
