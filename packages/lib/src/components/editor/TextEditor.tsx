@@ -1,7 +1,7 @@
-import type React from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
 import Prism from "prismjs";
 import type { Token } from "prismjs";
+import type React from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "../../utils/cn";
 import { LineNumbers } from "./LineNumbers";
 
@@ -79,17 +79,17 @@ const ensureTsxLanguage = () => {
   const clonedTypescript = Prism.util.clone(typescript);
   Prism.languages.tsx = Prism.languages.extend("jsx", clonedTypescript);
 
-  const tsxGrammar = Prism.languages
-    .tsx as typeof Prism.languages.tsx & Record<string, unknown>;
-  delete tsxGrammar.parameter;
-  delete tsxGrammar["literal-property"];
+  const tsxGrammar = Prism.languages.tsx as typeof Prism.languages.tsx &
+    Record<string, unknown>;
+  tsxGrammar.parameter = undefined;
+  tsxGrammar["literal-property"] = undefined;
 
   const tagToken = tsxGrammar.tag as
     | (Token & { pattern?: RegExp; lookbehind?: boolean })
     | undefined;
-  if (tagToken && tagToken.pattern) {
+  if (tagToken?.pattern) {
     tagToken.pattern = new RegExp(
-      /(^|[^\w$]|(?=<\/))/.source + "(?:" + tagToken.pattern.source + ")",
+      `${/(^|[^\w$]|(?=<\/))/.source}(?:${tagToken.pattern.source})`,
       tagToken.pattern.flags,
     );
     tagToken.lookbehind = true;
@@ -99,6 +99,99 @@ const ensureTsxLanguage = () => {
 ensureTsxLanguage();
 
 type TokenStream = Array<string | Token>;
+
+// Get plain text from contentEditable
+const getPlainText = (element: HTMLElement): string => {
+  return element.innerText || element.textContent || "";
+};
+
+// Render token to DOM element
+const renderTokenToElement = (
+  token: string | Token,
+  container: HTMLElement,
+): void => {
+  if (typeof token === "string") {
+    const textNode = document.createTextNode(token);
+    container.appendChild(textNode);
+    return;
+  }
+
+  const aliases = token.alias
+    ? Array.isArray(token.alias)
+      ? token.alias
+      : [token.alias]
+    : [];
+
+  const classNames = [
+    tokenClasses[token.type] ?? "text-terminal-foreground",
+    ...aliases
+      .map((alias: string) => tokenClasses[alias] ?? "")
+      .filter((value: string) => value.length > 0),
+  ];
+
+  const span = document.createElement("span");
+  span.className = classNames.join(" ");
+
+  if (Array.isArray(token.content)) {
+    for (const item of token.content) {
+      renderTokenToElement(item, span);
+    }
+  } else if (typeof token.content === "string") {
+    span.textContent = token.content;
+  } else {
+    renderTokenToElement(token.content, span);
+  }
+
+  container.appendChild(span);
+};
+
+// Get cursor offset as character count
+const getCursorOffset = (element: HTMLElement, range: Range): number => {
+  const preCaretRange = range.cloneRange();
+  preCaretRange.selectNodeContents(element);
+  preCaretRange.setEnd(range.endContainer, range.endOffset);
+  return preCaretRange.toString().length;
+};
+
+// Restore cursor position
+const restoreCursorPosition = (element: HTMLElement, offset: number): void => {
+  const selection = window.getSelection();
+  if (!selection) return;
+
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  let charCount = 0;
+  let targetNode: Node | null = null;
+  let targetOffset = 0;
+
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    const nodeLength = node.textContent?.length ?? 0;
+    if (charCount + nodeLength >= offset) {
+      targetNode = node;
+      targetOffset = offset - charCount;
+      break;
+    }
+    charCount += nodeLength;
+  }
+
+  if (targetNode) {
+    const newRange = document.createRange();
+    newRange.setStart(
+      targetNode,
+      Math.min(targetOffset, targetNode.textContent?.length ?? 0),
+    );
+    newRange.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+  } else {
+    // Fallback: place cursor at end
+    const newRange = document.createRange();
+    newRange.selectNodeContents(element);
+    newRange.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+  }
+};
 
 export const TextEditor: React.FC<TextEditorProps> = ({
   value,
@@ -126,25 +219,21 @@ export const TextEditor: React.FC<TextEditorProps> = ({
   }, [value, language, showHighlight]);
 
   // Update cursor position
-  const updateCursor = () => {
+  const updateCursor = useCallback(() => {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
     const preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(editorRef.current!);
+    if (!editorRef.current) return;
+    preCaretRange.selectNodeContents(editorRef.current);
     preCaretRange.setEnd(range.endContainer, range.endOffset);
 
     const textBefore = preCaretRange.toString();
     const line = textBefore.split("\n").length;
     const column = textBefore.length - textBefore.lastIndexOf("\n");
     setCursor({ line, column });
-  };
-
-  // Get plain text from contentEditable
-  const getPlainText = (element: HTMLElement): string => {
-    return element.innerText || element.textContent || "";
-  };
+  }, []);
 
   // Handle input events
   const handleInput = (event: React.FormEvent<HTMLDivElement>) => {
@@ -199,44 +288,6 @@ export const TextEditor: React.FC<TextEditorProps> = ({
     }
   };
 
-  // Render token to DOM element
-  const renderTokenToElement = (
-    token: string | Token,
-    container: HTMLElement,
-  ): void => {
-    if (typeof token === "string") {
-      const textNode = document.createTextNode(token);
-      container.appendChild(textNode);
-      return;
-    }
-
-    const aliases = token.alias
-      ? Array.isArray(token.alias)
-        ? token.alias
-        : [token.alias]
-      : [];
-
-    const classNames = [
-      tokenClasses[token.type] ?? "text-terminal-foreground",
-      ...aliases
-        .map((alias: string) => tokenClasses[alias] ?? "")
-        .filter((value: string) => value.length > 0),
-    ];
-
-    const span = document.createElement("span");
-    span.className = classNames.join(" ");
-
-    if (Array.isArray(token.content)) {
-      token.content.forEach((item) => renderTokenToElement(item, span));
-    } else if (typeof token.content === "string") {
-      span.textContent = token.content;
-    } else {
-      renderTokenToElement(token.content, span);
-    }
-
-    container.appendChild(span);
-  };
-
   // Update contentEditable when value changes externally
   useEffect(() => {
     if (!editorRef.current) return;
@@ -244,7 +295,10 @@ export const TextEditor: React.FC<TextEditorProps> = ({
     if (currentText !== value) {
       isUpdatingRef.current = true;
       const selection = window.getSelection();
-      const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0).cloneRange() : null;
+      const range =
+        selection && selection.rangeCount > 0
+          ? selection.getRangeAt(0).cloneRange()
+          : null;
       const cursorOffset = range
         ? getCursorOffset(editorRef.current, range)
         : value.length;
@@ -252,9 +306,9 @@ export const TextEditor: React.FC<TextEditorProps> = ({
       // Update the content
       editorRef.current.innerHTML = "";
       if (showHighlight) {
-        tokens.forEach((token) => {
-          renderTokenToElement(token, editorRef.current!);
-        });
+        for (const token of tokens) {
+          renderTokenToElement(token, editorRef.current);
+        }
       } else {
         editorRef.current.textContent = value;
       }
@@ -264,64 +318,7 @@ export const TextEditor: React.FC<TextEditorProps> = ({
       isUpdatingRef.current = false;
       updateCursor();
     }
-  }, [value, tokens, showHighlight]);
-
-  // Get cursor offset as character count
-  const getCursorOffset = (
-    element: HTMLElement,
-    range: Range,
-  ): number => {
-    const preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(element);
-    preCaretRange.setEnd(range.endContainer, range.endOffset);
-    return preCaretRange.toString().length;
-  };
-
-  // Restore cursor position
-  const restoreCursorPosition = (
-    element: HTMLElement,
-    offset: number,
-  ): void => {
-    const selection = window.getSelection();
-    if (!selection) return;
-
-    const walker = document.createTreeWalker(
-      element,
-      NodeFilter.SHOW_TEXT,
-    );
-    let charCount = 0;
-    let targetNode: Node | null = null;
-    let targetOffset = 0;
-
-    while (walker.nextNode()) {
-      const node = walker.currentNode;
-      const nodeLength = node.textContent?.length ?? 0;
-      if (charCount + nodeLength >= offset) {
-        targetNode = node;
-        targetOffset = offset - charCount;
-        break;
-      }
-      charCount += nodeLength;
-    }
-
-    if (targetNode) {
-      const newRange = document.createRange();
-      newRange.setStart(
-        targetNode,
-        Math.min(targetOffset, targetNode.textContent?.length ?? 0),
-      );
-      newRange.collapse(true);
-      selection.removeAllRanges();
-      selection.addRange(newRange);
-    } else {
-      // Fallback: place cursor at end
-      const newRange = document.createRange();
-      newRange.selectNodeContents(element);
-      newRange.collapse(false);
-      selection.removeAllRanges();
-      selection.addRange(newRange);
-    }
-  };
+  }, [value, tokens, showHighlight, updateCursor]);
 
   // Handle selection changes
   useEffect(() => {
@@ -334,7 +331,7 @@ export const TextEditor: React.FC<TextEditorProps> = ({
     return () => {
       document.removeEventListener("selectionchange", handleSelectionChange);
     };
-  }, []);
+  }, [updateCursor]);
 
   return (
     <div

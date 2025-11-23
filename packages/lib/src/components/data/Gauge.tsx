@@ -76,12 +76,20 @@ export const Gauge: React.FC<GaugeProps> = ({
               const outerRadius = radius + strokeWidth / 2;
 
               const startInner = {
-                x: centerX + innerRadius * Math.cos((startAngle * Math.PI) / 180),
-                y: centerY + innerRadius * Math.sin((startAngle * Math.PI) / 180),
+                x:
+                  centerX +
+                  innerRadius * Math.cos((startAngle * Math.PI) / 180),
+                y:
+                  centerY +
+                  innerRadius * Math.sin((startAngle * Math.PI) / 180),
               };
               const startOuter = {
-                x: centerX + outerRadius * Math.cos((startAngle * Math.PI) / 180),
-                y: centerY + outerRadius * Math.sin((startAngle * Math.PI) / 180),
+                x:
+                  centerX +
+                  outerRadius * Math.cos((startAngle * Math.PI) / 180),
+                y:
+                  centerY +
+                  outerRadius * Math.sin((startAngle * Math.PI) / 180),
               };
               const endInner = {
                 x: centerX + innerRadius * Math.cos((endAngle * Math.PI) / 180),
@@ -141,7 +149,8 @@ export const Gauge: React.FC<GaugeProps> = ({
             strokeLinecap="round"
             transform="rotate(-90 80 80)"
             style={{
-              transition: "stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1)",
+              transition:
+                "stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           />
         )}

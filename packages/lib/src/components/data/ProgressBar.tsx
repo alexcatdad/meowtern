@@ -41,9 +41,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   // Calculate number of blocks for pixelated variant
   const totalBlocks = isPixelated ? Math.ceil(100 / blockSize) : 0;
-  const filledBlocks = isPixelated
-    ? Math.floor((pct / 100) * totalBlocks)
-    : 0;
+  const filledBlocks = isPixelated ? Math.floor((pct / 100) * totalBlocks) : 0;
 
   return (
     <div

@@ -76,17 +76,17 @@ const ensureTsxLanguage = () => {
   const clonedTypescript = Prism.util.clone(typescript);
   Prism.languages.tsx = Prism.languages.extend("jsx", clonedTypescript);
 
-  const tsxGrammar = Prism.languages
-    .tsx as typeof Prism.languages.tsx & Record<string, unknown>;
-  delete tsxGrammar.parameter;
-  delete tsxGrammar["literal-property"];
+  const tsxGrammar = Prism.languages.tsx as typeof Prism.languages.tsx &
+    Record<string, unknown>;
+  tsxGrammar.parameter = undefined;
+  tsxGrammar["literal-property"] = undefined;
 
   const tagToken = tsxGrammar.tag as
     | (Token & { pattern?: RegExp; lookbehind?: boolean })
     | undefined;
-  if (tagToken && tagToken.pattern) {
+  if (tagToken?.pattern) {
     tagToken.pattern = new RegExp(
-      /(^|[^\w$]|(?=<\/))/.source + "(?:" + tagToken.pattern.source + ")",
+      `${/(^|[^\w$]|(?=<\/))/.source}(?:${tagToken.pattern.source})`,
       tagToken.pattern.flags,
     );
     tagToken.lookbehind = true;
@@ -158,7 +158,9 @@ export const SyntaxHighlight = forwardRef<HTMLPreElement, SyntaxHighlightProps>(
         style={{ fontVariantLigatures: "none" }}
         {...props}
       >
-        <code>{tokens.map((token, index) => renderToken(token, `token-${index}`))}</code>
+        <code>
+          {tokens.map((token, index) => renderToken(token, `token-${index}`))}
+        </code>
       </pre>
     );
   },

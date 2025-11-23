@@ -5,7 +5,9 @@ import { Surface } from "./Surface";
 describe("Surface", () => {
   test("applies variant classes", () => {
     const { getByText } = render(<Surface variant="sunken">content</Surface>);
-    expect(getByText("content").className).toContain("shadow-[inset_0_0_25px_rgba(0,0,0,0.6)]");
+    expect(getByText("content").className).toContain(
+      "shadow-[inset_0_0_25px_rgba(0,0,0,0.6)]",
+    );
   });
 
   test("applies CRT variant with scanlines", () => {

@@ -21,9 +21,7 @@ describe("TerminalBox", () => {
   });
 
   test("supports CRT variant", () => {
-    const { container } = render(
-      <TerminalBox variant="crt">box</TerminalBox>,
-    );
+    const { container } = render(<TerminalBox variant="crt">box</TerminalBox>);
     const className = container.firstElementChild?.className || "";
     expect(className).toContain("before:");
   });

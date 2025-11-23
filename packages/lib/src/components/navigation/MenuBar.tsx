@@ -32,9 +32,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({
     left: number;
     width: number;
   }>();
-  const triggerRefs = useRef<Map<string, HTMLButtonElement | null>>(
-    new Map(),
-  );
+  const triggerRefs = useRef<Map<string, HTMLButtonElement | null>>(new Map());
 
   useIsomorphicLayoutEffect(() => {
     if (!openId) {
