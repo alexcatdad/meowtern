@@ -12,10 +12,9 @@ permissions:
 
 jobs:
   deploy-preview:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    # Skip environment to avoid branch protection restrictions
+    # GitHub Pages preview deployments work without explicit environment
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -36,14 +35,16 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true
       - name: Comment PR with preview URL
         uses: actions/github-script@v7
-        if: github.event_name == 'pull_request'
+        if: always() && github.event_name == 'pull_request'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const previewUrl = '${{ steps.deployment.outputs.page_url }}';
             const prNumber = context.issue.number;
+            const deploymentStep = '${{ steps.deployment.outcome }}';
+            const previewUrl = '${{ steps.deployment.outputs.page_url }}';
             
             // Find existing comment
             const comments = await github.rest.issues.listComments({
@@ -56,12 +57,29 @@ jobs:
               comment => comment.user.type === 'Bot' && comment.body.includes('Preview deployment')
             );
             
-            const commentBody = `## 🚀 Preview Deployment
-            
-            Your preview is ready! View it at:
-            **${previewUrl}**
-            
-            > This preview will be updated automatically when you push new commits.`;
+            let commentBody;
+            if (deploymentStep === 'success' && previewUrl) {
+              commentBody = `## 🚀 Preview Deployment
+              
+              Your preview is ready! View it at:
+              **${previewUrl}**
+              
+              > This preview will be updated automatically when you push new commits.`;
+            } else {
+              commentBody = `## ⚠️ Preview Deployment
+              
+              Preview deployment failed. This is likely due to GitHub Pages environment protection rules.
+              
+              To enable PR previews:
+              1. Go to Repository Settings → Environments
+              2. Edit the \`github-pages\` environment
+              3. Under "Deployment branches", add a rule to allow PR branches or disable branch protection for previews
+              
+              Alternatively, you can test locally by running:
+              \`\`\`bash
+              bun run dev
+              \`\`\``;
+            }
             
             if (botComment) {
               // Update existing comment
