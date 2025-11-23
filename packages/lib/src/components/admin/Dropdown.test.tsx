@@ -137,7 +137,7 @@ describe("Dropdown", () => {
   it("handles uncontrolled open state", () => {
     const controlledOpen = undefined;
     const isControlled = controlledOpen !== undefined;
-    let internalOpen = false;
+    const internalOpen = false;
     const open = isControlled ? controlledOpen : internalOpen;
 
     expect(open).toBe(false);

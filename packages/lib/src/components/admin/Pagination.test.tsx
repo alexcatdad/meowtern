@@ -21,10 +21,7 @@ describe("Pagination", () => {
     const siblingCount = 1;
 
     const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
-    const rightSiblingIndex = Math.min(
-      currentPage + siblingCount,
-      totalPages,
-    );
+    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
 
     expect(leftSiblingIndex).toBe(4);
     expect(rightSiblingIndex).toBe(6);
@@ -46,10 +43,7 @@ describe("Pagination", () => {
     const siblingCount = 1;
     const totalPages = 10;
 
-    const rightSiblingIndex = Math.min(
-      currentPage + siblingCount,
-      totalPages,
-    );
+    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
     const showRightDots = rightSiblingIndex < totalPages - 1;
 
     expect(showRightDots).toBe(true);
@@ -60,10 +54,7 @@ describe("Pagination", () => {
     const currentPage = 1;
     const siblingCount = 1;
 
-    const rightSiblingIndex = Math.min(
-      currentPage + siblingCount,
-      totalPages,
-    );
+    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
     const showLeftDots = currentPage - siblingCount > 2;
     const showRightDots = rightSiblingIndex < totalPages - 1;
 
@@ -90,10 +81,7 @@ describe("Pagination", () => {
     const siblingCount = 1;
 
     const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
-    const rightSiblingIndex = Math.min(
-      currentPage + siblingCount,
-      totalPages,
-    );
+    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
 
     const showLeftDots = leftSiblingIndex > 2;
     const showRightDots = rightSiblingIndex < totalPages - 1;

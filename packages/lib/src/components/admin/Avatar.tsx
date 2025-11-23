@@ -1,5 +1,4 @@
 import React, { forwardRef, useMemo, useState } from "react";
-import { cn } from "../../utils/cn";
 import {
   type ComponentSize,
   type StatusType,
@@ -9,6 +8,7 @@ import {
   statusIndicatorSizes,
   statusLabels,
 } from "../../styles/sizeClasses";
+import { cn } from "../../utils/cn";
 
 type AvatarSize = ComponentSize;
 type AvatarStatus = StatusType;

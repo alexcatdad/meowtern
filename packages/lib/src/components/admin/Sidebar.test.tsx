@@ -22,7 +22,7 @@ describe("Sidebar", () => {
   it("handles uncontrolled collapsed state", () => {
     const controlledCollapsed = undefined;
     const isControlled = controlledCollapsed !== undefined;
-    let internalCollapsed = false;
+    const internalCollapsed = false;
     const collapsed = isControlled ? controlledCollapsed : internalCollapsed;
 
     expect(collapsed).toBe(false);
@@ -31,7 +31,7 @@ describe("Sidebar", () => {
 
   it("respects default collapsed state", () => {
     const defaultCollapsed = true;
-    let collapsed = defaultCollapsed;
+    const collapsed = defaultCollapsed;
 
     expect(collapsed).toBe(true);
   });

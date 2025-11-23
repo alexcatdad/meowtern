@@ -34,17 +34,13 @@ describe("DataGrid", () => {
   ];
 
   it("sorts data in ascending order", () => {
-    const sorted = [...testData].sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
+    const sorted = [...testData].sort((a, b) => a.name.localeCompare(b.name));
     expect(sorted[0].name).toBe("Alice");
     expect(sorted[sorted.length - 1].name).toBe("Charlie");
   });
 
   it("sorts data in descending order", () => {
-    const sorted = [...testData].sort((a, b) =>
-      b.name.localeCompare(a.name),
-    );
+    const sorted = [...testData].sort((a, b) => b.name.localeCompare(a.name));
     expect(sorted[0].name).toBe("Charlie");
     expect(sorted[sorted.length - 1].name).toBe("Alice");
   });

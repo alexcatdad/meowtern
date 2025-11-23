@@ -8,9 +8,9 @@ import {
   useId,
   useRef,
 } from "react";
-import { cn } from "../../utils/cn";
 import { useControlledState } from "../../hooks/useControlledState";
 import { useMenuKeyboard } from "../../hooks/useMenuKeyboard";
+import { cn } from "../../utils/cn";
 
 export interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   trigger: React.ReactElement;
@@ -38,7 +38,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const menuRef = useRef<HTMLDivElement>(null);
     const menuId = useId();
 
-    const [open, setOpen] = useControlledState(controlledOpen, false, onOpenChange);
+    const [open, setOpen] = useControlledState(
+      controlledOpen,
+      false,
+      onOpenChange,
+    );
 
     const getMenuItems = useCallback(() => {
       if (!menuRef.current) return [];
@@ -47,7 +51,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       ) as HTMLElement[];
     }, []);
 
-    const { handleKeyDown, resetFocus } = useMenuKeyboard(open, setOpen, getMenuItems);
+    const { handleKeyDown, resetFocus } = useMenuKeyboard(
+      open,
+      setOpen,
+      getMenuItems,
+    );
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {

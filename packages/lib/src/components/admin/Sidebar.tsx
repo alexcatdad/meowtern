@@ -1,5 +1,11 @@
 import type React from "react";
-import { createContext, forwardRef, useMemo, useContext, useState } from "react";
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { cn } from "../../utils/cn";
 
 interface SidebarContextValue {

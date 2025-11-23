@@ -36,10 +36,14 @@ export const padVerticalSmall = "py-1";
 export const padVerticalMedium = "py-2";
 
 // Button/Interactive utilities
-export const buttonBase = "font-mono text-sm transition-colors focus:outline-none";
-export const buttonSmall = "px-2 py-1 text-xs font-mono transition-colors focus:outline-none";
-export const buttonHoverDefault = "hover:bg-terminal-brightBlack/20 focus:bg-terminal-brightBlack/20";
-export const buttonHoverDestructive = "hover:bg-terminal-red/10 focus:bg-terminal-red/10";
+export const buttonBase =
+  "font-mono text-sm transition-colors focus:outline-none";
+export const buttonSmall =
+  "px-2 py-1 text-xs font-mono transition-colors focus:outline-none";
+export const buttonHoverDefault =
+  "hover:bg-terminal-brightBlack/20 focus:bg-terminal-brightBlack/20";
+export const buttonHoverDestructive =
+  "hover:bg-terminal-red/10 focus:bg-terminal-red/10";
 export const buttonDisabled = "cursor-not-allowed opacity-50";
 
 // Table/Grid utilities
@@ -48,9 +52,12 @@ export const rowHover = "transition-colors hover:bg-terminal-brightBlack/10";
 export const rowPadding = "px-3 py-2";
 
 // Menu/Dropdown utilities
-export const menuItem = "flex w-full items-center gap-2 px-3 py-1.5 text-sm font-mono text-left transition-colors focus:outline-none";
-export const menuItemDestructive = "text-terminal-red hover:bg-terminal-red/10 focus:bg-terminal-red/10";
-export const menuItemDefault = "text-terminal-foreground hover:bg-terminal-brightBlack/20 focus:bg-terminal-brightBlack/20";
+export const menuItem =
+  "flex w-full items-center gap-2 px-3 py-1.5 text-sm font-mono text-left transition-colors focus:outline-none";
+export const menuItemDestructive =
+  "text-terminal-red hover:bg-terminal-red/10 focus:bg-terminal-red/10";
+export const menuItemDefault =
+  "text-terminal-foreground hover:bg-terminal-brightBlack/20 focus:bg-terminal-brightBlack/20";
 
 // Background utilities
 export const bgDefault = "bg-terminal-background";
