@@ -56,7 +56,7 @@ export * from "./components/admin/Sidebar";
 export * from "./components/admin/Pagination";
 export * from "./components/admin/Avatar";
 export * from "./components/admin/Dropdown";
-export * from "./components/admin/AdminTable";
+export * from "./components/admin/DataGrid";
 export * from "./hooks/useKeyboard";
 export * from "./hooks/useStableId";
 export * from "./hooks/useAnimationFrame";

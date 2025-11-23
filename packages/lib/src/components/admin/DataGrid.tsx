@@ -1,10 +1,9 @@
-import type React from "react";
-import { useMemo, useState } from "react";
+import React, { forwardRef, useMemo, useState } from "react";
 import { cn } from "../../utils/cn";
 import { Pagination, PaginationInfo } from "./Pagination";
 import type { SortDirection } from "../content/DataTable";
 
-export interface AdminTableColumn<T extends Record<string, unknown>> {
+export interface DataGridColumn<T extends Record<string, unknown>> {
   key: keyof T | string;
   label: string;
   width?: string;
@@ -13,9 +12,9 @@ export interface AdminTableColumn<T extends Record<string, unknown>> {
   render?: (row: T, index: number) => React.ReactNode;
 }
 
-export interface AdminTableProps<T extends Record<string, unknown>>
+export interface DataGridProps<T extends Record<string, unknown>>
   extends React.HTMLAttributes<HTMLDivElement> {
-  columns: Array<AdminTableColumn<T>>;
+  columns: Array<DataGridColumn<T>>;
   data: T[];
   selectable?: boolean;
   selectedRows?: Set<React.Key>;
@@ -30,29 +29,36 @@ export interface AdminTableProps<T extends Record<string, unknown>>
   stickyHeader?: boolean;
   striped?: boolean;
   compact?: boolean;
+  loading?: boolean;
   initialSort?: { key: string; direction?: SortDirection };
+  "aria-label"?: string;
 }
 
-export function AdminTable<T extends Record<string, unknown>>({
-  columns,
-  data,
-  selectable = false,
-  selectedRows: controlledSelected,
-  onSelectionChange,
-  getRowKey,
-  onRowClick,
-  pagination = false,
-  pageSize = 10,
-  currentPage: controlledPage,
-  onPageChange,
-  emptyState = "No data available",
-  stickyHeader = true,
-  striped = false,
-  compact = false,
-  initialSort,
-  className,
-  ...props
-}: AdminTableProps<T>) {
+function DataGridInner<T extends Record<string, unknown>>(
+  {
+    columns,
+    data,
+    selectable = false,
+    selectedRows: controlledSelected,
+    onSelectionChange,
+    getRowKey,
+    onRowClick,
+    pagination = false,
+    pageSize = 10,
+    currentPage: controlledPage,
+    onPageChange,
+    emptyState = "No data available",
+    stickyHeader = true,
+    striped = false,
+    compact = false,
+    loading = false,
+    initialSort,
+    className,
+    "aria-label": ariaLabel,
+    ...props
+  }: DataGridProps<T>,
+  ref: React.ForwardedRef<HTMLDivElement>,
+) {
   const [internalPage, setInternalPage] = useState(1);
   const [internalSelected, setInternalSelected] = useState<Set<React.Key>>(
     new Set(),
@@ -153,10 +159,32 @@ export function AdminTable<T extends Record<string, unknown>>({
     setSelected(newSelected);
   };
 
+  const getAriaSort = (
+    columnKey: string,
+  ): "ascending" | "descending" | "none" => {
+    if (sort.key !== columnKey) return "none";
+    return sort.direction === "asc" ? "ascending" : "descending";
+  };
+
+  if (columns.length === 0) {
+    return (
+      <div
+        ref={ref}
+        className={cn("text-terminal-brightBlack text-sm", className)}
+        {...props}
+      >
+        No columns defined
+      </div>
+    );
+  }
+
   return (
-    <div className={cn("flex flex-col gap-4", className)} {...props}>
+    <div ref={ref} className={cn("flex flex-col gap-4", className)} {...props}>
       <div className="overflow-auto border border-terminal-gridLine">
-        <table className="min-w-full border-collapse font-mono text-sm">
+        <table
+          className="min-w-full border-collapse font-mono text-sm"
+          aria-label={ariaLabel}
+        >
           <thead
             className={cn(
               "bg-terminal-black/70 text-xs uppercase tracking-wide text-terminal-brightBlack",
@@ -165,7 +193,10 @@ export function AdminTable<T extends Record<string, unknown>>({
           >
             <tr>
               {selectable && (
-                <th className="w-10 border-b border-terminal-gridLine px-3 py-2">
+                <th
+                  scope="col"
+                  className="w-10 border-b border-terminal-gridLine px-3 py-2"
+                >
                   <input
                     type="checkbox"
                     checked={allSelected}
@@ -181,7 +212,9 @@ export function AdminTable<T extends Record<string, unknown>>({
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
+                  scope="col"
                   style={{ width: column.width }}
+                  aria-sort={column.sortable ? getAriaSort(column.key as string) : undefined}
                   className={cn(
                     "border-b border-terminal-gridLine px-3",
                     compact ? "py-1.5" : "py-2",
@@ -195,6 +228,7 @@ export function AdminTable<T extends Record<string, unknown>>({
                       type="button"
                       className="inline-flex items-center gap-1 uppercase tracking-wider text-terminal-accent transition-colors hover:text-terminal-accent/70"
                       onClick={() => toggleSort(column.key as string)}
+                      aria-label={`Sort by ${column.label}`}
                     >
                       {column.label}
                       {sort.key === column.key && (
@@ -213,7 +247,19 @@ export function AdminTable<T extends Record<string, unknown>>({
             </tr>
           </thead>
           <tbody>
-            {paginatedData.length === 0 && (
+            {loading && (
+              <tr>
+                <td
+                  colSpan={columns.length + (selectable ? 1 : 0)}
+                  className="px-3 py-8 text-center text-terminal-brightBlack"
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="animate-pulse">Loading...</span>
+                  </div>
+                </td>
+              </tr>
+            )}
+            {!loading && paginatedData.length === 0 && (
               <tr>
                 <td
                   colSpan={columns.length + (selectable ? 1 : 0)}
@@ -223,58 +269,66 @@ export function AdminTable<T extends Record<string, unknown>>({
                 </td>
               </tr>
             )}
-            {paginatedData.map((row, rowIndex) => {
-              const rowKey = getRowKey(row, rowIndex);
-              const isSelected = selectedRows.has(rowKey);
+            {!loading &&
+              paginatedData.map((row, rowIndex) => {
+                const rowKey = getRowKey(row, rowIndex);
+                const isSelected = selectedRows.has(rowKey);
 
-              return (
-                <tr
-                  key={rowKey}
-                  className={cn(
-                    "border-b border-terminal-gridLine/40 transition-colors",
-                    striped && rowIndex % 2 === 1 && "bg-terminal-black/20",
-                    isSelected && "bg-terminal-accent/10",
-                    onRowClick &&
-                      "cursor-pointer hover:bg-terminal-black/40 focus-visible:bg-terminal-black/50",
-                  )}
-                  onClick={() => onRowClick?.(row)}
-                >
-                  {selectable && (
-                    <td
-                      className={cn("px-3", compact ? "py-1.5" : "py-2")}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleSelectRow(rowKey)}
-                        className="h-4 w-4 cursor-pointer accent-terminal-accent"
-                        aria-label={`Select row ${rowIndex + 1}`}
-                      />
-                    </td>
-                  )}
-                  {columns.map((column) => (
-                    <td
-                      key={String(column.key)}
-                      className={cn(
-                        "px-3 align-top text-terminal-foreground",
-                        compact ? "py-1.5" : "py-2",
-                        column.align === "center" && "text-center",
-                        column.align === "right" && "text-right",
-                      )}
-                    >
-                      {column.render
-                        ? column.render(row, rowIndex)
-                        : String(
-                            (row as Record<string, unknown>)[
-                              column.key as string
-                            ] ?? "",
-                          )}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
+                return (
+                  <tr
+                    key={rowKey}
+                    className={cn(
+                      "border-b border-terminal-gridLine/40 transition-colors",
+                      striped && rowIndex % 2 === 1 && "bg-terminal-black/20",
+                      isSelected && "bg-terminal-accent/10",
+                      onRowClick &&
+                        "cursor-pointer hover:bg-terminal-black/40 focus-visible:bg-terminal-black/50",
+                    )}
+                    onClick={() => onRowClick?.(row)}
+                    tabIndex={onRowClick ? 0 : undefined}
+                    onKeyDown={(e) => {
+                      if (onRowClick && (e.key === "Enter" || e.key === " ")) {
+                        e.preventDefault();
+                        onRowClick(row);
+                      }
+                    }}
+                  >
+                    {selectable && (
+                      <td
+                        className={cn("px-3", compact ? "py-1.5" : "py-2")}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectRow(rowKey)}
+                          className="h-4 w-4 cursor-pointer accent-terminal-accent"
+                          aria-label={`Select row ${rowIndex + 1}`}
+                        />
+                      </td>
+                    )}
+                    {columns.map((column) => (
+                      <td
+                        key={String(column.key)}
+                        className={cn(
+                          "px-3 align-top text-terminal-foreground",
+                          compact ? "py-1.5" : "py-2",
+                          column.align === "center" && "text-center",
+                          column.align === "right" && "text-right",
+                        )}
+                      >
+                        {column.render
+                          ? column.render(row, rowIndex)
+                          : String(
+                              (row as Record<string, unknown>)[
+                                column.key as string
+                              ] ?? "",
+                            )}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
@@ -302,3 +356,18 @@ export function AdminTable<T extends Record<string, unknown>>({
     </div>
   );
 }
+
+export const DataGrid = forwardRef(DataGridInner) as <
+  T extends Record<string, unknown>,
+>(
+  props: DataGridProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> },
+) => React.ReactElement;
+
+(DataGrid as React.FC).displayName = "DataGrid";
+
+// Keep backwards compatibility alias
+export const AdminTable = DataGrid;
+export type AdminTableProps<T extends Record<string, unknown>> =
+  DataGridProps<T>;
+export type AdminTableColumn<T extends Record<string, unknown>> =
+  DataGridColumn<T>;

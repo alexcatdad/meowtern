@@ -2,8 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ActionBar,
   type Action,
-  AdminTable,
-  type AdminTableColumn,
   AnimatedValue,
   AnsiText,
   Avatar,
@@ -14,6 +12,8 @@ import {
   type Command,
   CommandPalette,
   ContextMenu,
+  DataGrid,
+  type DataGridColumn,
   DataTable,
   Dialog,
   Dropdown,
@@ -1043,7 +1043,7 @@ function App() {
     </div>
   );
 
-  const userColumns: AdminTableColumn<UserRow>[] = [
+  const userColumns: DataGridColumn<UserRow>[] = [
     {
       key: "name",
       label: "User",
@@ -1187,8 +1187,8 @@ function App() {
         </TerminalBox>
       </TerminalGrid>
 
-      <TerminalBox title="Admin Table with Selection & Pagination">
-        <AdminTable<UserRow>
+      <TerminalBox title="Data Grid with Selection & Pagination">
+        <DataGrid<UserRow>
           columns={userColumns}
           data={USER_DATA}
           getRowKey={(row) => row.id}
