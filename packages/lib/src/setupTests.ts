@@ -3,7 +3,10 @@ import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import * as matchers from "@testing-library/jest-dom/matchers";
 import { cleanup } from "@testing-library/react";
 
-GlobalRegistrator.register();
+// Only register once to avoid conflicts
+if (!globalThis.document) {
+  GlobalRegistrator.register();
+}
 
 expect.extend(matchers);
 
