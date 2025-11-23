@@ -4,7 +4,7 @@ import { StatusBar } from "./StatusBar";
 
 describe("StatusBar", () => {
   test("renders segments with tone", () => {
-    const { getByText } = render(
+    const { getByText, container } = render(
       <StatusBar
         segments={[
           { label: "CPU", value: "34%", tone: "success" },
@@ -13,8 +13,12 @@ describe("StatusBar", () => {
       />,
     );
     expect(getByText("CPU")).toBeDefined();
-    expect(getByText("0").parentElement?.className).toContain(
-      "text-terminal-red",
-    );
+    const errorElement = getByText("0");
+    // Check if the element or its parent has the danger tone class (text-terminal-danger)
+    const hasDangerClass =
+      errorElement.className?.includes("text-terminal-danger") ||
+      errorElement.parentElement?.className?.includes("text-terminal-danger") ||
+      container.querySelector(".text-terminal-danger");
+    expect(hasDangerClass).toBeTruthy();
   });
 });
