@@ -160,9 +160,11 @@ export function DataTable<T extends Record<string, unknown>>({
                     >
                       {column.render
                         ? column.render(row)
-                        : String((row as Record<string, unknown>)[
-                            column.key as string
-                          ] ?? "")}
+                        : String(
+                            (row as Record<string, unknown>)[
+                              column.key as string
+                            ] ?? "",
+                          )}
                     </td>
                   ))}
                 </tr>

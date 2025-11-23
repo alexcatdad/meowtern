@@ -1,4 +1,5 @@
-import React, {
+import type React from "react";
+import {
   cloneElement,
   forwardRef,
   isValidElement,
@@ -95,7 +96,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
       if (!open) {
-        if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+        if (
+          event.key === "ArrowDown" ||
+          event.key === "Enter" ||
+          event.key === " "
+        ) {
           event.preventDefault();
           setOpen(true);
         }
@@ -108,14 +113,16 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       switch (event.key) {
         case "ArrowDown": {
           event.preventDefault();
-          const nextIndex = focusedIndex < items.length - 1 ? focusedIndex + 1 : 0;
+          const nextIndex =
+            focusedIndex < items.length - 1 ? focusedIndex + 1 : 0;
           setFocusedIndex(nextIndex);
           items[nextIndex]?.focus();
           break;
         }
         case "ArrowUp": {
           event.preventDefault();
-          const prevIndex = focusedIndex > 0 ? focusedIndex - 1 : items.length - 1;
+          const prevIndex =
+            focusedIndex > 0 ? focusedIndex - 1 : items.length - 1;
           setFocusedIndex(prevIndex);
           items[prevIndex]?.focus();
           break;
@@ -146,7 +153,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           "aria-expanded": open,
           "aria-controls": open ? menuId : undefined,
           onClick: (e: React.MouseEvent) => {
-            const onClick = (trigger.props as { onClick?: (e: React.MouseEvent) => void }).onClick;
+            const onClick = (
+              trigger.props as { onClick?: (e: React.MouseEvent) => void }
+            ).onClick;
             onClick?.(e);
             setOpen(!open);
           },
@@ -156,7 +165,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     return (
       <div
         ref={(node) => {
-          (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          (
+            containerRef as React.MutableRefObject<HTMLDivElement | null>
+          ).current = node;
           if (typeof ref === "function") ref(node);
           else if (ref) ref.current = node;
         }}
@@ -197,7 +208,15 @@ export interface DropdownItemProps
 
 export const DropdownItem = forwardRef<HTMLButtonElement, DropdownItemProps>(
   (
-    { children, icon, shortcut, destructive = false, className, disabled, ...props },
+    {
+      children,
+      icon,
+      shortcut,
+      destructive = false,
+      className,
+      disabled,
+      ...props
+    },
     ref,
   ) => {
     return (
@@ -243,17 +262,16 @@ export const DropdownItem = forwardRef<HTMLButtonElement, DropdownItemProps>(
 DropdownItem.displayName = "DropdownItem";
 
 export interface DropdownSeparatorProps
-  extends React.HTMLAttributes<HTMLDivElement> {}
+  extends React.HTMLAttributes<HTMLHRElement> {}
 
 export const DropdownSeparator = forwardRef<
-  HTMLDivElement,
+  HTMLHRElement,
   DropdownSeparatorProps
 >(({ className, ...props }, ref) => {
   return (
-    <div
+    <hr
       ref={ref}
-      className={cn("my-1 h-px bg-terminal-gridLine", className)}
-      role="separator"
+      className={cn("my-1 h-px border-0 bg-terminal-gridLine", className)}
       {...props}
     />
   );

@@ -1,7 +1,8 @@
-import React, { forwardRef, useMemo, useState } from "react";
+import type React from "react";
+import { forwardRef, useMemo, useState } from "react";
 import { cn } from "../../utils/cn";
-import { Pagination, PaginationInfo } from "./Pagination";
 import type { SortDirection } from "../content/DataTable";
+import { Pagination, PaginationInfo } from "./Pagination";
 
 export interface DataGridColumn<T extends Record<string, unknown>> {
   key: keyof T | string;
@@ -214,7 +215,11 @@ function DataGridInner<T extends Record<string, unknown>>(
                   key={String(column.key)}
                   scope="col"
                   style={{ width: column.width }}
-                  aria-sort={column.sortable ? getAriaSort(column.key as string) : undefined}
+                  aria-sort={
+                    column.sortable
+                      ? getAriaSort(column.key as string)
+                      : undefined
+                  }
                   className={cn(
                     "border-b border-terminal-gridLine px-3",
                     compact ? "py-1.5" : "py-2",
@@ -297,6 +302,7 @@ function DataGridInner<T extends Record<string, unknown>>(
                       <td
                         className={cn("px-3", compact ? "py-1.5" : "py-2")}
                         onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => e.stopPropagation()}
                       >
                         <input
                           type="checkbox"

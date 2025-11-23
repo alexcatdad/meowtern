@@ -76,8 +76,8 @@ const ensureTsxLanguage = () => {
   const clonedTypescript = Prism.util.clone(typescript);
   Prism.languages.tsx = Prism.languages.extend("jsx", clonedTypescript);
 
-  const tsxGrammar = Prism.languages
-    .tsx as typeof Prism.languages.tsx & Record<string, unknown>;
+  const tsxGrammar = Prism.languages.tsx as typeof Prism.languages.tsx &
+    Record<string, unknown>;
   delete tsxGrammar.parameter;
   delete tsxGrammar["literal-property"];
 
@@ -158,7 +158,9 @@ export const SyntaxHighlight = forwardRef<HTMLPreElement, SyntaxHighlightProps>(
         style={{ fontVariantLigatures: "none" }}
         {...props}
       >
-        <code>{tokens.map((token, index) => renderToken(token, `token-${index}`))}</code>
+        <code>
+          {tokens.map((token, index) => renderToken(token, `token-${index}`))}
+        </code>
       </pre>
     );
   },

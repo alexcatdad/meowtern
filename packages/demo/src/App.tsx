@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  ActionBar,
   type Action,
+  ActionBar,
   AnimatedValue,
   AnsiText,
   Avatar,
@@ -451,14 +451,70 @@ type UserRow = {
 };
 
 const USER_DATA: UserRow[] = [
-  { id: "1", name: "Alice Chen", email: "alice@example.com", role: "Admin", status: "active", lastLogin: "2 hours ago" },
-  { id: "2", name: "Bob Smith", email: "bob@example.com", role: "Editor", status: "active", lastLogin: "1 day ago" },
-  { id: "3", name: "Carol Wu", email: "carol@example.com", role: "Viewer", status: "inactive", lastLogin: "2 weeks ago" },
-  { id: "4", name: "David Lee", email: "david@example.com", role: "Editor", status: "pending", lastLogin: "Never" },
-  { id: "5", name: "Eve Martinez", email: "eve@example.com", role: "Admin", status: "active", lastLogin: "5 min ago" },
-  { id: "6", name: "Frank Johnson", email: "frank@example.com", role: "Viewer", status: "active", lastLogin: "3 days ago" },
-  { id: "7", name: "Grace Kim", email: "grace@example.com", role: "Editor", status: "active", lastLogin: "12 hours ago" },
-  { id: "8", name: "Henry Brown", email: "henry@example.com", role: "Viewer", status: "inactive", lastLogin: "1 month ago" },
+  {
+    id: "1",
+    name: "Alice Chen",
+    email: "alice@example.com",
+    role: "Admin",
+    status: "active",
+    lastLogin: "2 hours ago",
+  },
+  {
+    id: "2",
+    name: "Bob Smith",
+    email: "bob@example.com",
+    role: "Editor",
+    status: "active",
+    lastLogin: "1 day ago",
+  },
+  {
+    id: "3",
+    name: "Carol Wu",
+    email: "carol@example.com",
+    role: "Viewer",
+    status: "inactive",
+    lastLogin: "2 weeks ago",
+  },
+  {
+    id: "4",
+    name: "David Lee",
+    email: "david@example.com",
+    role: "Editor",
+    status: "pending",
+    lastLogin: "Never",
+  },
+  {
+    id: "5",
+    name: "Eve Martinez",
+    email: "eve@example.com",
+    role: "Admin",
+    status: "active",
+    lastLogin: "5 min ago",
+  },
+  {
+    id: "6",
+    name: "Frank Johnson",
+    email: "frank@example.com",
+    role: "Viewer",
+    status: "active",
+    lastLogin: "3 days ago",
+  },
+  {
+    id: "7",
+    name: "Grace Kim",
+    email: "grace@example.com",
+    role: "Editor",
+    status: "active",
+    lastLogin: "12 hours ago",
+  },
+  {
+    id: "8",
+    name: "Henry Brown",
+    email: "henry@example.com",
+    role: "Viewer",
+    status: "inactive",
+    lastLogin: "1 month ago",
+  },
 ];
 
 const themeOptions: TerminalThemeName[] = [
@@ -725,7 +781,9 @@ function App() {
           </Text>
           <select
             value={graphVariant}
-            onChange={(e) => setGraphVariant(e.target.value as LineGraphVariant)}
+            onChange={(e) =>
+              setGraphVariant(e.target.value as LineGraphVariant)
+            }
             className="rounded-terminal border border-terminal-gridLine/60 bg-terminal-black/60 px-3 py-1.5 text-sm font-mono text-terminal-foreground focus:border-terminal-green/60 focus:outline-none focus:ring-1 focus:ring-terminal-green/40"
           >
             <option value="smooth">Smooth</option>
@@ -742,104 +800,104 @@ function App() {
       <TerminalGrid columns={3} gap="md">
         <StatCard
           label="Requests / s"
-        value={statMetrics.requests}
-        secondary={`${statMetrics.requestsDelta >= 0 ? "+" : ""}${Math.abs(
-          statMetrics.requestsDelta,
-        ).toFixed(1)}%`}
-        trend={statMetrics.requestsDelta >= 0 ? "up" : "down"}
-        hint="vs last 5m"
-        formatValue={(val) =>
-          typeof val === "number" ? Math.round(val).toLocaleString() : val
-        }
-      />
-      <StatCard
-        label="Error rate"
-        value={statMetrics.errorRate}
-        secondary={`${statMetrics.errorDelta >= 0 ? "+" : ""}${Math.abs(
-          statMetrics.errorDelta,
-        ).toFixed(2)}%`}
-        trend={statMetrics.errorDelta >= 0 ? "up" : "down"}
-        hint="All clusters"
-        formatValue={(val) =>
-          typeof val === "number" ? `${val.toFixed(2)}%` : val
-        }
-      />
-      <StatCard
-        label="Bandwidth"
-        value={statMetrics.bandwidth}
-        secondary={`${
-          statMetrics.bandwidthDelta >= 0 ? "↑" : "↓"
-        } ${Math.abs(statMetrics.bandwidthDelta).toFixed(0)} MB/s`}
-        trend={statMetrics.bandwidthDelta >= 0 ? "up" : "down"}
-      />
-      <TerminalBox title="Resource Progress" borderStyle="single">
-        <ProgressBar
-          label="CPU"
-          value={resourceUsage.cpu}
-          variant={graphVariant === "crt" ? "pixelated" : "smooth"}
+          value={statMetrics.requests}
+          secondary={`${statMetrics.requestsDelta >= 0 ? "+" : ""}${Math.abs(
+            statMetrics.requestsDelta,
+          ).toFixed(1)}%`}
+          trend={statMetrics.requestsDelta >= 0 ? "up" : "down"}
+          hint="vs last 5m"
+          formatValue={(val) =>
+            typeof val === "number" ? Math.round(val).toLocaleString() : val
+          }
         />
-        <ProgressBar
-          label="Memory"
-          value={resourceUsage.memory}
-          char="▓"
-          variant={graphVariant === "crt" ? "pixelated" : "smooth"}
+        <StatCard
+          label="Error rate"
+          value={statMetrics.errorRate}
+          secondary={`${statMetrics.errorDelta >= 0 ? "+" : ""}${Math.abs(
+            statMetrics.errorDelta,
+          ).toFixed(2)}%`}
+          trend={statMetrics.errorDelta >= 0 ? "up" : "down"}
+          hint="All clusters"
+          formatValue={(val) =>
+            typeof val === "number" ? `${val.toFixed(2)}%` : val
+          }
         />
-        <ProgressBar
-          label="Disk"
-          value={resourceUsage.disk}
-          showValue={false}
-          variant={graphVariant === "crt" ? "pixelated" : "smooth"}
+        <StatCard
+          label="Bandwidth"
+          value={statMetrics.bandwidth}
+          secondary={`${
+            statMetrics.bandwidthDelta >= 0 ? "↑" : "↓"
+          } ${Math.abs(statMetrics.bandwidthDelta).toFixed(0)} MB/s`}
+          trend={statMetrics.bandwidthDelta >= 0 ? "up" : "down"}
         />
-      </TerminalBox>
-      <TerminalBox title="Per-Core Load">
-        <VerticalMeter
-          values={coreLoads}
-          labels={VERTICAL_LABELS}
-          variant={graphVariant === "crt" ? "pixelated" : "smooth"}
-        />
-      </TerminalBox>
-      <TerminalBox title="Cluster Gauge">
-        <Gauge
-          value={clusterGauge}
-          label="Cluster load"
-          variant={graphVariant === "crt" ? "pixelated" : "smooth"}
-        />
-        <div className="flex items-center gap-2">
-          <AnimatedValue
-            value={animatedThroughput}
-            format={(val) => `${val.toFixed(1)}%`}
+        <TerminalBox title="Resource Progress" borderStyle="single">
+          <ProgressBar
+            label="CPU"
+            value={resourceUsage.cpu}
+            variant={graphVariant === "crt" ? "pixelated" : "smooth"}
           />
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => setAnimatedThroughput((prev) => (prev + 13) % 100)}
-          >
-            Pulse
-          </Button>
-        </div>
-      </TerminalBox>
-      <TerminalBox
-        title="Realtime Latency"
-        variant={graphVariant === "crt" ? "crt" : "sunken"}
-      >
-        <LineGraph
-          values={lineGraphValues}
-          height={80}
-          variant={graphVariant}
-          pixelSize={graphVariant === "crt" ? 8 : undefined}
-        />
-      </TerminalBox>
-      <TerminalBox
-        title="History Graph"
-        variant={graphVariant === "crt" ? "crt" : "sunken"}
-      >
-        <HistoryGraph
-          title="CPU history"
-          points={historyPoints}
-          variant={graphVariant}
-          pixelSize={graphVariant === "crt" ? 8 : undefined}
-        />
-      </TerminalBox>
+          <ProgressBar
+            label="Memory"
+            value={resourceUsage.memory}
+            char="▓"
+            variant={graphVariant === "crt" ? "pixelated" : "smooth"}
+          />
+          <ProgressBar
+            label="Disk"
+            value={resourceUsage.disk}
+            showValue={false}
+            variant={graphVariant === "crt" ? "pixelated" : "smooth"}
+          />
+        </TerminalBox>
+        <TerminalBox title="Per-Core Load">
+          <VerticalMeter
+            values={coreLoads}
+            labels={VERTICAL_LABELS}
+            variant={graphVariant === "crt" ? "pixelated" : "smooth"}
+          />
+        </TerminalBox>
+        <TerminalBox title="Cluster Gauge">
+          <Gauge
+            value={clusterGauge}
+            label="Cluster load"
+            variant={graphVariant === "crt" ? "pixelated" : "smooth"}
+          />
+          <div className="flex items-center gap-2">
+            <AnimatedValue
+              value={animatedThroughput}
+              format={(val) => `${val.toFixed(1)}%`}
+            />
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setAnimatedThroughput((prev) => (prev + 13) % 100)}
+            >
+              Pulse
+            </Button>
+          </div>
+        </TerminalBox>
+        <TerminalBox
+          title="Realtime Latency"
+          variant={graphVariant === "crt" ? "crt" : "sunken"}
+        >
+          <LineGraph
+            values={lineGraphValues}
+            height={80}
+            variant={graphVariant}
+            pixelSize={graphVariant === "crt" ? 8 : undefined}
+          />
+        </TerminalBox>
+        <TerminalBox
+          title="History Graph"
+          variant={graphVariant === "crt" ? "crt" : "sunken"}
+        >
+          <HistoryGraph
+            title="CPU history"
+            points={historyPoints}
+            variant={graphVariant}
+            pixelSize={graphVariant === "crt" ? 8 : undefined}
+          />
+        </TerminalBox>
       </TerminalGrid>
     </div>
   );
@@ -1050,7 +1108,17 @@ function App() {
       sortable: true,
       render: (row) => (
         <div className="flex items-center gap-2">
-          <Avatar name={row.name} size="sm" status={row.status === "active" ? "online" : row.status === "pending" ? "away" : "offline"} />
+          <Avatar
+            name={row.name}
+            size="sm"
+            status={
+              row.status === "active"
+                ? "online"
+                : row.status === "pending"
+                  ? "away"
+                  : "offline"
+            }
+          />
           <span>{row.name}</span>
         </div>
       ),
@@ -1061,7 +1129,16 @@ function App() {
       key: "status",
       label: "Status",
       render: (row) => (
-        <Badge variant={row.status === "active" ? "success" : row.status === "pending" ? "warning" : "neutral"} dot>
+        <Badge
+          variant={
+            row.status === "active"
+              ? "success"
+              : row.status === "pending"
+                ? "warning"
+                : "neutral"
+          }
+          dot
+        >
           {row.status}
         </Badge>
       ),
@@ -1073,14 +1150,29 @@ function App() {
       width: "50px",
       render: (row) => (
         <Dropdown
-          trigger={<Button size="sm" variant="ghost">...</Button>}
+          trigger={
+            <Button size="sm" variant="ghost">
+              ...
+            </Button>
+          }
           align="right"
         >
           <DropdownLabel>Actions</DropdownLabel>
-          <DropdownItem onClick={() => setLastAction(`Edit ${row.name}`)}>Edit user</DropdownItem>
-          <DropdownItem onClick={() => setLastAction(`Reset password for ${row.name}`)}>Reset password</DropdownItem>
+          <DropdownItem onClick={() => setLastAction(`Edit ${row.name}`)}>
+            Edit user
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => setLastAction(`Reset password for ${row.name}`)}
+          >
+            Reset password
+          </DropdownItem>
           <DropdownSeparator />
-          <DropdownItem destructive onClick={() => setLastAction(`Delete ${row.name}`)}>Delete user</DropdownItem>
+          <DropdownItem
+            destructive
+            onClick={() => setLastAction(`Delete ${row.name}`)}
+          >
+            Delete user
+          </DropdownItem>
         </Dropdown>
       ),
     },
@@ -1098,14 +1190,21 @@ function App() {
             >
               <SidebarHeader>
                 <SidebarToggle />
-                {!sidebarCollapsed && <Text variant="bold" className="ml-2">Admin</Text>}
+                {!sidebarCollapsed && (
+                  <Text variant="bold" className="ml-2">
+                    Admin
+                  </Text>
+                )}
               </SidebarHeader>
               <SidebarContent>
                 <SidebarGroup label="Main">
                   <SidebarItem
                     icon={<span>◈</span>}
                     active={sidebarActiveItem === "dashboard"}
-                    onClick={() => { setSidebarActiveItem("dashboard"); setLastAction("Dashboard"); }}
+                    onClick={() => {
+                      setSidebarActiveItem("dashboard");
+                      setLastAction("Dashboard");
+                    }}
                   >
                     Dashboard
                   </SidebarItem>
@@ -1113,14 +1212,20 @@ function App() {
                     icon={<span>◎</span>}
                     active={sidebarActiveItem === "users"}
                     badge={<Badge variant="info">8</Badge>}
-                    onClick={() => { setSidebarActiveItem("users"); setLastAction("Users"); }}
+                    onClick={() => {
+                      setSidebarActiveItem("users");
+                      setLastAction("Users");
+                    }}
                   >
                     Users
                   </SidebarItem>
                   <SidebarItem
                     icon={<span>⚙</span>}
                     active={sidebarActiveItem === "settings"}
-                    onClick={() => { setSidebarActiveItem("settings"); setLastAction("Settings"); }}
+                    onClick={() => {
+                      setSidebarActiveItem("settings");
+                      setLastAction("Settings");
+                    }}
                   >
                     Settings
                   </SidebarItem>
@@ -1129,21 +1234,30 @@ function App() {
                   <SidebarItem
                     icon={<span>▤</span>}
                     active={sidebarActiveItem === "analytics"}
-                    onClick={() => { setSidebarActiveItem("analytics"); setLastAction("Analytics"); }}
+                    onClick={() => {
+                      setSidebarActiveItem("analytics");
+                      setLastAction("Analytics");
+                    }}
                   >
                     Analytics
                   </SidebarItem>
                   <SidebarItem
                     icon={<span>⚡</span>}
                     active={sidebarActiveItem === "logs"}
-                    onClick={() => { setSidebarActiveItem("logs"); setLastAction("Logs"); }}
+                    onClick={() => {
+                      setSidebarActiveItem("logs");
+                      setLastAction("Logs");
+                    }}
                   >
                     Logs
                   </SidebarItem>
                 </SidebarGroup>
               </SidebarContent>
               <SidebarFooter>
-                <SidebarItem icon={<span>?</span>} onClick={() => setLastAction("Help clicked")}>
+                <SidebarItem
+                  icon={<span>?</span>}
+                  onClick={() => setLastAction("Help clicked")}
+                >
                   Help
                 </SidebarItem>
               </SidebarFooter>
@@ -1156,17 +1270,24 @@ function App() {
         <TerminalBox title="Avatar Components">
           <div className="space-y-4">
             <div>
-              <Text variant="dim" className="mb-2 block">Sizes & Status</Text>
+              <Text variant="dim" className="mb-2 block">
+                Sizes & Status
+              </Text>
               <div className="flex items-end gap-3">
                 <Avatar name="Alice Chen" size="xs" status="online" />
                 <Avatar name="Bob Smith" size="sm" status="away" />
                 <Avatar name="Carol Wu" size="md" status="busy" />
                 <Avatar name="David Lee" size="lg" status="offline" />
-                <Avatar src="https://api.dicebear.com/7.x/pixel-art/svg?seed=demo" size="xl" />
+                <Avatar
+                  src="https://api.dicebear.com/7.x/pixel-art/svg?seed=demo"
+                  size="xl"
+                />
               </div>
             </div>
             <div>
-              <Text variant="dim" className="mb-2 block">Avatar Group</Text>
+              <Text variant="dim" className="mb-2 block">
+                Avatar Group
+              </Text>
               <AvatarGroup max={4}>
                 <Avatar name="Alice Chen" />
                 <Avatar name="Bob Smith" />
@@ -1177,7 +1298,9 @@ function App() {
               </AvatarGroup>
             </div>
             <div>
-              <Text variant="dim" className="mb-2 block">Square Avatars</Text>
+              <Text variant="dim" className="mb-2 block">
+                Square Avatars
+              </Text>
               <div className="flex gap-2">
                 <Avatar name="Terminal" size="md" square />
                 <Avatar name="Admin" size="md" square status="online" />
@@ -1209,29 +1332,50 @@ function App() {
         <TerminalBox title="Dropdown Menu">
           <div className="flex gap-4">
             <Dropdown trigger={<Button size="sm">Actions</Button>}>
-              <DropdownItem icon={<span>+</span>} shortcut="Ctrl+N">New item</DropdownItem>
+              <DropdownItem icon={<span>+</span>} shortcut="Ctrl+N">
+                New item
+              </DropdownItem>
               <DropdownItem icon={<span>↺</span>}>Refresh</DropdownItem>
               <DropdownSeparator />
               <DropdownLabel>Danger Zone</DropdownLabel>
-              <DropdownItem destructive icon={<span>×</span>}>Delete all</DropdownItem>
+              <DropdownItem destructive icon={<span>×</span>}>
+                Delete all
+              </DropdownItem>
             </Dropdown>
-            <Dropdown trigger={<Button size="sm" variant="secondary">Right-aligned</Button>} align="right">
-              <DropdownItem onClick={() => setLastAction("Export CSV")}>Export CSV</DropdownItem>
-              <DropdownItem onClick={() => setLastAction("Export JSON")}>Export JSON</DropdownItem>
+            <Dropdown
+              trigger={
+                <Button size="sm" variant="secondary">
+                  Right-aligned
+                </Button>
+              }
+              align="right"
+            >
+              <DropdownItem onClick={() => setLastAction("Export CSV")}>
+                Export CSV
+              </DropdownItem>
+              <DropdownItem onClick={() => setLastAction("Export JSON")}>
+                Export JSON
+              </DropdownItem>
             </Dropdown>
           </div>
         </TerminalBox>
         <TerminalBox title="Standalone Pagination">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <PaginationInfo currentPage={adminPage} pageSize={4} totalItems={USER_DATA.length} />
+              <PaginationInfo
+                currentPage={adminPage}
+                pageSize={4}
+                totalItems={USER_DATA.length}
+              />
               <Pagination
                 currentPage={adminPage}
                 totalPages={Math.ceil(USER_DATA.length / 4)}
                 onPageChange={setAdminPage}
               />
             </div>
-            <Text variant="dim">Page {adminPage} of {Math.ceil(USER_DATA.length / 4)}</Text>
+            <Text variant="dim">
+              Page {adminPage} of {Math.ceil(USER_DATA.length / 4)}
+            </Text>
           </div>
         </TerminalBox>
       </TerminalGrid>
@@ -1299,7 +1443,11 @@ function App() {
             <div className="flex flex-1 flex-col overflow-hidden">
               <MenuBar items={menuItems} className="mb-3 shrink-0" />
               <div className="flex-1 overflow-y-auto pr-1">
-                <Tabs tabs={tabs} activeId={activeTab} onTabChange={setActiveTab} />
+                <Tabs
+                  tabs={tabs}
+                  activeId={activeTab}
+                  onTabChange={setActiveTab}
+                />
               </div>
               <StatusBar segments={statusSegments} className="mt-4 shrink-0" />
               <Footer className="mt-3 flex-col gap-2 shrink-0">

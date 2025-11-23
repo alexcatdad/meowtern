@@ -30,11 +30,7 @@ const getSmoothPath = (values: number[], height: number) => {
     .join(" ");
 };
 
-const getSteppedPath = (
-  values: number[],
-  height: number,
-  quantizeStep = 0,
-) => {
+const getSteppedPath = (values: number[], height: number, quantizeStep = 0) => {
   const normalized = normalizeValues(values, height);
   if (normalized.length === 0) return "";
   const formatY = (value: number) =>
@@ -66,26 +62,26 @@ const getBlockPath = (
 ): Block[] => {
   const normalized = normalizeValues(values, height);
   if (normalized.length === 0) return [];
-  
+
   const blocks: Block[] = [];
   const quantizedStep = Math.max(blockSize, 8);
-  
+
   for (let index = 0; index < normalized.length - 1; index += 1) {
     const y1 = quantize(height - normalized[index], quantizedStep);
     const y2 = quantize(height - normalized[index + 1], quantizedStep);
     const clampedY1 = clampBetween(y1, 0, height);
     const clampedY2 = clampBetween(y2, 0, height);
-    
+
     const blockWidth = 1;
     const blockHeight = quantizedStep;
-    
+
     blocks.push({
       x: index,
       y: clampedY1 - blockHeight / 2,
       width: blockWidth,
       height: blockHeight,
     });
-    
+
     if (clampedY1 !== clampedY2) {
       const verticalHeight = Math.abs(clampedY2 - clampedY1);
       blocks.push({
@@ -96,8 +92,11 @@ const getBlockPath = (
       });
     }
   }
-  
-  const lastY = quantize(height - normalized[normalized.length - 1], quantizedStep);
+
+  const lastY = quantize(
+    height - normalized[normalized.length - 1],
+    quantizedStep,
+  );
   const lastClampedY = clampBetween(lastY, 0, height);
   blocks.push({
     x: normalized.length - 1,
@@ -105,7 +104,7 @@ const getBlockPath = (
     width: 1,
     height: quantizedStep,
   });
-  
+
   return blocks;
 };
 
@@ -167,10 +166,7 @@ export const LineGraph: React.FC<LineGraphProps> = ({
         height={height}
         width="100%"
         preserveAspectRatio="none"
-        className={cn(
-          "overflow-visible",
-          useScanlines && "mix-blend-screen",
-        )}
+        className={cn("overflow-visible", useScanlines && "mix-blend-screen")}
         role="img"
         aria-label="Data line graph"
         shapeRendering={useScanlines ? "crispEdges" : "geometricPrecision"}
@@ -261,10 +257,18 @@ export const LineGraph: React.FC<LineGraphProps> = ({
               d={path}
               fill="none"
               stroke={`url(#${strokeGradientId})`}
-              strokeWidth={resolvedVariant === "crt" ? Math.max(strokeWidth, 2) : strokeWidth}
+              strokeWidth={
+                resolvedVariant === "crt"
+                  ? Math.max(strokeWidth, 2)
+                  : strokeWidth
+              }
               strokeLinecap={resolvedVariant === "smooth" ? "round" : "butt"}
               strokeLinejoin={resolvedVariant === "smooth" ? "round" : "miter"}
-              shapeRendering={resolvedVariant === "smooth" ? "geometricPrecision" : "crispEdges"}
+              shapeRendering={
+                resolvedVariant === "smooth"
+                  ? "geometricPrecision"
+                  : "crispEdges"
+              }
               className={cn(
                 "drop-shadow-[0_0_15px_rgba(97,214,214,0.6)]",
                 resolvedVariant !== "smooth" &&

@@ -33,7 +33,7 @@ export const HistoryGraph: React.FC<HistoryGraphProps> = ({
   const trimmed = points.slice(-maxSamples);
   const values = trimmed.map((point) => point.value);
   const resolvedVariant: LineGraphVariant =
-    pixelated && !variant ? "crt" : variant ?? "smooth";
+    pixelated && !variant ? "crt" : (variant ?? "smooth");
   const useCrtSurface = resolvedVariant === "crt";
 
   return (

@@ -47,7 +47,8 @@ const SurfaceComponent = (
           "ring-1 ring-terminal-cyan/30 shadow-[0_0_25px_rgba(21,241,255,0.18)]",
         interactive &&
           "cursor-pointer hover:ring-terminal-cyan/60 hover:shadow-[0_0_35px_rgba(21,241,255,0.32)]",
-        isCrt && "before:absolute before:inset-0 before:pointer-events-none before:z-10 before:bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.15),rgba(0,0,0,0.15)_1px,transparent_1px,transparent_2px)] before:opacity-60 after:absolute after:inset-0 after:pointer-events-none after:z-0 after:bg-[radial-gradient(ellipse_at_center,rgba(22,198,12,0.08),transparent_70%)] after:mix-blend-screen",
+        isCrt &&
+          "before:absolute before:inset-0 before:pointer-events-none before:z-10 before:bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.15),rgba(0,0,0,0.15)_1px,transparent_1px,transparent_2px)] before:opacity-60 after:absolute after:inset-0 after:pointer-events-none after:z-0 after:bg-[radial-gradient(ellipse_at_center,rgba(22,198,12,0.08),transparent_70%)] after:mix-blend-screen",
         className,
       )}
       style={

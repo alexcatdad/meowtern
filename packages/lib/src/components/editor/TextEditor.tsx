@@ -1,7 +1,7 @@
-import type React from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
 import Prism from "prismjs";
 import type { Token } from "prismjs";
+import type React from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "../../utils/cn";
 import { LineNumbers } from "./LineNumbers";
 
@@ -79,8 +79,8 @@ const ensureTsxLanguage = () => {
   const clonedTypescript = Prism.util.clone(typescript);
   Prism.languages.tsx = Prism.languages.extend("jsx", clonedTypescript);
 
-  const tsxGrammar = Prism.languages
-    .tsx as typeof Prism.languages.tsx & Record<string, unknown>;
+  const tsxGrammar = Prism.languages.tsx as typeof Prism.languages.tsx &
+    Record<string, unknown>;
   delete tsxGrammar.parameter;
   delete tsxGrammar["literal-property"];
 
@@ -244,7 +244,10 @@ export const TextEditor: React.FC<TextEditorProps> = ({
     if (currentText !== value) {
       isUpdatingRef.current = true;
       const selection = window.getSelection();
-      const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0).cloneRange() : null;
+      const range =
+        selection && selection.rangeCount > 0
+          ? selection.getRangeAt(0).cloneRange()
+          : null;
       const cursorOffset = range
         ? getCursorOffset(editorRef.current, range)
         : value.length;
@@ -267,10 +270,7 @@ export const TextEditor: React.FC<TextEditorProps> = ({
   }, [value, tokens, showHighlight]);
 
   // Get cursor offset as character count
-  const getCursorOffset = (
-    element: HTMLElement,
-    range: Range,
-  ): number => {
+  const getCursorOffset = (element: HTMLElement, range: Range): number => {
     const preCaretRange = range.cloneRange();
     preCaretRange.selectNodeContents(element);
     preCaretRange.setEnd(range.endContainer, range.endOffset);
@@ -285,10 +285,7 @@ export const TextEditor: React.FC<TextEditorProps> = ({
     const selection = window.getSelection();
     if (!selection) return;
 
-    const walker = document.createTreeWalker(
-      element,
-      NodeFilter.SHOW_TEXT,
-    );
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
     let charCount = 0;
     let targetNode: Node | null = null;
     let targetOffset = 0;

@@ -71,7 +71,16 @@ const getColorFromName = (name: string): string => {
 
 export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
   (
-    { src, alt, name, size = "md", status, square = false, className, ...props },
+    {
+      src,
+      alt,
+      name,
+      size = "md",
+      status,
+      square = false,
+      className,
+      ...props
+    },
     ref,
   ) => {
     const [imgError, setImgError] = useState(false);
@@ -139,13 +148,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
     const remainingCount = Math.max(0, childArray.length - effectiveMax);
 
     return (
-      <div
-        ref={ref}
-        className={cn("flex -space-x-2", className)}
-        role="group"
-        aria-label={`Group of ${childArray.length} avatars`}
-        {...props}
-      >
+      <div ref={ref} className={cn("flex -space-x-2", className)} {...props}>
         {visibleChildren.map((child, index) => (
           <div
             key={index}

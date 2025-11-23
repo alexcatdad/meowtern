@@ -1,4 +1,5 @@
-import React, { createContext, forwardRef, useContext, useState } from "react";
+import type React from "react";
+import { createContext, forwardRef, useContext, useState } from "react";
 import { cn } from "../../utils/cn";
 
 interface SidebarContextValue {
@@ -54,7 +55,6 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
       <SidebarContext.Provider value={{ collapsed, setCollapsed }}>
         <nav
           ref={ref}
-          role="navigation"
           aria-label="Sidebar navigation"
           className={cn(
             "flex h-full flex-col border-r border-terminal-gridLine bg-terminal-background font-mono transition-all duration-200",
@@ -148,14 +148,20 @@ export const SidebarGroup = forwardRef<HTMLDivElement, SidebarGroupProps>(
   ({ children, className, label, ...props }, ref) => {
     const { collapsed } = useSidebar();
     return (
-      <div ref={ref} className={cn("py-2", className)} role="group" aria-label={label} {...props}>
+      <div ref={ref} className={cn("py-2", className)} {...props}>
         {label && !collapsed && (
-          <div className="px-3 py-1 text-xs uppercase tracking-wider text-terminal-brightBlack" aria-hidden="true">
+          <div
+            className="px-3 py-1 text-xs uppercase tracking-wider text-terminal-brightBlack"
+            aria-hidden="true"
+          >
             {label}
           </div>
         )}
         {collapsed && label && (
-          <div className="mx-auto my-1 h-px w-6 bg-terminal-gridLine" aria-hidden="true" />
+          <div
+            className="mx-auto my-1 h-px w-6 bg-terminal-gridLine"
+            aria-hidden="true"
+          />
         )}
         <div className="space-y-0.5">{children}</div>
       </div>
@@ -193,7 +199,10 @@ export const SidebarItem = forwardRef<HTMLButtonElement, SidebarItemProps>(
         {...props}
       >
         {icon && (
-          <span className="flex h-5 w-5 shrink-0 items-center justify-center" aria-hidden="true">
+          <span
+            className="flex h-5 w-5 shrink-0 items-center justify-center"
+            aria-hidden="true"
+          >
             {icon}
           </span>
         )}
@@ -227,7 +236,9 @@ export const SidebarToggle = forwardRef<HTMLButtonElement, SidebarToggleProps>(
         aria-expanded={!collapsed}
         {...props}
       >
-        <span className="text-sm" aria-hidden="true">{collapsed ? "»" : "«"}</span>
+        <span className="text-sm" aria-hidden="true">
+          {collapsed ? "»" : "«"}
+        </span>
       </button>
     );
   },
