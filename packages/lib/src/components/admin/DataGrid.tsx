@@ -288,7 +288,8 @@ function DataGridInner<T extends Record<string, unknown>>(
                     className={cn(
                       "border-b border-terminal-gridLine/40",
                       striped && rowIndex % 2 === 1 && "bg-terminal-black/20",
-                      isSelected && "bg-terminal-accent/20 text-terminal-accent",
+                      isSelected &&
+                        "bg-terminal-accent/20 text-terminal-accent",
                       onRowClick &&
                         "cursor-pointer hover:bg-terminal-accent hover:text-terminal-background focus-visible:bg-terminal-accent focus-visible:text-terminal-background",
                     )}
@@ -324,7 +325,8 @@ function DataGridInner<T extends Record<string, unknown>>(
                           compact ? "py-1" : "py-1",
                           column.align === "center" && "text-center",
                           column.align === "right" && "text-right",
-                          colIndex > 0 && "border-l border-terminal-gridLine/30",
+                          colIndex > 0 &&
+                            "border-l border-terminal-gridLine/30",
                         )}
                       >
                         {column.render

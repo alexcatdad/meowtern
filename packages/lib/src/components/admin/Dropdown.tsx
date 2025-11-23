@@ -214,15 +214,16 @@ export const DropdownSeparator = forwardRef<
   DropdownSeparatorProps
 >(({ className, ...props }, ref) => {
   return (
-    <div
+    <hr
       ref={ref}
-      className={cn("my-0.5 px-2 text-terminal-gridLine text-xs", className)}
-      role="separator"
+      className={cn(
+        "my-0.5 border-0 bg-transparent text-terminal-gridLine text-xs px-2 h-3 flex items-center",
+        "before:content-['─────────────────'] before:block",
+        className,
+      )}
       aria-orientation="horizontal"
       {...props}
-    >
-      ─────────────────
-    </div>
+    />
   );
 });
 

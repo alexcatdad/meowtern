@@ -135,7 +135,6 @@ export interface SidebarFooterProps
 
 export const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
   ({ children, className, ...props }, ref) => {
-    const { collapsed } = useSidebar();
     return (
       <div
         ref={ref}

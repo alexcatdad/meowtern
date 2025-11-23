@@ -115,8 +115,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
         {pageNumbers.map((page, index) => {
           const isLast = index === pageNumbers.length - 1;
           const nextIsEllipsis =
-            index < pageNumbers.length - 1 &&
-            pageNumbers[index + 1] === "...";
+            index < pageNumbers.length - 1 && pageNumbers[index + 1] === "...";
           return page === "..." ? (
             <span
               key={`ellipsis-${index}`}
