@@ -22,7 +22,9 @@ describe("TextEditor", () => {
       <TextEditor value="line 1" onChange={onChange} showHighlight={false} />,
     );
     // TextEditor uses contentEditable div, not textarea
-    const editor = container.querySelector("[contenteditable='true']") as HTMLElement;
+    const editor = container.querySelector(
+      "[contenteditable='true']",
+    ) as HTMLElement;
     expect(editor).toBeTruthy();
     if (editor) {
       editor.textContent = "line 1\nline 2";
