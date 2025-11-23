@@ -23,8 +23,7 @@ export const ScrollableArea = forwardRef<HTMLDivElement, ScrollableAreaProps>(
       if (typeof ref === "function") {
         ref(node);
       } else if (ref) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (ref as any).current = node;
+        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
       }
     };
     return (

@@ -78,15 +78,15 @@ const ensureTsxLanguage = () => {
 
   const tsxGrammar = Prism.languages.tsx as typeof Prism.languages.tsx &
     Record<string, unknown>;
-  delete tsxGrammar.parameter;
-  delete tsxGrammar["literal-property"];
+  tsxGrammar.parameter = undefined;
+  tsxGrammar["literal-property"] = undefined;
 
   const tagToken = tsxGrammar.tag as
     | (Token & { pattern?: RegExp; lookbehind?: boolean })
     | undefined;
-  if (tagToken && tagToken.pattern) {
+  if (tagToken?.pattern) {
     tagToken.pattern = new RegExp(
-      /(^|[^\w$]|(?=<\/))/.source + "(?:" + tagToken.pattern.source + ")",
+      `${/(^|[^\w$]|(?=<\/))/.source}(?:${tagToken.pattern.source})`,
       tagToken.pattern.flags,
     );
     tagToken.lookbehind = true;

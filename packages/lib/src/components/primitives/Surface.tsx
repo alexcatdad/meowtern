@@ -54,7 +54,8 @@ const SurfaceComponent = (
       style={
         isCrt
           ? {
-              boxShadow: `inset 0 0 30px rgba(0,0,0,0.8), 0 0 8px rgba(22,198,12,0.2), inset 0 0 20px rgba(22,198,12,0.05)`,
+              boxShadow:
+                "inset 0 0 30px rgba(0,0,0,0.8), 0 0 8px rgba(22,198,12,0.2), inset 0 0 20px rgba(22,198,12,0.05)",
               ...style,
             }
           : style
