@@ -10,6 +10,8 @@ describe("ThemeProvider", () => {
       </ThemeProvider>,
     );
     const node = getByText("content").parentElement;
-    expect(node?.style.backgroundColor).toBe("rgb(9, 11, 24)");
+    const bgColor = node?.style.backgroundColor;
+    // Accept both hex and rgb formats (browser differences)
+    expect(bgColor === "rgb(9, 11, 24)" || bgColor === "#090b18").toBeTruthy();
   });
 });

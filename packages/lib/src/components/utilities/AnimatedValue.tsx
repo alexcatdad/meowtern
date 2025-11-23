@@ -13,7 +13,7 @@ export const AnimatedValue: React.FC<AnimatedValueProps> = ({
   format = (input) => input.toFixed(0),
 }) => {
   const [displayValue, setDisplayValue] = useState(value);
-  const startRef = useRef<number>();
+  const startRef = useRef<number | undefined>(undefined);
   const initialRef = useRef(value);
   const latestDisplayRef = useRef(value);
 

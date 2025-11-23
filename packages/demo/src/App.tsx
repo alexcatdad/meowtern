@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useOptimistic,
+  useState,
+  useTransition,
+} from "react";
 import {
   type Action,
   ActionBar,
@@ -527,9 +534,25 @@ const themeOptions: TerminalThemeName[] = [
 const MATCH_TOTAL = 8;
 
 function App() {
-  const [themePreset, setThemePreset] =
+  const [, startTransition] = useTransition();
+  const [themePreset, setThemePresetState] =
     useState<TerminalThemeName>("btop-classic");
-  const [activeTab, setActiveTab] = useState("layout");
+  const [activeTab, setActiveTabState] = useState("layout");
+
+  // Use transitions for non-blocking updates
+  const setThemePreset = useCallback((preset: TerminalThemeName) => {
+    startTransition(() => {
+      setThemePresetState(preset);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startTransition is stable
+  }, []);
+
+  const setActiveTab = useCallback((tab: string) => {
+    startTransition(() => {
+      setActiveTabState(tab);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startTransition is stable
+  }, []);
   const [dualPaneActive, setDualPaneActive] = useState<"left" | "right">(
     "left",
   );
@@ -551,6 +574,12 @@ function App() {
     INITIAL_FRAME.throughput,
   );
   const [actionMessage, setActionMessage] = useState("No workflow triggered");
+
+  // Use optimistic updates for workflow actions
+  const [optimisticMessage, setOptimisticMessage] = useOptimistic(
+    actionMessage,
+    (_currentMessage: string, newMessage: string) => newMessage,
+  );
   const [contextMenu, setContextMenu] = useState({
     visible: false,
     position: { x: 0, y: 0 },
@@ -588,13 +617,17 @@ function App() {
 
   useEffect(() => {
     const nextFrame = DATA_FRAMES[dataFrameIndex];
-    setStatMetrics(nextFrame.stats);
-    setResourceUsage(nextFrame.resources);
-    setCoreLoads(nextFrame.cores);
-    setClusterGauge(nextFrame.gauge);
-    setAnimatedThroughput(nextFrame.throughput);
-    setHistoryPoints(nextFrame.history);
-    setLineGraphValues(nextFrame.line);
+    // Use transition for data frame updates to prevent blocking during animations
+    startTransition(() => {
+      setStatMetrics(nextFrame.stats);
+      setResourceUsage(nextFrame.resources);
+      setCoreLoads(nextFrame.cores);
+      setClusterGauge(nextFrame.gauge);
+      setAnimatedThroughput(nextFrame.throughput);
+      setHistoryPoints(nextFrame.history);
+      setLineGraphValues(nextFrame.line);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startTransition is stable
   }, [dataFrameIndex]);
 
   const menuItems = useMemo(
@@ -628,7 +661,7 @@ function App() {
         onSelect: () => setDialogOpen(true),
       },
     ],
-    [],
+    [setThemePreset],
   );
 
   const handleContextMenuAction = (message: string) => {
@@ -657,27 +690,36 @@ function App() {
     {
       id: "deploy",
       label: "Deploy",
-      onSelect: () => {
-        setActionMessage("Deploy dispatched");
+      onSelect: async () => {
+        setOptimisticMessage("Deploy dispatched");
         setLastAction("Deploy dispatched");
+        // Simulate async operation
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        setActionMessage("Deploy dispatched");
       },
     },
     {
       id: "restart",
       label: "Restart pods",
       variant: "secondary",
-      onSelect: () => {
-        setActionMessage("Restart scheduled");
+      onSelect: async () => {
+        setOptimisticMessage("Restart scheduled");
         setLastAction("Restart scheduled");
+        // Simulate async operation
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        setActionMessage("Restart scheduled");
       },
     },
     {
       id: "halt",
       label: "Stop",
       variant: "danger",
-      onSelect: () => {
-        setActionMessage("Stop acknowledged");
+      onSelect: async () => {
+        setOptimisticMessage("Stop acknowledged");
         setLastAction("Stop acknowledged");
+        // Simulate async operation
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        setActionMessage("Stop acknowledged");
       },
     },
   ];
@@ -1027,7 +1069,7 @@ function App() {
         <TerminalBox title="Action Bar">
           <ActionBar actions={workflowActions} />
           <Text variant="dim" className="mt-2">
-            {actionMessage}
+            {optimisticMessage}
           </Text>
         </TerminalBox>
         <TerminalBox title="Keyboard & Tooltip">

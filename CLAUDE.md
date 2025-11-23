@@ -86,8 +86,12 @@ All components follow this pattern:
 
 ## Important Notes
 
-- All components are **client-side only** (React 18+ with hooks)
+- All components are **client-side only** (React 19+ with hooks)
 - The library has **peer dependencies** on `react` and `react-dom` (not bundled)
+- Uses React 19 features for performance:
+  - **Form Actions**: `InputDialog` uses `useActionState` and `useFormStatus` for automatic form handling
+  - **Transitions**: Non-blocking state updates using `useTransition` for theme changes, tab switching, and data updates
+  - **Optimistic Updates**: `useOptimistic` for instant UI feedback on async operations
 - Audio bell uses Web Audio API (`playBell()` in `Input.tsx`)
 - TypeScript is configured with strict mode and ESNext target
 - Do not emit compiled files (`noEmit: true` in tsconfig)
