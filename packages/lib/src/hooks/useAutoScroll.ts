@@ -1,7 +1,7 @@
 import { type RefObject, useCallback, useEffect, useState } from "react";
 
 export const useAutoScroll = (
-  ref: RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement | null>,
   options: { stickToBottom?: boolean; threshold?: number } = {},
 ) => {
   const { stickToBottom = true, threshold = 4 } = options;

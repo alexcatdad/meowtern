@@ -7,8 +7,8 @@ export const useAnimationFrame = (
   options: { enabled?: boolean } = {},
 ) => {
   const { enabled = true } = options;
-  const frameRef = useRef<number>();
-  const prevTimeRef = useRef<number>();
+  const frameRef = useRef<number | undefined>(undefined);
+  const prevTimeRef = useRef<number | undefined>(undefined);
   const callbackRef = useRef<Callback>(callback);
   callbackRef.current = callback;
 
