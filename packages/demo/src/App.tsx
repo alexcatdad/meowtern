@@ -2,8 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ActionBar,
   type Action,
+  AdminTable,
+  type AdminTableColumn,
   AnimatedValue,
   AnsiText,
+  Avatar,
+  AvatarGroup,
   Badge,
   Breadcrumb,
   Button,
@@ -12,6 +16,10 @@ import {
   ContextMenu,
   DataTable,
   Dialog,
+  Dropdown,
+  DropdownItem,
+  DropdownLabel,
+  DropdownSeparator,
   DualPane,
   EditorStatusBar,
   type FileItem,
@@ -34,6 +42,8 @@ import {
   LogViewer,
   MenuBar,
   MonoText,
+  Pagination,
+  PaginationInfo,
   type Process,
   ProcessList,
   ProgressBar,
@@ -42,6 +52,13 @@ import {
   SelectDialog,
   SelectableList,
   Separator,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarItem,
+  SidebarToggle,
   StatCard,
   StatusBar,
   type StatusSegment,
@@ -424,6 +441,26 @@ const SAMPLE_CODE = `export const handler = async () => {
   return response.json();
 };`;
 
+type UserRow = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: "active" | "inactive" | "pending";
+  lastLogin: string;
+};
+
+const USER_DATA: UserRow[] = [
+  { id: "1", name: "Alice Chen", email: "alice@example.com", role: "Admin", status: "active", lastLogin: "2 hours ago" },
+  { id: "2", name: "Bob Smith", email: "bob@example.com", role: "Editor", status: "active", lastLogin: "1 day ago" },
+  { id: "3", name: "Carol Wu", email: "carol@example.com", role: "Viewer", status: "inactive", lastLogin: "2 weeks ago" },
+  { id: "4", name: "David Lee", email: "david@example.com", role: "Editor", status: "pending", lastLogin: "Never" },
+  { id: "5", name: "Eve Martinez", email: "eve@example.com", role: "Admin", status: "active", lastLogin: "5 min ago" },
+  { id: "6", name: "Frank Johnson", email: "frank@example.com", role: "Viewer", status: "active", lastLogin: "3 days ago" },
+  { id: "7", name: "Grace Kim", email: "grace@example.com", role: "Editor", status: "active", lastLogin: "12 hours ago" },
+  { id: "8", name: "Henry Brown", email: "henry@example.com", role: "Viewer", status: "inactive", lastLogin: "1 month ago" },
+];
+
 const themeOptions: TerminalThemeName[] = [
   "btop-classic",
   "polar-night",
@@ -463,6 +500,10 @@ function App() {
     position: { x: 0, y: 0 },
   });
   const [editorValue, setEditorValue] = useState(SAMPLE_CODE);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarActiveItem, setSidebarActiveItem] = useState("dashboard");
+  const [adminPage, setAdminPage] = useState(1);
+  const [selectedUsers, setSelectedUsers] = useState<Set<React.Key>>(new Set());
   const [statMetrics, setStatMetrics] = useState(INITIAL_FRAME.stats);
   const [resourceUsage, setResourceUsage] = useState(INITIAL_FRAME.resources);
   const [coreLoads, setCoreLoads] = useState(INITIAL_FRAME.cores);
@@ -1002,12 +1043,208 @@ function App() {
     </div>
   );
 
+  const userColumns: AdminTableColumn<UserRow>[] = [
+    {
+      key: "name",
+      label: "User",
+      sortable: true,
+      render: (row) => (
+        <div className="flex items-center gap-2">
+          <Avatar name={row.name} size="sm" status={row.status === "active" ? "online" : row.status === "pending" ? "away" : "offline"} />
+          <span>{row.name}</span>
+        </div>
+      ),
+    },
+    { key: "email", label: "Email", sortable: true },
+    { key: "role", label: "Role" },
+    {
+      key: "status",
+      label: "Status",
+      render: (row) => (
+        <Badge variant={row.status === "active" ? "success" : row.status === "pending" ? "warning" : "neutral"} dot>
+          {row.status}
+        </Badge>
+      ),
+    },
+    { key: "lastLogin", label: "Last Login", align: "right" },
+    {
+      key: "actions",
+      label: "",
+      width: "50px",
+      render: (row) => (
+        <Dropdown
+          trigger={<Button size="sm" variant="ghost">...</Button>}
+          align="right"
+        >
+          <DropdownLabel>Actions</DropdownLabel>
+          <DropdownItem onClick={() => setLastAction(`Edit ${row.name}`)}>Edit user</DropdownItem>
+          <DropdownItem onClick={() => setLastAction(`Reset password for ${row.name}`)}>Reset password</DropdownItem>
+          <DropdownSeparator />
+          <DropdownItem destructive onClick={() => setLastAction(`Delete ${row.name}`)}>Delete user</DropdownItem>
+        </Dropdown>
+      ),
+    },
+  ];
+
+  const adminTab = (
+    <div className="space-y-4">
+      <TerminalGrid columns={2} gap="md">
+        <TerminalBox title="Sidebar Navigation" className="min-h-[300px]">
+          <div className="flex h-full border border-terminal-gridLine">
+            <Sidebar
+              collapsed={sidebarCollapsed}
+              onCollapsedChange={setSidebarCollapsed}
+              width="180px"
+            >
+              <SidebarHeader>
+                <SidebarToggle />
+                {!sidebarCollapsed && <Text variant="bold" className="ml-2">Admin</Text>}
+              </SidebarHeader>
+              <SidebarContent>
+                <SidebarGroup label="Main">
+                  <SidebarItem
+                    icon={<span>◈</span>}
+                    active={sidebarActiveItem === "dashboard"}
+                    onClick={() => { setSidebarActiveItem("dashboard"); setLastAction("Dashboard"); }}
+                  >
+                    Dashboard
+                  </SidebarItem>
+                  <SidebarItem
+                    icon={<span>◎</span>}
+                    active={sidebarActiveItem === "users"}
+                    badge={<Badge variant="info">8</Badge>}
+                    onClick={() => { setSidebarActiveItem("users"); setLastAction("Users"); }}
+                  >
+                    Users
+                  </SidebarItem>
+                  <SidebarItem
+                    icon={<span>⚙</span>}
+                    active={sidebarActiveItem === "settings"}
+                    onClick={() => { setSidebarActiveItem("settings"); setLastAction("Settings"); }}
+                  >
+                    Settings
+                  </SidebarItem>
+                </SidebarGroup>
+                <SidebarGroup label="Reports">
+                  <SidebarItem
+                    icon={<span>▤</span>}
+                    active={sidebarActiveItem === "analytics"}
+                    onClick={() => { setSidebarActiveItem("analytics"); setLastAction("Analytics"); }}
+                  >
+                    Analytics
+                  </SidebarItem>
+                  <SidebarItem
+                    icon={<span>⚡</span>}
+                    active={sidebarActiveItem === "logs"}
+                    onClick={() => { setSidebarActiveItem("logs"); setLastAction("Logs"); }}
+                  >
+                    Logs
+                  </SidebarItem>
+                </SidebarGroup>
+              </SidebarContent>
+              <SidebarFooter>
+                <SidebarItem icon={<span>?</span>} onClick={() => setLastAction("Help clicked")}>
+                  Help
+                </SidebarItem>
+              </SidebarFooter>
+            </Sidebar>
+            <div className="flex-1 p-4">
+              <Text variant="dim">Active: {sidebarActiveItem}</Text>
+            </div>
+          </div>
+        </TerminalBox>
+        <TerminalBox title="Avatar Components">
+          <div className="space-y-4">
+            <div>
+              <Text variant="dim" className="mb-2 block">Sizes & Status</Text>
+              <div className="flex items-end gap-3">
+                <Avatar name="Alice Chen" size="xs" status="online" />
+                <Avatar name="Bob Smith" size="sm" status="away" />
+                <Avatar name="Carol Wu" size="md" status="busy" />
+                <Avatar name="David Lee" size="lg" status="offline" />
+                <Avatar src="https://api.dicebear.com/7.x/pixel-art/svg?seed=demo" size="xl" />
+              </div>
+            </div>
+            <div>
+              <Text variant="dim" className="mb-2 block">Avatar Group</Text>
+              <AvatarGroup max={4}>
+                <Avatar name="Alice Chen" />
+                <Avatar name="Bob Smith" />
+                <Avatar name="Carol Wu" />
+                <Avatar name="David Lee" />
+                <Avatar name="Eve Martinez" />
+                <Avatar name="Frank Johnson" />
+              </AvatarGroup>
+            </div>
+            <div>
+              <Text variant="dim" className="mb-2 block">Square Avatars</Text>
+              <div className="flex gap-2">
+                <Avatar name="Terminal" size="md" square />
+                <Avatar name="Admin" size="md" square status="online" />
+              </div>
+            </div>
+          </div>
+        </TerminalBox>
+      </TerminalGrid>
+
+      <TerminalBox title="Admin Table with Selection & Pagination">
+        <AdminTable<UserRow>
+          columns={userColumns}
+          data={USER_DATA}
+          getRowKey={(row) => row.id}
+          selectable
+          selectedRows={selectedUsers}
+          onSelectionChange={setSelectedUsers}
+          pagination
+          pageSize={4}
+          currentPage={adminPage}
+          onPageChange={setAdminPage}
+          striped
+          initialSort={{ key: "name", direction: "asc" }}
+          onRowClick={(row) => setLastAction(`Clicked ${row.name}`)}
+        />
+      </TerminalBox>
+
+      <TerminalGrid columns={2} gap="md">
+        <TerminalBox title="Dropdown Menu">
+          <div className="flex gap-4">
+            <Dropdown trigger={<Button size="sm">Actions</Button>}>
+              <DropdownItem icon={<span>+</span>} shortcut="Ctrl+N">New item</DropdownItem>
+              <DropdownItem icon={<span>↺</span>}>Refresh</DropdownItem>
+              <DropdownSeparator />
+              <DropdownLabel>Danger Zone</DropdownLabel>
+              <DropdownItem destructive icon={<span>×</span>}>Delete all</DropdownItem>
+            </Dropdown>
+            <Dropdown trigger={<Button size="sm" variant="secondary">Right-aligned</Button>} align="right">
+              <DropdownItem onClick={() => setLastAction("Export CSV")}>Export CSV</DropdownItem>
+              <DropdownItem onClick={() => setLastAction("Export JSON")}>Export JSON</DropdownItem>
+            </Dropdown>
+          </div>
+        </TerminalBox>
+        <TerminalBox title="Standalone Pagination">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <PaginationInfo currentPage={adminPage} pageSize={4} totalItems={USER_DATA.length} />
+              <Pagination
+                currentPage={adminPage}
+                totalPages={Math.ceil(USER_DATA.length / 4)}
+                onPageChange={setAdminPage}
+              />
+            </div>
+            <Text variant="dim">Page {adminPage} of {Math.ceil(USER_DATA.length / 4)}</Text>
+          </div>
+        </TerminalBox>
+      </TerminalGrid>
+    </div>
+  );
+
   const tabs = [
     { id: "layout", label: "Layout", content: layoutTab },
     { id: "data", label: "Data Viz", content: dataTab },
     { id: "content", label: "Content", content: contentTab },
     { id: "interaction", label: "Interaction", content: interactionTab },
     { id: "editor", label: "Editor", content: editorTab },
+    { id: "admin", label: "Admin", content: adminTab },
   ];
 
   const statusSegments: StatusSegment[] = [
