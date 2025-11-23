@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import { cn } from "../../utils/cn";
+import { useControlledState } from "../../hooks/useControlledState";
 
 export interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   trigger: React.ReactElement;
@@ -33,24 +34,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     },
     ref,
   ) => {
-    const [internalOpen, setInternalOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const menuId = useId();
 
-    const isControlled = controlledOpen !== undefined;
-    const open = isControlled ? controlledOpen : internalOpen;
-
-    const setOpen = useCallback(
-      (value: boolean) => {
-        if (!isControlled) {
-          setInternalOpen(value);
-        }
-        onOpenChange?.(value);
-      },
-      [isControlled, onOpenChange],
-    );
-
+    const [open, setOpen] = useControlledState(controlledOpen, false, onOpenChange);
     const [focusedIndex, setFocusedIndex] = useState(-1);
 
     useEffect(() => {

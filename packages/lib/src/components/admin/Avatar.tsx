@@ -1,38 +1,17 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useMemo, useState } from "react";
 import { cn } from "../../utils/cn";
+import {
+  type ComponentSize,
+  type StatusType,
+  avatarColors,
+  sizeClasses,
+  statusColors,
+  statusIndicatorSizes,
+  statusLabels,
+} from "../../styles/sizeClasses";
 
-type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
-type AvatarStatus = "online" | "offline" | "away" | "busy";
-
-const sizeClasses: Record<AvatarSize, string> = {
-  xs: "h-6 w-6 text-[10px]",
-  sm: "h-8 w-8 text-xs",
-  md: "h-10 w-10 text-sm",
-  lg: "h-12 w-12 text-base",
-  xl: "h-16 w-16 text-lg",
-};
-
-const statusColors: Record<AvatarStatus, string> = {
-  online: "bg-terminal-green",
-  offline: "bg-terminal-brightBlack",
-  away: "bg-terminal-yellow",
-  busy: "bg-terminal-red",
-};
-
-const statusLabels: Record<AvatarStatus, string> = {
-  online: "Online",
-  offline: "Offline",
-  away: "Away",
-  busy: "Busy",
-};
-
-const statusSizes: Record<AvatarSize, string> = {
-  xs: "h-1.5 w-1.5",
-  sm: "h-2 w-2",
-  md: "h-2.5 w-2.5",
-  lg: "h-3 w-3",
-  xl: "h-4 w-4",
-};
+type AvatarSize = ComponentSize;
+type AvatarStatus = StatusType;
 
 export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string;
@@ -53,20 +32,12 @@ const getInitials = (name: string): string => {
 };
 
 const getColorFromName = (name: string): string => {
-  const colors = [
-    "bg-terminal-red",
-    "bg-terminal-green",
-    "bg-terminal-yellow",
-    "bg-terminal-blue",
-    "bg-terminal-magenta",
-    "bg-terminal-cyan",
-  ];
   if (!name) return "bg-terminal-brightBlack";
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
   }
-  return colors[Math.abs(hash) % colors.length];
+  return avatarColors[Math.abs(hash) % avatarColors.length];
 };
 
 export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
@@ -86,7 +57,10 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
     const [imgError, setImgError] = useState(false);
     const showFallback = !src || imgError;
     const initials = name ? getInitials(name) : "?";
-    const bgColor = name ? getColorFromName(name) : "bg-terminal-brightBlack";
+    const bgColor = useMemo(
+      () => (name ? getColorFromName(name) : "bg-terminal-brightBlack"),
+      [name],
+    );
 
     return (
       <div
@@ -122,7 +96,7 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             className={cn(
               "absolute bottom-0 right-0 rounded-full ring-2 ring-terminal-background",
               statusColors[status],
-              statusSizes[size],
+              statusIndicatorSizes[size],
             )}
             role="status"
             aria-label={statusLabels[status]}

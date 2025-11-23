@@ -1,5 +1,5 @@
 import type React from "react";
-import { createContext, forwardRef, useContext, useState } from "react";
+import { createContext, forwardRef, useMemo, useContext, useState } from "react";
 import { cn } from "../../utils/cn";
 
 interface SidebarContextValue {
@@ -51,8 +51,13 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
       onCollapsedChange?.(value);
     };
 
+    const contextValue = useMemo(
+      () => ({ collapsed, setCollapsed }),
+      [collapsed, setCollapsed],
+    );
+
     return (
-      <SidebarContext.Provider value={{ collapsed, setCollapsed }}>
+      <SidebarContext.Provider value={contextValue}>
         <nav
           ref={ref}
           aria-label="Sidebar navigation"
