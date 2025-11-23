@@ -7,6 +7,7 @@ export interface InputProps
   prefix?: string;
   onEnter?: (value: string) => void;
   bellOnBackspace?: boolean;
+  formAction?: (formData: FormData) => void | Promise<void>;
 }
 
 export const playBell = () => {
@@ -70,6 +71,7 @@ export const Input: React.FC<InputProps> = ({
   onEnter,
   bellOnBackspace = true,
   onKeyDown,
+  formAction,
   ...props
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -96,6 +98,7 @@ export const Input: React.FC<InputProps> = ({
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck="false"
+        formAction={formAction}
         {...props}
       />
     </div>

@@ -3,7 +3,7 @@ import { type RefObject, useEffect } from "react";
 type Direction = "vertical" | "horizontal" | "both";
 
 export const useSyncedScroll = (
-  refs: RefObject<HTMLElement>[],
+  refs: RefObject<HTMLElement | null>[],
   options: { direction?: Direction } = {},
 ) => {
   const { direction = "vertical" } = options;
