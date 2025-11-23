@@ -126,8 +126,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             ref={menuRef}
             id={menuId}
             className={cn(
-              "absolute z-50 min-w-[160px] py-1",
-              "border border-terminal-gridLine bg-terminal-background shadow-lg",
+              "absolute z-50 min-w-[160px] py-0.5",
+              "border-2 border-terminal-gridLine bg-terminal-background",
               align === "left" ? "left-0" : "right-0",
             )}
             style={{ marginTop: sideOffset }}
@@ -172,11 +172,11 @@ export const DropdownItem = forwardRef<HTMLButtonElement, DropdownItemProps>(
         disabled={disabled}
         tabIndex={-1}
         className={cn(
-          "flex w-full items-center gap-2 px-3 py-1.5 text-sm font-mono text-left",
-          "transition-colors focus:outline-none",
+          "flex w-full items-center gap-2 px-2 py-1 text-sm font-mono text-left",
+          "focus:outline-none",
           destructive
-            ? "text-terminal-red hover:bg-terminal-red/10 focus:bg-terminal-red/10"
-            : "text-terminal-foreground hover:bg-terminal-brightBlack/20 focus:bg-terminal-brightBlack/20",
+            ? "text-terminal-red hover:bg-terminal-red hover:text-terminal-background focus:bg-terminal-red focus:text-terminal-background"
+            : "text-terminal-foreground hover:bg-terminal-accent hover:text-terminal-background focus:bg-terminal-accent focus:text-terminal-background",
           disabled && "cursor-not-allowed opacity-50",
           className,
         )}
@@ -214,11 +214,15 @@ export const DropdownSeparator = forwardRef<
   DropdownSeparatorProps
 >(({ className, ...props }, ref) => {
   return (
-    <hr
+    <div
       ref={ref}
-      className={cn("my-1 h-px border-0 bg-terminal-gridLine", className)}
+      className={cn("my-0.5 px-2 text-terminal-gridLine text-xs", className)}
+      role="separator"
+      aria-orientation="horizontal"
       {...props}
-    />
+    >
+      ─────────────────
+    </div>
   );
 });
 
@@ -233,7 +237,7 @@ export const DropdownLabel = forwardRef<HTMLDivElement, DropdownLabelProps>(
       <div
         ref={ref}
         className={cn(
-          "px-3 py-1.5 text-xs font-mono uppercase tracking-wider text-terminal-brightBlack",
+          "px-2 py-0.5 text-xs font-mono uppercase tracking-wider text-terminal-brightBlack border-b border-terminal-gridLine/40",
           className,
         )}
         role="presentation"

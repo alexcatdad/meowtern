@@ -182,7 +182,7 @@ function DataGridInner<T extends Record<string, unknown>>(
   }
 
   return (
-    <div ref={ref} className={cn("flex flex-col gap-4", className)} {...props}>
+    <div ref={ref} className={cn("flex flex-col gap-2", className)} {...props}>
       <div className="overflow-auto border border-terminal-gridLine">
         <table
           className="min-w-full border-collapse font-mono text-sm"
@@ -198,7 +198,7 @@ function DataGridInner<T extends Record<string, unknown>>(
               {selectable && (
                 <th
                   scope="col"
-                  className="w-10 border-b border-terminal-gridLine px-3 py-2"
+                  className="w-10 border-b border-terminal-gridLine px-2 py-1"
                 >
                   <input
                     type="checkbox"
@@ -212,7 +212,7 @@ function DataGridInner<T extends Record<string, unknown>>(
                   />
                 </th>
               )}
-              {columns.map((column) => (
+              {columns.map((column, colIndex) => (
                 <th
                   key={String(column.key)}
                   scope="col"
@@ -223,17 +223,18 @@ function DataGridInner<T extends Record<string, unknown>>(
                       : undefined
                   }
                   className={cn(
-                    "border-b border-terminal-gridLine px-3",
-                    compact ? "py-1.5" : "py-2",
+                    "border-b border-terminal-gridLine px-2",
+                    compact ? "py-1" : "py-1",
                     "text-left",
                     column.align === "center" && "text-center",
                     column.align === "right" && "text-right",
+                    colIndex > 0 && "border-l border-terminal-gridLine/30",
                   )}
                 >
                   {column.sortable ? (
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 uppercase tracking-wider text-terminal-accent transition-colors hover:text-terminal-accent/70"
+                      className="inline-flex items-center gap-1 uppercase tracking-wider text-terminal-accent transition-colors hover:bg-terminal-accent hover:text-terminal-background"
                       onClick={() => toggleSort(column.key as string)}
                       aria-label={`Sort by ${column.label}`}
                     >
@@ -258,7 +259,7 @@ function DataGridInner<T extends Record<string, unknown>>(
               <tr>
                 <td
                   colSpan={columns.length + (selectable ? 1 : 0)}
-                  className="px-3 py-8 text-center text-terminal-brightBlack"
+                  className="px-2 py-4 text-center text-terminal-brightBlack"
                 >
                   <div className="flex items-center justify-center gap-2">
                     <span className="animate-pulse">Loading...</span>
@@ -270,7 +271,7 @@ function DataGridInner<T extends Record<string, unknown>>(
               <tr>
                 <td
                   colSpan={columns.length + (selectable ? 1 : 0)}
-                  className="px-3 py-8 text-center text-terminal-brightBlack"
+                  className="px-2 py-4 text-center text-terminal-brightBlack"
                 >
                   {emptyState}
                 </td>
@@ -285,11 +286,11 @@ function DataGridInner<T extends Record<string, unknown>>(
                   <tr
                     key={rowKey}
                     className={cn(
-                      "border-b border-terminal-gridLine/40 transition-colors",
+                      "border-b border-terminal-gridLine/40",
                       striped && rowIndex % 2 === 1 && "bg-terminal-black/20",
-                      isSelected && "bg-terminal-accent/10",
+                      isSelected && "bg-terminal-accent/20 text-terminal-accent",
                       onRowClick &&
-                        "cursor-pointer hover:bg-terminal-black/40 focus-visible:bg-terminal-black/50",
+                        "cursor-pointer hover:bg-terminal-accent hover:text-terminal-background focus-visible:bg-terminal-accent focus-visible:text-terminal-background",
                     )}
                     onClick={() => onRowClick?.(row)}
                     tabIndex={onRowClick ? 0 : undefined}
@@ -302,7 +303,7 @@ function DataGridInner<T extends Record<string, unknown>>(
                   >
                     {selectable && (
                       <td
-                        className={cn("px-3", compact ? "py-1.5" : "py-2")}
+                        className={cn("px-2", compact ? "py-1" : "py-1")}
                         onClick={(e) => e.stopPropagation()}
                         onKeyDown={(e) => e.stopPropagation()}
                       >
@@ -315,14 +316,15 @@ function DataGridInner<T extends Record<string, unknown>>(
                         />
                       </td>
                     )}
-                    {columns.map((column) => (
+                    {columns.map((column, colIndex) => (
                       <td
                         key={String(column.key)}
                         className={cn(
-                          "px-3 align-top text-terminal-foreground",
-                          compact ? "py-1.5" : "py-2",
+                          "px-2 align-top text-terminal-foreground",
+                          compact ? "py-1" : "py-1",
                           column.align === "center" && "text-center",
                           column.align === "right" && "text-right",
+                          colIndex > 0 && "border-l border-terminal-gridLine/30",
                         )}
                       >
                         {column.render
@@ -357,7 +359,7 @@ function DataGridInner<T extends Record<string, unknown>>(
       )}
 
       {selectable && selectedRows.size > 0 && (
-        <div className="text-sm text-terminal-brightBlack">
+        <div className="text-xs text-terminal-brightBlack border-t border-terminal-gridLine pt-2">
           {selectedRows.size} row{selectedRows.size !== 1 ? "s" : ""} selected
         </div>
       )}

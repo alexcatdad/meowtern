@@ -81,17 +81,25 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
       <nav
         ref={ref}
         aria-label="Pagination"
-        className={cn("flex items-center gap-1 font-mono text-sm", className)}
+        className={cn(
+          "flex items-center gap-0.5 font-mono text-sm border border-terminal-gridLine px-1 py-0.5",
+          className,
+        )}
         {...props}
       >
         {showFirstLast && (
-          <PaginationButton
-            onClick={() => onPageChange(1)}
-            disabled={currentPage === 1}
-            aria-label="Go to first page"
-          >
-            {"<<"}
-          </PaginationButton>
+          <>
+            <PaginationButton
+              onClick={() => onPageChange(1)}
+              disabled={currentPage === 1}
+              aria-label="Go to first page"
+            >
+              {"<<"}
+            </PaginationButton>
+            <span className="text-terminal-gridLine px-0.5" aria-hidden="true">
+              │
+            </span>
+          </>
         )}
         <PaginationButton
           onClick={() => onPageChange(currentPage - 1)}
@@ -100,29 +108,49 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
         >
           {"<"}
         </PaginationButton>
+        <span className="text-terminal-gridLine px-0.5" aria-hidden="true">
+          │
+        </span>
 
-        {pageNumbers.map((page, index) =>
-          page === "..." ? (
+        {pageNumbers.map((page, index) => {
+          const isLast = index === pageNumbers.length - 1;
+          const nextIsEllipsis =
+            index < pageNumbers.length - 1 &&
+            pageNumbers[index + 1] === "...";
+          return page === "..." ? (
             <span
               key={`ellipsis-${index}`}
-              className="px-2 text-terminal-brightBlack"
+              className="px-1 text-terminal-brightBlack"
               aria-hidden="true"
             >
               ...
             </span>
           ) : (
-            <PaginationButton
-              key={page}
-              onClick={() => onPageChange(page)}
-              active={currentPage === page}
-              aria-label={`Go to page ${page}`}
-              aria-current={currentPage === page ? "page" : undefined}
-            >
-              {page}
-            </PaginationButton>
-          ),
-        )}
+            <>
+              <PaginationButton
+                key={page}
+                onClick={() => onPageChange(page)}
+                active={currentPage === page}
+                aria-label={`Go to page ${page}`}
+                aria-current={currentPage === page ? "page" : undefined}
+              >
+                {page}
+              </PaginationButton>
+              {!isLast && !nextIsEllipsis && (
+                <span
+                  className="text-terminal-gridLine px-0.5"
+                  aria-hidden="true"
+                >
+                  │
+                </span>
+              )}
+            </>
+          );
+        })}
 
+        <span className="text-terminal-gridLine px-0.5" aria-hidden="true">
+          │
+        </span>
         <PaginationButton
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
@@ -131,13 +159,18 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
           {">"}
         </PaginationButton>
         {showFirstLast && (
-          <PaginationButton
-            onClick={() => onPageChange(totalPages)}
-            disabled={currentPage === totalPages}
-            aria-label="Go to last page"
-          >
-            {">>"}
-          </PaginationButton>
+          <>
+            <span className="text-terminal-gridLine px-0.5" aria-hidden="true">
+              │
+            </span>
+            <PaginationButton
+              onClick={() => onPageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              aria-label="Go to last page"
+            >
+              {">>"}
+            </PaginationButton>
+          </>
         )}
       </nav>
     );
@@ -159,11 +192,11 @@ const PaginationButton = forwardRef<HTMLButtonElement, PaginationButtonProps>(
         type="button"
         disabled={disabled}
         className={cn(
-          "min-w-[32px] px-2 py-1 transition-colors",
+          "min-w-[28px] px-1.5 py-0.5",
           "focus:outline-none focus-visible:ring-1 focus-visible:ring-terminal-accent",
           active
             ? "bg-terminal-accent text-terminal-background"
-            : "text-terminal-foreground hover:bg-terminal-brightBlack/20 hover:text-terminal-brightWhite",
+            : "text-terminal-foreground hover:bg-terminal-accent hover:text-terminal-background",
           disabled && "cursor-not-allowed opacity-40",
           className,
         )}
@@ -192,7 +225,10 @@ export const PaginationInfo = forwardRef<HTMLDivElement, PaginationInfoProps>(
     return (
       <div
         ref={ref}
-        className={cn("font-mono text-sm text-terminal-brightBlack", className)}
+        className={cn(
+          "font-mono text-xs text-terminal-brightBlack border border-terminal-gridLine px-2 py-0.5",
+          className,
+        )}
         aria-live="polite"
         {...props}
       >
