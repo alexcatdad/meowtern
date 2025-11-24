@@ -1,8 +1,8 @@
 {
+  "root": "packages/demo",
   "buildCommand": "bun run build",
-  "outputDirectory": "packages/demo/dist",
-  "installCommand": "bun install",
-  "framework": "vite",
+  "outputDirectory": "dist",
+  "installCommand": "cd ../.. && bun install",
   "rewrites": [
     {
       "source": "/(.*)",
