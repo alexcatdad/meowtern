@@ -72,7 +72,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
           ref={ref}
           aria-label="Sidebar navigation"
           className={cn(
-            "flex h-full flex-col border-r border-terminal-gridLine bg-terminal-background font-mono transition-all duration-200",
+            "flex h-full flex-col border-r-2 border-terminal-gridLine bg-terminal-background font-mono",
             className,
           )}
           style={{ width: collapsed ? collapsedWidth : width }}
@@ -97,8 +97,8 @@ export const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
       <div
         ref={ref}
         className={cn(
-          "flex items-center border-b border-terminal-gridLine px-3 py-3",
-          collapsed && "justify-center px-2",
+          "flex items-center border-b border-terminal-gridLine px-2 py-1.5",
+          collapsed && "justify-center",
           className,
         )}
         {...props}
@@ -119,7 +119,7 @@ export const SidebarContent = forwardRef<HTMLDivElement, SidebarContentProps>(
     return (
       <div
         ref={ref}
-        className={cn("flex-1 overflow-y-auto py-2", className)}
+        className={cn("flex-1 overflow-y-auto py-1", className)}
         {...props}
       >
         {children}
@@ -135,13 +135,11 @@ export interface SidebarFooterProps
 
 export const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
   ({ children, className, ...props }, ref) => {
-    const { collapsed } = useSidebar();
     return (
       <div
         ref={ref}
         className={cn(
-          "border-t border-terminal-gridLine px-3 py-3",
-          collapsed && "px-2",
+          "border-t border-terminal-gridLine px-2 py-1.5",
           className,
         )}
         {...props}
@@ -163,10 +161,10 @@ export const SidebarGroup = forwardRef<HTMLDivElement, SidebarGroupProps>(
   ({ children, className, label, ...props }, ref) => {
     const { collapsed } = useSidebar();
     return (
-      <div ref={ref} className={cn("py-2", className)} {...props}>
+      <div ref={ref} className={cn("py-1", className)} {...props}>
         {label && !collapsed && (
           <div
-            className="px-3 py-1 text-xs uppercase tracking-wider text-terminal-brightBlack"
+            className="px-2 py-0.5 text-xs uppercase tracking-wider text-terminal-brightBlack border-b border-terminal-gridLine/40 mb-0.5"
             aria-hidden="true"
           >
             {label}
@@ -174,9 +172,11 @@ export const SidebarGroup = forwardRef<HTMLDivElement, SidebarGroupProps>(
         )}
         {collapsed && label && (
           <div
-            className="mx-auto my-1 h-px w-6 bg-terminal-gridLine"
+            className="mx-auto my-1 text-terminal-gridLine"
             aria-hidden="true"
-          />
+          >
+            ─
+          </div>
         )}
         <div className="space-y-0.5">{children}</div>
       </div>
@@ -203,19 +203,19 @@ export const SidebarItem = forwardRef<HTMLButtonElement, SidebarItemProps>(
         type="button"
         aria-current={active ? "page" : undefined}
         className={cn(
-          "flex w-full items-center gap-3 px-3 py-2 text-sm transition-colors",
-          "text-terminal-foreground hover:bg-terminal-brightBlack/20 hover:text-terminal-brightWhite",
+          "flex w-full items-center gap-2 px-2 py-1 text-sm",
+          "text-terminal-foreground hover:bg-terminal-accent hover:text-terminal-background",
           "focus:outline-none focus-visible:ring-1 focus-visible:ring-terminal-accent",
           active &&
-            "bg-terminal-accent/10 text-terminal-accent border-r-2 border-terminal-accent",
-          collapsed && "justify-center px-2",
+            "bg-terminal-accent text-terminal-background border-r-2 border-terminal-accent",
+          collapsed && "justify-center",
           className,
         )}
         {...props}
       >
         {icon && (
           <span
-            className="flex h-5 w-5 shrink-0 items-center justify-center"
+            className="flex h-4 w-4 shrink-0 items-center justify-center"
             aria-hidden="true"
           >
             {icon}
@@ -242,8 +242,8 @@ export const SidebarToggle = forwardRef<HTMLButtonElement, SidebarToggleProps>(
         type="button"
         onClick={() => setCollapsed(!collapsed)}
         className={cn(
-          "flex h-8 w-8 items-center justify-center rounded text-terminal-foreground",
-          "hover:bg-terminal-brightBlack/20 hover:text-terminal-brightWhite",
+          "flex h-6 w-6 items-center justify-center text-terminal-foreground",
+          "hover:bg-terminal-accent hover:text-terminal-background",
           "focus:outline-none focus-visible:ring-1 focus-visible:ring-terminal-accent",
           className,
         )}

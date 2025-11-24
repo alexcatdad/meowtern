@@ -1,0 +1,11 @@
+node_modules
+.git
+.github
+packages/lib
+*.test.tsx
+*.test.ts
+bunfig.toml
+biome.json
+CLAUDE.md
+README.md
+
