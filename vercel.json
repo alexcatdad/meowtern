@@ -1,8 +1,7 @@
 {
-  "root": "packages/demo",
-  "buildCommand": "bun run build",
-  "outputDirectory": "dist",
-  "installCommand": "cd ../.. && bun install",
+  "buildCommand": "bun run --filter web-tui-demo build",
+  "outputDirectory": "packages/demo/dist",
+  "installCommand": "bun install",
   "rewrites": [
     {
       "source": "/(.*)",
