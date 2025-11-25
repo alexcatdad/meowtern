@@ -1,7 +1,6 @@
 node_modules
 .git
 .github
-packages/lib
 *.test.tsx
 *.test.ts
 bunfig.toml
