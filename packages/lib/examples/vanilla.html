@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>web-tui - Vanilla HTML Example</title>
+  <link rel="stylesheet" href="../src/css/web-tui.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      min-height: 100vh;
+      background-color: var(--tui-bg);
+      font-family: var(--tui-font-mono);
+    }
+    .demo-section {
+      margin-bottom: 2rem;
+    }
+    .demo-title {
+      color: var(--tui-accent);
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body data-theme="dark" data-tui-auto-init>
+
+  <!-- Theme Switcher -->
+  <div style="position: fixed; top: 1rem; right: 1rem; z-index: 1000;">
+    <select id="theme-select" class="tui-input" style="width: auto;">
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+      <option value="btop-classic">btop Classic</option>
+      <option value="polar-night">Polar Night</option>
+      <option value="retro-amber">Retro Amber</option>
+      <option value="matrix-green">Matrix Green</option>
+      <option value="red-alert">Red Alert</option>
+    </select>
+  </div>
+
+  <!-- Terminal Window -->
+  <div class="demo-section">
+    <div class="tui-window" style="max-width: 800px;">
+      <div class="tui-window-header">
+        <div class="tui-window-controls">
+          <button class="tui-window-control tui-window-control-close"></button>
+          <button class="tui-window-control tui-window-control-minimize"></button>
+          <button class="tui-window-control tui-window-control-maximize"></button>
+        </div>
+        <span class="tui-window-title">web-tui Demo</span>
+        <div style="width: 52px;"></div>
+      </div>
+      <div class="tui-window-body">
+
+        <!-- Text Variants -->
+        <div class="demo-section">
+          <div class="demo-title">Text Variants</div>
+          <p class="tui-text">Default text</p>
+          <p class="tui-text tui-text-dim">Dimmed text</p>
+          <p class="tui-text tui-text-bold">Bold text</p>
+          <p class="tui-text tui-text-success">Success text</p>
+          <p class="tui-text tui-text-warning">Warning text</p>
+          <p class="tui-text tui-text-error">Error text</p>
+          <p class="tui-text tui-text-info">Info text</p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="demo-section">
+          <div class="demo-title">Buttons</div>
+          <div class="tui-flex tui-gap-2" style="flex-wrap: wrap;">
+            <button class="tui-btn">Default</button>
+            <button class="tui-btn tui-btn-primary">Primary</button>
+            <button class="tui-btn tui-btn-secondary">Secondary</button>
+            <button class="tui-btn tui-btn-success">Success</button>
+            <button class="tui-btn tui-btn-danger">Danger</button>
+            <button class="tui-btn tui-btn-ghost">Ghost</button>
+            <button class="tui-btn" disabled>Disabled</button>
+          </div>
+          <div class="tui-flex tui-gap-2" style="margin-top: 0.5rem;">
+            <button class="tui-btn tui-btn-primary tui-btn-sm">Small</button>
+            <button class="tui-btn tui-btn-primary">Medium</button>
+            <button class="tui-btn tui-btn-primary tui-btn-lg">Large</button>
+          </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="demo-section">
+          <div class="demo-title">Badges</div>
+          <div class="tui-flex tui-gap-2">
+            <span class="tui-badge">Default</span>
+            <span class="tui-badge tui-badge-success">Success</span>
+            <span class="tui-badge tui-badge-warning">Warning</span>
+            <span class="tui-badge tui-badge-danger">Danger</span>
+            <span class="tui-badge tui-badge-info">Info</span>
+            <span class="tui-badge tui-badge-accent">Accent</span>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="demo-section">
+          <div class="demo-title">Input</div>
+          <div class="tui-input" style="max-width: 400px;">
+            <span class="tui-input-prefix">$</span>
+            <input type="text" class="tui-input-field" placeholder="Type a command...">
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="demo-section">
+          <div class="demo-title">Tabs</div>
+          <div class="tui-tabs" data-auto-init>
+            <div class="tui-tabs-list">
+              <button class="tui-tab" data-tab-id="tab1">Overview</button>
+              <button class="tui-tab" data-tab-id="tab2">Details</button>
+              <button class="tui-tab" data-tab-id="tab3">Settings</button>
+            </div>
+            <div class="tui-tab-panel" data-tab-id="tab1">
+              <p class="tui-text">This is the overview panel content.</p>
+            </div>
+            <div class="tui-tab-panel" data-tab-id="tab2">
+              <p class="tui-text">This is the details panel content.</p>
+            </div>
+            <div class="tui-tab-panel" data-tab-id="tab3">
+              <p class="tui-text">This is the settings panel content.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bars -->
+        <div class="demo-section">
+          <div class="demo-title">Progress Bars</div>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 400px;">
+            <div class="tui-progress">
+              <div class="tui-progress-bar" style="width: 75%;"></div>
+            </div>
+            <div class="tui-progress">
+              <div class="tui-progress-bar tui-progress-bar-success" style="width: 60%;"></div>
+            </div>
+            <div class="tui-progress">
+              <div class="tui-progress-bar tui-progress-bar-warning" style="width: 45%;"></div>
+            </div>
+            <div class="tui-progress">
+              <div class="tui-progress-bar tui-progress-bar-danger" style="width: 30%;"></div>
+            </div>
+            <div class="tui-progress tui-progress-lg">
+              <div class="tui-progress-bar" style="width: 50%;"></div>
+              <span class="tui-progress-label">50%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Surface Variants -->
+        <div class="demo-section">
+          <div class="demo-title">Surface Variants</div>
+          <div class="tui-grid tui-grid-2" style="max-width: 600px;">
+            <div class="tui-surface tui-surface-padded">
+              <p class="tui-text tui-text-dim">Plain Surface</p>
+            </div>
+            <div class="tui-surface tui-surface-sunken tui-surface-padded">
+              <p class="tui-text tui-text-dim">Sunken Surface</p>
+            </div>
+            <div class="tui-surface tui-surface-raised tui-surface-padded">
+              <p class="tui-text tui-text-dim">Raised Surface</p>
+            </div>
+            <div class="tui-surface tui-surface-crt tui-surface-padded">
+              <p class="tui-text tui-text-dim">CRT Surface</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="demo-section">
+          <div class="demo-title">Stat Cards</div>
+          <div class="tui-grid tui-grid-3" style="max-width: 600px;">
+            <div class="tui-surface tui-surface-padded">
+              <div class="tui-stat">
+                <span class="tui-stat-label">CPU Usage</span>
+                <span class="tui-stat-value">45%</span>
+                <span class="tui-stat-change tui-stat-change-positive">+2.5%</span>
+              </div>
+            </div>
+            <div class="tui-surface tui-surface-padded">
+              <div class="tui-stat">
+                <span class="tui-stat-label">Memory</span>
+                <span class="tui-stat-value tui-stat-value-warning">78%</span>
+                <span class="tui-stat-change tui-stat-change-negative">-5.2%</span>
+              </div>
+            </div>
+            <div class="tui-surface tui-surface-padded">
+              <div class="tui-stat">
+                <span class="tui-stat-label">Disk I/O</span>
+                <span class="tui-stat-value tui-stat-value-success">12 MB/s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="demo-section">
+          <div class="demo-title">Data Table</div>
+          <div class="tui-scroll" style="max-height: 200px;">
+            <table class="tui-table tui-table-striped" data-auto-init>
+              <thead>
+                <tr>
+                  <th data-sortable data-column="pid">PID</th>
+                  <th data-sortable data-column="name">Name</th>
+                  <th data-sortable data-column="cpu">CPU %</th>
+                  <th data-sortable data-column="mem">Memory</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1234</td>
+                  <td>node</td>
+                  <td>12.5</td>
+                  <td>256 MB</td>
+                  <td><span class="tui-badge tui-badge-success">Running</span></td>
+                </tr>
+                <tr>
+                  <td>5678</td>
+                  <td>postgres</td>
+                  <td>8.2</td>
+                  <td>512 MB</td>
+                  <td><span class="tui-badge tui-badge-success">Running</span></td>
+                </tr>
+                <tr>
+                  <td>9012</td>
+                  <td>nginx</td>
+                  <td>2.1</td>
+                  <td>64 MB</td>
+                  <td><span class="tui-badge tui-badge-success">Running</span></td>
+                </tr>
+                <tr>
+                  <td>3456</td>
+                  <td>redis</td>
+                  <td>0.5</td>
+                  <td>128 MB</td>
+                  <td><span class="tui-badge tui-badge-warning">Idle</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Key-Value List -->
+        <div class="demo-section">
+          <div class="demo-title">Key-Value List</div>
+          <div class="tui-kv" style="max-width: 400px;">
+            <div class="tui-kv-row">
+              <span class="tui-kv-key">Hostname</span>
+              <span class="tui-kv-separator"></span>
+              <span class="tui-kv-value">server-01</span>
+            </div>
+            <div class="tui-kv-row">
+              <span class="tui-kv-key">IP Address</span>
+              <span class="tui-kv-separator"></span>
+              <span class="tui-kv-value">192.168.1.100</span>
+            </div>
+            <div class="tui-kv-row">
+              <span class="tui-kv-key">Uptime</span>
+              <span class="tui-kv-separator"></span>
+              <span class="tui-kv-value">14 days, 6 hours</span>
+            </div>
+            <div class="tui-kv-row">
+              <span class="tui-kv-key">Kernel</span>
+              <span class="tui-kv-separator"></span>
+              <span class="tui-kv-value">Linux 5.15.0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dropdown Menu -->
+        <div class="demo-section">
+          <div class="demo-title">Dropdown Menu</div>
+          <div class="tui-menu" data-auto-init>
+            <button class="tui-btn" data-menu-trigger>Actions</button>
+            <div class="tui-menu-content">
+              <button class="tui-menu-item">New File</button>
+              <button class="tui-menu-item">Open...</button>
+              <button class="tui-menu-item">Save</button>
+              <div class="tui-menu-separator"></div>
+              <button class="tui-menu-item">Settings</button>
+              <button class="tui-menu-item" disabled>Disabled</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dialog Trigger -->
+        <div class="demo-section">
+          <div class="demo-title">Dialog</div>
+          <button class="tui-btn tui-btn-primary" id="open-dialog">Open Dialog</button>
+        </div>
+
+        <!-- Breadcrumb -->
+        <div class="demo-section">
+          <div class="demo-title">Breadcrumb</div>
+          <nav class="tui-breadcrumb">
+            <a href="#" class="tui-breadcrumb-item">Home</a>
+            <span class="tui-breadcrumb-separator">/</span>
+            <a href="#" class="tui-breadcrumb-item">Settings</a>
+            <span class="tui-breadcrumb-separator">/</span>
+            <span class="tui-breadcrumb-item" data-current="true">Profile</span>
+          </nav>
+        </div>
+
+        <!-- Pagination -->
+        <div class="demo-section">
+          <div class="demo-title">Pagination</div>
+          <nav class="tui-pagination">
+            <button class="tui-pagination-btn" disabled>&lt;</button>
+            <button class="tui-pagination-btn" data-active="true">1</button>
+            <button class="tui-pagination-btn">2</button>
+            <button class="tui-pagination-btn">3</button>
+            <button class="tui-pagination-btn">...</button>
+            <button class="tui-pagination-btn">10</button>
+            <button class="tui-pagination-btn">&gt;</button>
+          </nav>
+        </div>
+
+        <!-- Tooltip -->
+        <div class="demo-section">
+          <div class="demo-title">Tooltip</div>
+          <span class="tui-tooltip">
+            <button class="tui-btn">Hover me</button>
+            <span class="tui-tooltip-content">This is a tooltip!</span>
+          </span>
+        </div>
+
+        <!-- Function Key Bar -->
+        <div class="demo-section">
+          <div class="demo-title">Function Key Bar</div>
+          <div class="tui-fnbar">
+            <span class="tui-fnbar-item">
+              <span class="tui-fnbar-key">F1</span>
+              <span class="tui-fnbar-label">Help</span>
+            </span>
+            <span class="tui-fnbar-item">
+              <span class="tui-fnbar-key">F2</span>
+              <span class="tui-fnbar-label">Rename</span>
+            </span>
+            <span class="tui-fnbar-item">
+              <span class="tui-fnbar-key">F5</span>
+              <span class="tui-fnbar-label">Copy</span>
+            </span>
+            <span class="tui-fnbar-item">
+              <span class="tui-fnbar-key">F6</span>
+              <span class="tui-fnbar-label">Move</span>
+            </span>
+            <span class="tui-fnbar-item">
+              <span class="tui-fnbar-key">F10</span>
+              <span class="tui-fnbar-label">Quit</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Spinners -->
+        <div class="demo-section">
+          <div class="demo-title">Loading Spinners</div>
+          <div class="tui-flex tui-gap-4">
+            <span class="tui-spinner tui-spinner-sm"></span>
+            <span class="tui-spinner"></span>
+            <span class="tui-spinner tui-spinner-lg"></span>
+          </div>
+        </div>
+
+        <!-- Avatars -->
+        <div class="demo-section">
+          <div class="demo-title">Avatars</div>
+          <div class="tui-flex tui-gap-2">
+            <span class="tui-avatar tui-avatar-sm">A</span>
+            <span class="tui-avatar">JD</span>
+            <span class="tui-avatar tui-avatar-lg">XY</span>
+            <span class="tui-avatar tui-avatar-square">SQ</span>
+          </div>
+        </div>
+
+        <!-- Code -->
+        <div class="demo-section">
+          <div class="demo-title">Code</div>
+          <p class="tui-text">
+            Use <code class="tui-code">npm install web-tui</code> to install.
+          </p>
+          <pre class="tui-pre">function hello() {
+  console.log("Hello, World!");
+}
+
+hello();</pre>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog -->
+  <div class="tui-dialog" id="demo-dialog" data-auto-init>
+    <div class="tui-dialog-content">
+      <div class="tui-dialog-header">
+        <h2 class="tui-dialog-title">Confirm Action</h2>
+        <button class="tui-dialog-close">&times;</button>
+      </div>
+      <div class="tui-dialog-body">
+        <p>Are you sure you want to proceed with this action?</p>
+      </div>
+      <div class="tui-dialog-footer">
+        <button class="tui-btn tui-btn-ghost" id="dialog-cancel">Cancel</button>
+        <button class="tui-btn tui-btn-primary" id="dialog-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar (fixed at bottom) -->
+  <div class="tui-statusbar" style="position: fixed; bottom: 0; left: 0; right: 0;">
+    <div class="tui-statusbar-left">
+      <span class="tui-statusbar-item">web-tui v0.1.0</span>
+      <span class="tui-statusbar-item">
+        <span class="tui-badge tui-badge-success" style="font-size: 0.625rem;">READY</span>
+      </span>
+    </div>
+    <div class="tui-statusbar-right">
+      <span class="tui-statusbar-item">Ln 1, Col 1</span>
+      <span class="tui-statusbar-item">UTF-8</span>
+    </div>
+  </div>
+
+  <script src="../src/css/web-tui.js"></script>
+  <script>
+    // Theme switcher
+    const themeSelect = document.getElementById('theme-select');
+    themeSelect.addEventListener('change', (e) => {
+      document.body.dataset.theme = e.target.value;
+    });
+
+    // Dialog
+    const dialog = webTui.initDialog('#demo-dialog');
+    document.getElementById('open-dialog').addEventListener('click', () => dialog.open());
+    document.getElementById('dialog-cancel').addEventListener('click', () => dialog.close());
+    document.getElementById('dialog-confirm').addEventListener('click', () => {
+      alert('Confirmed!');
+      dialog.close();
+    });
+
+    // Auto-init all components
+    webTui.autoInit();
+  </script>
+
+</body>
+</html>
