@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buttons - web-tui</title>
+  <link rel="stylesheet" href="../../src/css/web-tui.css">
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <a href="../index.html" style="text-decoration: none;">
+          <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        </a>
+      </div>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="../installation.html">Installation</a>
+        <a href="../theming.html">Theming</a>
+        <div class="docs-nav-section">Components</div>
+        <a href="layout.html">Layout</a>
+        <a href="typography.html">Typography</a>
+        <a href="buttons.html" class="active">Buttons</a>
+        <a href="forms.html">Forms</a>
+        <a href="data.html">Data Display</a>
+        <a href="navigation.html">Navigation</a>
+        <a href="overlays.html">Overlays</a>
+        <a href="interactive.html">CSS-Only Interactive</a>
+      </nav>
+      <div class="docs-theme-switcher">
+        <label>Theme</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Buttons</h1>
+      <p class="tui-text-dim" style="font-size: 1.1rem; margin-bottom: 2rem;">
+        Terminal-styled buttons with multiple variants and sizes.
+      </p>
+
+      <!-- Button Variants -->
+      <section class="docs-section">
+        <h2>Variants</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="variant-row">
+              <button class="tui-btn">Default</button>
+              <button class="tui-btn tui-btn-primary">Primary</button>
+              <button class="tui-btn tui-btn-secondary">Secondary</button>
+              <button class="tui-btn tui-btn-success">Success</button>
+              <button class="tui-btn tui-btn-danger">Danger</button>
+              <button class="tui-btn tui-btn-ghost">Ghost</button>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;button class="tui-btn"&gt;Default&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-secondary"&gt;Secondary&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-success"&gt;Success&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-danger"&gt;Danger&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-ghost"&gt;Ghost&lt;/button&gt;</code>
+            </div>
+          </div>
+        </div>
+
+        <table class="tui-table class-table">
+          <thead>
+            <tr><th>Class</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>.tui-btn</code></td><td>Base button style (required)</td></tr>
+            <tr><td><code>.tui-btn-primary</code></td><td>Primary action, accent color</td></tr>
+            <tr><td><code>.tui-btn-secondary</code></td><td>Secondary action, outlined style</td></tr>
+            <tr><td><code>.tui-btn-success</code></td><td>Success/confirm action, green</td></tr>
+            <tr><td><code>.tui-btn-danger</code></td><td>Destructive action, red</td></tr>
+            <tr><td><code>.tui-btn-ghost</code></td><td>Subtle, transparent background</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Sizes -->
+      <section class="docs-section">
+        <h2>Sizes</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="size-demo">
+              <button class="tui-btn tui-btn-primary tui-btn-sm">Small</button>
+              <button class="tui-btn tui-btn-primary">Default</button>
+              <button class="tui-btn tui-btn-primary tui-btn-lg">Large</button>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;button class="tui-btn tui-btn-sm"&gt;Small&lt;/button&gt;
+&lt;button class="tui-btn"&gt;Default&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-lg"&gt;Large&lt;/button&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- States -->
+      <section class="docs-section">
+        <h2>States</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="variant-row">
+              <button class="tui-btn tui-btn-primary">Normal</button>
+              <button class="tui-btn tui-btn-primary" disabled>Disabled</button>
+              <button class="tui-btn tui-btn-primary" style="opacity: 0.7;">
+                <span class="tui-spinner" style="width: 1em; height: 1em; margin-right: 0.5em;"></span>
+                Loading
+              </button>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;button class="tui-btn tui-btn-primary"&gt;Normal&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-primary" disabled&gt;Disabled&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-primary"&gt;
+  &lt;span class="tui-spinner"&gt;&lt;/span&gt;
+  Loading
+&lt;/button&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Button Groups -->
+      <section class="docs-section">
+        <h2>Button Groups</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-btn-group">
+              <button class="tui-btn">Left</button>
+              <button class="tui-btn">Center</button>
+              <button class="tui-btn">Right</button>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-btn-group"&gt;
+  &lt;button class="tui-btn"&gt;Left&lt;/button&gt;
+  &lt;button class="tui-btn"&gt;Center&lt;/button&gt;
+  &lt;button class="tui-btn"&gt;Right&lt;/button&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- With Icons -->
+      <section class="docs-section">
+        <h2>With Icons</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="variant-row">
+              <button class="tui-btn tui-btn-primary">[+] Add</button>
+              <button class="tui-btn tui-btn-danger">[x] Delete</button>
+              <button class="tui-btn tui-btn-secondary">[&gt;] Run</button>
+              <button class="tui-btn">[?] Help</button>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;!-- Use ASCII/Unicode characters as icons --&gt;
+&lt;button class="tui-btn tui-btn-primary"&gt;[+] Add&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-danger"&gt;[x] Delete&lt;/button&gt;
+&lt;button class="tui-btn tui-btn-secondary"&gt;[&gt;] Run&lt;/button&gt;
+&lt;button class="tui-btn"&gt;[?] Help&lt;/button&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="docs-footer">
+        <p class="tui-text-dim">web-tui is MIT licensed.</p>
+      </footer>
+    </main>
+  </div>
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>

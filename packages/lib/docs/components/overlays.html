@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overlays - web-tui</title>
+  <link rel="stylesheet" href="../../src/css/web-tui.css">
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <a href="../index.html" style="text-decoration: none;">
+          <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        </a>
+      </div>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="../installation.html">Installation</a>
+        <a href="../theming.html">Theming</a>
+        <div class="docs-nav-section">Components</div>
+        <a href="layout.html">Layout</a>
+        <a href="typography.html">Typography</a>
+        <a href="buttons.html">Buttons</a>
+        <a href="forms.html">Forms</a>
+        <a href="data.html">Data Display</a>
+        <a href="navigation.html">Navigation</a>
+        <a href="overlays.html" class="active">Overlays</a>
+        <a href="interactive.html">CSS-Only Interactive</a>
+      </nav>
+      <div class="docs-theme-switcher">
+        <label>Theme</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Overlays</h1>
+      <p class="tui-text-dim" style="font-size: 1.1rem; margin-bottom: 2rem;">
+        Dialogs, modals, tooltips, and command palette components.
+      </p>
+
+      <!-- Dialog -->
+      <section class="docs-section">
+        <h2>Dialog (JS-enhanced)</h2>
+        <p>Traditional dialog with JavaScript control. For CSS-only modals, see <a href="interactive.html" class="tui-link">Interactive Components</a>.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <button class="tui-btn tui-btn-primary" onclick="document.getElementById('demo-dialog').setAttribute('data-open', 'true')">
+              Open Dialog
+            </button>
+
+            <div class="tui-dialog" id="demo-dialog" data-open="false">
+              <div class="tui-dialog-content">
+                <div class="tui-dialog-header">
+                  <span>Confirm Action</span>
+                  <button class="tui-dialog-close" onclick="document.getElementById('demo-dialog').setAttribute('data-open', 'false')">&times;</button>
+                </div>
+                <div class="tui-dialog-body">
+                  <p>Are you sure you want to proceed with this action?</p>
+                </div>
+                <div class="tui-dialog-footer">
+                  <button class="tui-btn" onclick="document.getElementById('demo-dialog').setAttribute('data-open', 'false')">Cancel</button>
+                  <button class="tui-btn tui-btn-primary" onclick="document.getElementById('demo-dialog').setAttribute('data-open', 'false')">Confirm</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-dialog" data-open="true"&gt;
+  &lt;div class="tui-dialog-content"&gt;
+    &lt;div class="tui-dialog-header"&gt;
+      &lt;span&gt;Title&lt;/span&gt;
+      &lt;button class="tui-dialog-close"&gt;&amp;times;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="tui-dialog-body"&gt;Content&lt;/div&gt;
+    &lt;div class="tui-dialog-footer"&gt;
+      &lt;button class="tui-btn"&gt;Cancel&lt;/button&gt;
+      &lt;button class="tui-btn tui-btn-primary"&gt;OK&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Command Palette -->
+      <section class="docs-section">
+        <h2>Command Palette</h2>
+        <p>VS Code-style command palette for quick actions.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <button class="tui-btn" onclick="document.getElementById('demo-palette').setAttribute('data-open', 'true')">
+              Open Command Palette (Ctrl+K)
+            </button>
+
+            <div class="tui-palette" id="demo-palette" data-open="false">
+              <div class="tui-palette-content">
+                <div class="tui-input" style="margin-bottom: 0.5rem;">
+                  <span class="tui-input-prefix">&gt;</span>
+                  <input type="text" class="tui-input-field" placeholder="Type a command...">
+                </div>
+                <div class="tui-palette-results">
+                  <div class="tui-palette-item active">
+                    <span class="tui-palette-icon">[F]</span>
+                    <span class="tui-palette-label">New File</span>
+                    <span class="tui-palette-shortcut">Ctrl+N</span>
+                  </div>
+                  <div class="tui-palette-item">
+                    <span class="tui-palette-icon">[O]</span>
+                    <span class="tui-palette-label">Open File</span>
+                    <span class="tui-palette-shortcut">Ctrl+O</span>
+                  </div>
+                  <div class="tui-palette-item">
+                    <span class="tui-palette-icon">[S]</span>
+                    <span class="tui-palette-label">Save File</span>
+                    <span class="tui-palette-shortcut">Ctrl+S</span>
+                  </div>
+                  <div class="tui-palette-item">
+                    <span class="tui-palette-icon">[G]</span>
+                    <span class="tui-palette-label">Go to Line</span>
+                    <span class="tui-palette-shortcut">Ctrl+G</span>
+                  </div>
+                </div>
+              </div>
+              <div class="tui-palette-backdrop" onclick="document.getElementById('demo-palette').setAttribute('data-open', 'false')"></div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-palette" data-open="true"&gt;
+  &lt;div class="tui-palette-content"&gt;
+    &lt;div class="tui-input"&gt;
+      &lt;span class="tui-input-prefix"&gt;&gt;&lt;/span&gt;
+      &lt;input class="tui-input-field" placeholder="Type a command..."&gt;
+    &lt;/div&gt;
+    &lt;div class="tui-palette-results"&gt;
+      &lt;div class="tui-palette-item active"&gt;
+        &lt;span class="tui-palette-icon"&gt;[F]&lt;/span&gt;
+        &lt;span class="tui-palette-label"&gt;New File&lt;/span&gt;
+        &lt;span class="tui-palette-shortcut"&gt;Ctrl+N&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="tui-palette-backdrop"&gt;&lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Toast / Notification -->
+      <section class="docs-section">
+        <h2>Toast Notifications</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <div class="tui-toast">
+                <span class="tui-toast-icon">[i]</span>
+                <span class="tui-toast-message">Default notification message</span>
+              </div>
+              <div class="tui-toast tui-toast-success">
+                <span class="tui-toast-icon">[OK]</span>
+                <span class="tui-toast-message">Operation completed successfully</span>
+              </div>
+              <div class="tui-toast tui-toast-warning">
+                <span class="tui-toast-icon">[!]</span>
+                <span class="tui-toast-message">Warning: Check your settings</span>
+              </div>
+              <div class="tui-toast tui-toast-danger">
+                <span class="tui-toast-icon">[X]</span>
+                <span class="tui-toast-message">Error: Connection failed</span>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-toast"&gt;
+  &lt;span class="tui-toast-icon"&gt;[i]&lt;/span&gt;
+  &lt;span class="tui-toast-message"&gt;Message&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;div class="tui-toast tui-toast-success"&gt;...&lt;/div&gt;
+&lt;div class="tui-toast tui-toast-warning"&gt;...&lt;/div&gt;
+&lt;div class="tui-toast tui-toast-danger"&gt;...&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tooltip (CSS) -->
+      <section class="docs-section">
+        <h2>Tooltip (CSS-only)</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: flex; gap: 2rem; padding: 2rem;">
+              <span class="tui-tooltip" data-tip="This is a tooltip">Hover me</span>
+              <button class="tui-btn tui-tooltip" data-tip="Click to submit">Submit</button>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;span class="tui-tooltip" data-tip="Tooltip text"&gt;Hover me&lt;/span&gt;
+
+&lt;!-- Position variants --&gt;
+&lt;span class="tui-tooltip tui-tooltip-top" data-tip="Top"&gt;...&lt;/span&gt;
+&lt;span class="tui-tooltip tui-tooltip-bottom" data-tip="Bottom"&gt;...&lt;/span&gt;
+&lt;span class="tui-tooltip tui-tooltip-left" data-tip="Left"&gt;...&lt;/span&gt;
+&lt;span class="tui-tooltip tui-tooltip-right" data-tip="Right"&gt;...&lt;/span&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Popover -->
+      <section class="docs-section">
+        <h2>Popover</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-popover" style="display: inline-block;">
+              <button class="tui-btn tui-popover-trigger">Click for Info</button>
+              <div class="tui-popover-content">
+                <div class="tui-popover-header">Server Info</div>
+                <div class="tui-popover-body">
+                  <div class="tui-kv">
+                    <div class="tui-kv-item">
+                      <span class="tui-kv-key">Status</span>
+                      <span class="tui-kv-value"><span class="tui-badge tui-badge-success">Online</span></span>
+                    </div>
+                    <div class="tui-kv-item">
+                      <span class="tui-kv-key">Uptime</span>
+                      <span class="tui-kv-value">45d 12h</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-popover"&gt;
+  &lt;button class="tui-btn tui-popover-trigger"&gt;Trigger&lt;/button&gt;
+  &lt;div class="tui-popover-content"&gt;
+    &lt;div class="tui-popover-header"&gt;Title&lt;/div&gt;
+    &lt;div class="tui-popover-body"&gt;Content&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="docs-footer">
+        <p class="tui-text-dim">web-tui is MIT licensed.</p>
+      </footer>
+    </main>
+  </div>
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>

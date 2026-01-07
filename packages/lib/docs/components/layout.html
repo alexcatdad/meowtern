@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout Components - web-tui</title>
+  <link rel="stylesheet" href="../../src/css/web-tui.css">
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <a href="../index.html" style="text-decoration: none;">
+          <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        </a>
+      </div>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="../installation.html">Installation</a>
+        <a href="../theming.html">Theming</a>
+        <div class="docs-nav-section">Components</div>
+        <a href="layout.html" class="active">Layout</a>
+        <a href="typography.html">Typography</a>
+        <a href="buttons.html">Buttons</a>
+        <a href="forms.html">Forms</a>
+        <a href="data.html">Data Display</a>
+        <a href="navigation.html">Navigation</a>
+        <a href="overlays.html">Overlays</a>
+        <a href="interactive.html">CSS-Only Interactive</a>
+      </nav>
+      <div class="docs-theme-switcher">
+        <label>Theme</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Layout Components</h1>
+      <p class="tui-text-dim" style="font-size: 1.1rem; margin-bottom: 2rem;">
+        Containers, windows, and structural components for building terminal interfaces.
+      </p>
+
+      <!-- Window -->
+      <section class="docs-section">
+        <h2>Window</h2>
+        <p>The main terminal window container with title bar and controls.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header">
+            <span>Preview</span>
+          </div>
+          <div class="component-preview-demo">
+            <div class="tui-window">
+              <div class="tui-window-header">
+                <div class="tui-window-controls">
+                  <button class="tui-window-control tui-window-control-close"></button>
+                  <button class="tui-window-control tui-window-control-minimize"></button>
+                  <button class="tui-window-control tui-window-control-maximize"></button>
+                </div>
+                <span class="tui-window-title">user@terminal:~</span>
+              </div>
+              <div class="tui-window-body">
+                <p class="tui-text">Window content goes here.</p>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-window"&gt;
+  &lt;div class="tui-window-header"&gt;
+    &lt;div class="tui-window-controls"&gt;
+      &lt;button class="tui-window-control tui-window-control-close"&gt;&lt;/button&gt;
+      &lt;button class="tui-window-control tui-window-control-minimize"&gt;&lt;/button&gt;
+      &lt;button class="tui-window-control tui-window-control-maximize"&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;span class="tui-window-title"&gt;user@terminal:~&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="tui-window-body"&gt;
+    &lt;p class="tui-text"&gt;Window content goes here.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+
+        <table class="tui-table class-table">
+          <thead>
+            <tr><th>Class</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>.tui-window</code></td><td>Window container</td></tr>
+            <tr><td><code>.tui-window-header</code></td><td>Title bar</td></tr>
+            <tr><td><code>.tui-window-controls</code></td><td>Control buttons container</td></tr>
+            <tr><td><code>.tui-window-control</code></td><td>Base control button</td></tr>
+            <tr><td><code>.tui-window-control-close</code></td><td>Close button (red)</td></tr>
+            <tr><td><code>.tui-window-control-minimize</code></td><td>Minimize button (yellow)</td></tr>
+            <tr><td><code>.tui-window-control-maximize</code></td><td>Maximize button (green)</td></tr>
+            <tr><td><code>.tui-window-title</code></td><td>Window title text</td></tr>
+            <tr><td><code>.tui-window-body</code></td><td>Content area</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Box -->
+      <section class="docs-section">
+        <h2>Box</h2>
+        <p>Basic container for grouping content.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <div class="tui-box" style="padding: 1rem;">
+                <p class="tui-text">Basic box</p>
+              </div>
+              <div class="tui-box tui-box-bordered">
+                <div class="tui-box-header">Bordered Box</div>
+                <p class="tui-text">With header</p>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-box"&gt;Basic box&lt;/div&gt;
+
+&lt;div class="tui-box tui-box-bordered"&gt;
+  &lt;div class="tui-box-header"&gt;Title&lt;/div&gt;
+  Content here
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Surface -->
+      <section class="docs-section">
+        <h2>Surface</h2>
+        <p>Styled surfaces with different visual treatments.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+              <div class="tui-surface" style="padding: 1rem;">
+                <p class="tui-text">Default Surface</p>
+              </div>
+              <div class="tui-surface tui-surface-sunken" style="padding: 1rem;">
+                <p class="tui-text">Sunken Surface</p>
+              </div>
+              <div class="tui-surface tui-surface-raised" style="padding: 1rem;">
+                <p class="tui-text">Raised Surface</p>
+              </div>
+              <div class="tui-surface tui-surface-crt" style="padding: 1rem;">
+                <p class="tui-text">CRT Effect</p>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-surface"&gt;Default&lt;/div&gt;
+&lt;div class="tui-surface tui-surface-sunken"&gt;Sunken&lt;/div&gt;
+&lt;div class="tui-surface tui-surface-raised"&gt;Raised&lt;/div&gt;
+&lt;div class="tui-surface tui-surface-crt"&gt;CRT Effect&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Grid -->
+      <section class="docs-section">
+        <h2>Grid</h2>
+        <p>Simple grid layouts for organizing content.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-grid tui-grid-3" style="gap: 0.5rem;">
+              <div class="tui-box tui-box-bordered" style="padding: 1rem; text-align: center;">1</div>
+              <div class="tui-box tui-box-bordered" style="padding: 1rem; text-align: center;">2</div>
+              <div class="tui-box tui-box-bordered" style="padding: 1rem; text-align: center;">3</div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-grid tui-grid-2"&gt;...&lt;/div&gt;  &lt;!-- 2 columns --&gt;
+&lt;div class="tui-grid tui-grid-3"&gt;...&lt;/div&gt;  &lt;!-- 3 columns --&gt;
+&lt;div class="tui-grid tui-grid-4"&gt;...&lt;/div&gt;  &lt;!-- 4 columns --&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar -->
+      <section class="docs-section">
+        <h2>Sidebar</h2>
+        <p>Collapsible sidebar navigation container.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: flex; gap: 1rem;">
+              <div class="tui-sidebar" style="width: 200px;">
+                <div class="tui-sidebar-header">Menu</div>
+                <nav class="tui-sidebar-nav">
+                  <a href="#" class="tui-sidebar-item active">Dashboard</a>
+                  <a href="#" class="tui-sidebar-item">Settings</a>
+                  <a href="#" class="tui-sidebar-item">Profile</a>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-sidebar"&gt;
+  &lt;div class="tui-sidebar-header"&gt;Menu&lt;/div&gt;
+  &lt;nav class="tui-sidebar-nav"&gt;
+    &lt;a href="#" class="tui-sidebar-item active"&gt;Dashboard&lt;/a&gt;
+    &lt;a href="#" class="tui-sidebar-item"&gt;Settings&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/div&gt;
+
+&lt;!-- Collapsed state --&gt;
+&lt;div class="tui-sidebar" data-collapsed="true"&gt;...&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Separator -->
+      <section class="docs-section">
+        <h2>Separator</h2>
+        <p>Visual dividers for content sections.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <p class="tui-text">Content above</p>
+            <div class="tui-separator"></div>
+            <p class="tui-text">Content below</p>
+
+            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
+              <span>Item 1</span>
+              <div class="tui-separator-vertical" style="height: 1.5rem;"></div>
+              <span>Item 2</span>
+              <div class="tui-separator-vertical" style="height: 1.5rem;"></div>
+              <span>Item 3</span>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-separator"&gt;&lt;/div&gt;
+&lt;div class="tui-separator-vertical"&gt;&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="docs-footer">
+        <p class="tui-text-dim">web-tui is MIT licensed.</p>
+      </footer>
+    </main>
+  </div>
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forms - web-tui</title>
+  <link rel="stylesheet" href="../../src/css/web-tui.css">
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <a href="../index.html" style="text-decoration: none;">
+          <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        </a>
+      </div>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="../installation.html">Installation</a>
+        <a href="../theming.html">Theming</a>
+        <div class="docs-nav-section">Components</div>
+        <a href="layout.html">Layout</a>
+        <a href="typography.html">Typography</a>
+        <a href="buttons.html">Buttons</a>
+        <a href="forms.html" class="active">Forms</a>
+        <a href="data.html">Data Display</a>
+        <a href="navigation.html">Navigation</a>
+        <a href="overlays.html">Overlays</a>
+        <a href="interactive.html">CSS-Only Interactive</a>
+      </nav>
+      <div class="docs-theme-switcher">
+        <label>Theme</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Forms</h1>
+      <p class="tui-text-dim" style="font-size: 1.1rem; margin-bottom: 2rem;">
+        Terminal-styled form inputs and controls.
+      </p>
+
+      <!-- Text Input -->
+      <section class="docs-section">
+        <h2>Text Input</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-input" style="max-width: 400px;">
+              <span class="tui-input-prefix">$</span>
+              <input type="text" class="tui-input-field" placeholder="Enter command...">
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-input"&gt;
+  &lt;span class="tui-input-prefix"&gt;$&lt;/span&gt;
+  &lt;input type="text" class="tui-input-field" placeholder="Enter command..."&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Input Variants -->
+      <section class="docs-section">
+        <h2>Input Variants</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px;">
+              <div class="tui-input">
+                <span class="tui-input-prefix">&gt;</span>
+                <input type="text" class="tui-input-field" placeholder="Default input">
+              </div>
+              <div class="tui-input tui-input-success">
+                <span class="tui-input-prefix">[OK]</span>
+                <input type="text" class="tui-input-field" value="Valid input">
+              </div>
+              <div class="tui-input tui-input-error">
+                <span class="tui-input-prefix">[!]</span>
+                <input type="text" class="tui-input-field" value="Invalid input">
+              </div>
+              <div class="tui-input">
+                <input type="text" class="tui-input-field" placeholder="No prefix" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-input"&gt;...&lt;/div&gt;
+&lt;div class="tui-input tui-input-success"&gt;...&lt;/div&gt;
+&lt;div class="tui-input tui-input-error"&gt;...&lt;/div&gt;
+&lt;input class="tui-input-field" disabled&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Textarea -->
+      <section class="docs-section">
+        <h2>Textarea</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <textarea class="tui-textarea" rows="4" placeholder="Enter multi-line text..." style="max-width: 400px;"></textarea>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;textarea class="tui-textarea" rows="4" placeholder="Enter text..."&gt;&lt;/textarea&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Select -->
+      <section class="docs-section">
+        <h2>Select</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <select class="tui-input-field" style="max-width: 250px;">
+              <option value="">Select an option...</option>
+              <option value="1">Option 1</option>
+              <option value="2">Option 2</option>
+              <option value="3">Option 3</option>
+            </select>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;select class="tui-input-field"&gt;
+  &lt;option value=""&gt;Select...&lt;/option&gt;
+  &lt;option value="1"&gt;Option 1&lt;/option&gt;
+&lt;/select&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Form Layout -->
+      <section class="docs-section">
+        <h2>Form Layout</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <form class="tui-form" style="max-width: 400px;">
+              <div class="tui-form-group">
+                <label class="tui-form-label">Username</label>
+                <div class="tui-input">
+                  <span class="tui-input-prefix">@</span>
+                  <input type="text" class="tui-input-field" placeholder="username">
+                </div>
+              </div>
+
+              <div class="tui-form-group">
+                <label class="tui-form-label">Password</label>
+                <div class="tui-input">
+                  <span class="tui-input-prefix">*</span>
+                  <input type="password" class="tui-input-field" placeholder="password">
+                </div>
+                <span class="tui-form-hint">Minimum 8 characters</span>
+              </div>
+
+              <div class="tui-form-group">
+                <label class="tui-checkbox">
+                  <input type="checkbox">
+                  <span class="tui-checkbox-mark"></span>
+                  <span>Remember me</span>
+                </label>
+              </div>
+
+              <div class="tui-form-actions">
+                <button type="button" class="tui-btn">Cancel</button>
+                <button type="submit" class="tui-btn tui-btn-primary">Login</button>
+              </div>
+            </form>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;form class="tui-form"&gt;
+  &lt;div class="tui-form-group"&gt;
+    &lt;label class="tui-form-label"&gt;Username&lt;/label&gt;
+    &lt;div class="tui-input"&gt;
+      &lt;span class="tui-input-prefix"&gt;@&lt;/span&gt;
+      &lt;input type="text" class="tui-input-field"&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="tui-form-group"&gt;
+    &lt;label class="tui-form-label"&gt;Password&lt;/label&gt;
+    &lt;div class="tui-input"&gt;...&lt;/div&gt;
+    &lt;span class="tui-form-hint"&gt;Help text&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div class="tui-form-actions"&gt;
+    &lt;button class="tui-btn"&gt;Cancel&lt;/button&gt;
+    &lt;button class="tui-btn tui-btn-primary"&gt;Submit&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/form&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inline Form -->
+      <section class="docs-section">
+        <h2>Inline Form</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <form class="tui-form-inline">
+              <div class="tui-input">
+                <span class="tui-input-prefix">$</span>
+                <input type="text" class="tui-input-field" placeholder="Search...">
+              </div>
+              <button type="submit" class="tui-btn tui-btn-primary">Search</button>
+            </form>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;form class="tui-form-inline"&gt;
+  &lt;div class="tui-input"&gt;...&lt;/div&gt;
+  &lt;button class="tui-btn tui-btn-primary"&gt;Search&lt;/button&gt;
+&lt;/form&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="docs-footer">
+        <p class="tui-text-dim">web-tui is MIT licensed.</p>
+      </footer>
+    </main>
+  </div>
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>
