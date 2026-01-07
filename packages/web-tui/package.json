@@ -34,7 +34,10 @@
     "!src/**/*.test.tsx"
   ],
   "scripts": {
-    "test": "bun test"
+    "build": "tsc --noEmit",
+    "dev": "tsc --noEmit --watch",
+    "test": "bun test",
+    "lint": "biome check src/"
   },
   "keywords": [
     "terminal",
