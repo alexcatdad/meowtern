@@ -9,7 +9,9 @@ env:
   IMAGE_NAME: git.escu.dev/${{ gitea.repository }}
   GITEA_API: http://gitea.core.svc.cluster.local:3000
   PR_NUMBER: ${{ gitea.event.pull_request.number }}
-  PREVIEW_URL: https://pr-${{ gitea.event.pull_request.number }}.preview.escu.dev
+  # Internal access only - use node IP or add to /etc/hosts
+  PREVIEW_HOST: pr-${{ gitea.event.pull_request.number }}.preview.local
+  PREVIEW_URL: http://pr-${{ gitea.event.pull_request.number }}.preview.local
 
 jobs:
   deploy-preview:
@@ -59,18 +61,13 @@ jobs:
           NAMESPACE="preview-pr-${{ env.PR_NUMBER }}"
           APP_NAME="meowtern"
           IMAGE="${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}"
-          HOST="pr-${{ env.PR_NUMBER }}.preview.escu.dev"
+          HOST="${{ env.PREVIEW_HOST }}"
 
           # Create namespace
           kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
           kubectl label namespace "$NAMESPACE" preview.homelab/managed=true preview.homelab/pr-number="${{ env.PR_NUMBER }}" --overwrite
 
-          # Copy TLS secret
-          kubectl get secret preview-wildcard-tls-secret -n kube-system -o json | \
-            jq --arg ns "$NAMESPACE" '.metadata.namespace = $ns | del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp)' | \
-            kubectl apply -f -
-
-          # Apply manifests
+          # Apply manifests (internal only - no TLS)
           kubectl apply -f - <<EOF
           ---
           apiVersion: apps/v1
@@ -125,10 +122,6 @@ jobs:
             name: ${APP_NAME}-pr-${{ env.PR_NUMBER }}
             namespace: ${NAMESPACE}
           spec:
-            tls:
-            - hosts:
-              - ${HOST}
-              secretName: preview-wildcard-tls-secret
             rules:
             - host: ${HOST}
               http:
@@ -161,7 +154,7 @@ jobs:
             "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments" | \
             jq -r '.[] | select(.body | contains("Preview Deployment")) | .id' | head -1)
 
-          BODY="## Preview Deployment\n\n**URL:** ${{ env.PREVIEW_URL }}\n\n**Commit:** \`${{ gitea.sha }}\`\n\nThis preview will be automatically destroyed when the PR is closed."
+          BODY="## Preview Deployment (Internal)\n\n**Host:** \`${{ env.PREVIEW_HOST }}\`\n\n**Access:** Add to /etc/hosts: \`10.0.10.5 ${{ env.PREVIEW_HOST }}\`\n\nThen visit: ${{ env.PREVIEW_URL }}\n\n**Commit:** \`${{ gitea.sha }}\`\n\nThis preview will be automatically destroyed when the PR is closed."
 
           if [ -n "$EXISTING" ]; then
             curl -s -X PATCH -H "Authorization: token $REGISTRY_TOKEN" -H "Content-Type: application/json" \
