@@ -21,6 +21,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug Docker access
+        run: |
+          echo "DOCKER_HOST is: $DOCKER_HOST"
+          echo "Testing docker info..."
+          docker info || echo "Docker info failed"
+          echo "Testing docker version..."
+          docker version || echo "Docker version failed"
+          echo "Listing docker images..."
+          docker images || echo "Docker images failed"
+
       - name: Set pending status
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
