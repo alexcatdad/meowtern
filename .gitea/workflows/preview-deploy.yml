@@ -91,58 +91,103 @@ jobs:
           } | tee -a "$DEBUG_LOG"
 
       - name: Setup kubectl
-        uses: azure/setup-kubectl@v3
+        run: |
+          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
+          echo "" >> "$DEBUG_LOG"
+          echo "=== KUBECTL SETUP $(date) ===" >> "$DEBUG_LOG"
+          # kubectl should be pre-installed in catthehacker images
+          which kubectl >> "$DEBUG_LOG" 2>&1 || {
+            echo "kubectl not found, installing..." >> "$DEBUG_LOG"
+            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" >> "$DEBUG_LOG" 2>&1
+            chmod +x kubectl && mv kubectl /usr/local/bin/ >> "$DEBUG_LOG" 2>&1
+          }
+          kubectl version --client >> "$DEBUG_LOG" 2>&1
 
       - name: Configure kubeconfig
         env:
           KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_CONTENT }}
         run: |
+          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
+          echo "" >> "$DEBUG_LOG"
+          echo "=== KUBECONFIG $(date) ===" >> "$DEBUG_LOG"
+          echo "KUBECONFIG_CONTENT length: ${#KUBECONFIG_CONTENT}" >> "$DEBUG_LOG"
+
           mkdir -p ~/.kube
           echo "$KUBECONFIG_CONTENT" > ~/.kube/config
           chmod 600 ~/.kube/config
 
+          echo "Testing cluster connection..." >> "$DEBUG_LOG"
+          kubectl cluster-info >> "$DEBUG_LOG" 2>&1 || echo "Cluster connection FAILED" >> "$DEBUG_LOG"
+          kubectl get nodes >> "$DEBUG_LOG" 2>&1 || echo "Get nodes FAILED" >> "$DEBUG_LOG"
+
       - name: Setup Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: 'v3.13.0'
+        run: |
+          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
+          echo "" >> "$DEBUG_LOG"
+          echo "=== HELM SETUP $(date) ===" >> "$DEBUG_LOG"
+          which helm >> "$DEBUG_LOG" 2>&1 || {
+            echo "helm not found, installing..." >> "$DEBUG_LOG"
+            curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash >> "$DEBUG_LOG" 2>&1
+          }
+          helm version >> "$DEBUG_LOG" 2>&1
 
       - name: Clone homelab charts
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
-          git clone http://oauth2:${REGISTRY_TOKEN}@gitea.core.svc.cluster.local:3000/alex/homelab.git /tmp/homelab
+          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
+          echo "" >> "$DEBUG_LOG"
+          echo "=== CLONE CHARTS $(date) ===" >> "$DEBUG_LOG"
+          git clone http://oauth2:${REGISTRY_TOKEN}@gitea.core.svc.cluster.local:3000/alex/homelab.git /tmp/homelab >> "$DEBUG_LOG" 2>&1
+          ls -la /tmp/homelab >> "$DEBUG_LOG" 2>&1
 
       - name: Create namespace and copy TLS secret
         run: |
+          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
           NAMESPACE="preview-pr-${{ env.PR_NUMBER }}"
 
-          # Create namespace if it doesn't exist
-          kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+          {
+            echo ""
+            echo "=== CREATE NAMESPACE $(date) ==="
+            echo "Namespace: $NAMESPACE"
 
-          # Label the namespace for cleanup identification
-          kubectl label namespace "$NAMESPACE" \
-            preview.homelab/managed=true \
-            preview.homelab/pr-number="${{ env.PR_NUMBER }}" \
-            --overwrite
+            # Create namespace if it doesn't exist
+            kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f - 2>&1
 
-          # Copy preview wildcard TLS secret to preview namespace
-          kubectl get secret preview-wildcard-tls-secret -n kube-system -o json | \
-            jq --arg ns "$NAMESPACE" '.metadata.namespace = $ns | del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.annotations["kubectl.kubernetes.io/last-applied-configuration"])' | \
-            kubectl apply -f -
+            # Label the namespace for cleanup identification
+            kubectl label namespace "$NAMESPACE" \
+              preview.homelab/managed=true \
+              preview.homelab/pr-number="${{ env.PR_NUMBER }}" \
+              --overwrite 2>&1
+
+            echo "Checking TLS secret..."
+            # Copy preview wildcard TLS secret to preview namespace
+            kubectl get secret preview-wildcard-tls-secret -n kube-system -o json 2>&1 | \
+              jq --arg ns "$NAMESPACE" '.metadata.namespace = $ns | del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.annotations["kubectl.kubernetes.io/last-applied-configuration"])' | \
+              kubectl apply -f - 2>&1
+          } >> "$DEBUG_LOG" 2>&1
 
       - name: Deploy preview
         run: |
-          helm upgrade --install \
-            "preview-pr-${{ env.PR_NUMBER }}" \
-            /tmp/homelab/homelab-charts/preview-stack \
-            --namespace "preview-pr-${{ env.PR_NUMBER }}" \
-            --set prNumber="${{ env.PR_NUMBER }}" \
-            --set appName="meowtern" \
-            --set image.repository="${{ env.IMAGE_NAME }}" \
-            --set image.tag="pr-${{ env.PR_NUMBER }}" \
-            --set containerPort=80 \
-            --wait \
-            --timeout=300s
+          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
+          {
+            echo ""
+            echo "=== DEPLOY PREVIEW $(date) ==="
+            echo "Chart path: /tmp/homelab/homelab-charts/preview-stack"
+            ls -la /tmp/homelab/homelab-charts/preview-stack 2>&1 || echo "Chart not found!"
+
+            helm upgrade --install \
+              "preview-pr-${{ env.PR_NUMBER }}" \
+              /tmp/homelab/homelab-charts/preview-stack \
+              --namespace "preview-pr-${{ env.PR_NUMBER }}" \
+              --set prNumber="${{ env.PR_NUMBER }}" \
+              --set appName="meowtern" \
+              --set image.repository="${{ env.IMAGE_NAME }}" \
+              --set image.tag="pr-${{ env.PR_NUMBER }}" \
+              --set containerPort=80 \
+              --wait \
+              --timeout=300s 2>&1
+          } >> "$DEBUG_LOG" 2>&1
 
       - name: Wait for deployment
         run: |
