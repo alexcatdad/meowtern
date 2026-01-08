@@ -118,18 +118,23 @@ jobs:
           # Wait for deployment
           kubectl rollout status deployment/${APP_NAME}-pr-${{ env.PR_NUMBER }} -n ${NAMESPACE} --timeout=120s
 
-          # Get the NodePort and set preview URL
+          # Get the NodePort and save for later steps
           NODE_PORT=$(kubectl get svc ${APP_NAME}-pr-${{ env.PR_NUMBER }} -n ${NAMESPACE} -o jsonpath='{.spec.ports[0].nodePort}')
-          echo "NODE_PORT=${NODE_PORT}" >> $GITHUB_OUTPUT
           echo "Preview available at: http://${{ env.NODE_IP }}:${NODE_PORT}"
-        id: deploy
+          # Save to file for other steps
+          echo "${NODE_PORT}" > /tmp/node_port
 
       - name: Set success status
         if: success()
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
-          PREVIEW_URL: http://${{ env.NODE_IP }}:${{ steps.deploy.outputs.NODE_PORT }}
         run: |
+          # Read the NodePort from the deploy step
+          NODE_PORT=$(cat /tmp/node_port)
+          PREVIEW_URL="http://${{ env.NODE_IP }}:${NODE_PORT}"
+
+          echo "Setting success status with preview URL: ${PREVIEW_URL}"
+
           curl -s -X POST \
             -H "Authorization: token $REGISTRY_TOKEN" \
             -H "Content-Type: application/json" \
