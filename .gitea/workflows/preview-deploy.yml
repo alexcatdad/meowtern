@@ -41,10 +41,7 @@ jobs:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
           REGISTRY_USER: ${{ vars.REGISTRY_USER }}
         run: |
-          echo "Logging in to ${{ env.REGISTRY }} as $REGISTRY_USER..."
           echo "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin
-          echo "Login result: $?"
-          cat ~/.docker/config.json 2>/dev/null | head -5 || echo "No docker config found"
 
       - name: Build Docker image
         run: |
