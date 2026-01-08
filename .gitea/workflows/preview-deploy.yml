@@ -141,22 +141,25 @@ jobs:
             -d "{\"state\": \"success\", \"target_url\": \"${PREVIEW_URL}\", \"description\": \"Preview deployed!\", \"context\": \"preview\"}" \
             "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
 
-          # Comment on PR (update existing or create new)
-          EXISTING=$(curl -s -H "Authorization: token $REGISTRY_TOKEN" \
-            "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments" | \
-            jq -r '.[] | select(.body | contains("Preview Deployment")) | .id' | head -1)
+          # Save PREVIEW_URL for comment step
+          echo "${PREVIEW_URL}" > /tmp/preview_url
 
+      - name: Comment on PR
+        if: success()
+        continue-on-error: true
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          PREVIEW_URL=$(cat /tmp/preview_url)
+
+          # Create comment body with proper JSON escaping (no jq needed)
           BODY="## Preview Deployment\n\n**URL:** ${PREVIEW_URL}\n\n**Commit:** \`${{ gitea.sha }}\`\n\n_(Internal network only)_\n\nThis preview will be automatically destroyed when the PR is closed."
 
-          if [ -n "$EXISTING" ]; then
-            curl -s -X PATCH -H "Authorization: token $REGISTRY_TOKEN" -H "Content-Type: application/json" \
-              -d "{\"body\": \"$BODY\"}" \
-              "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/comments/$EXISTING"
-          else
-            curl -s -X POST -H "Authorization: token $REGISTRY_TOKEN" -H "Content-Type: application/json" \
-              -d "{\"body\": \"$BODY\"}" \
-              "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"
-          fi
+          curl -s -X POST \
+            -H "Authorization: token $REGISTRY_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"body\": \"${BODY}\"}" \
+            "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments" || echo "Failed to post comment, but preview is available"
 
       - name: Set failure status
         if: failure()
