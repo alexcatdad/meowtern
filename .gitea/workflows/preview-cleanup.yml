@@ -16,7 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup kubectl
-        uses: azure/setup-kubectl@v3
+        run: |
+          curl -sLO "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl && mv kubectl /usr/local/bin/
 
       - name: Configure kubeconfig
         env:
@@ -26,60 +28,39 @@ jobs:
           echo "$KUBECONFIG_CONTENT" > ~/.kube/config
           chmod 600 ~/.kube/config
 
-      - name: Setup Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: 'v3.13.0'
-
-      - name: Delete preview deployment
+      - name: Delete preview namespace
         run: |
           NAMESPACE="preview-pr-${{ env.PR_NUMBER }}"
 
-          # Uninstall Helm release
-          helm uninstall "preview-pr-${{ env.PR_NUMBER }}" \
-            --namespace "$NAMESPACE" \
-            --wait \
-            --timeout=120s || echo "Helm release not found or already deleted"
-
           # Delete namespace (cascades all resources)
-          kubectl delete namespace "$NAMESPACE" \
-            --ignore-not-found=true \
-            --wait=true \
-            --timeout=120s
+          kubectl delete namespace "$NAMESPACE" --ignore-not-found=true --wait=true --timeout=120s
 
           echo "Preview environment for PR #${{ env.PR_NUMBER }} has been cleaned up"
 
-      - name: Delete preview images from registry
+      - name: Delete container images
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
           # Delete PR-specific tags from Gitea container registry
           REPO_PATH=$(echo "${{ gitea.repository }}" | tr '[:upper:]' '[:lower:]')
 
-          echo "Attempting to clean up container images for PR #${{ env.PR_NUMBER }}"
-
-          # List and delete tags matching pr-{PR_NUMBER}*
-          curl -s -X GET \
-            -H "Authorization: token $REGISTRY_TOKEN" \
+          curl -s -H "Authorization: token $REGISTRY_TOKEN" \
             "${{ env.GITEA_API }}/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions" | \
             jq -r '.[] | select(.version | startswith("pr-${{ env.PR_NUMBER }}")) | .id' | \
             while read -r VERSION_ID; do
               if [ -n "$VERSION_ID" ]; then
                 echo "Deleting image version: $VERSION_ID"
-                curl -s -X DELETE \
-                  -H "Authorization: token $REGISTRY_TOKEN" \
+                curl -s -X DELETE -H "Authorization: token $REGISTRY_TOKEN" \
                   "${{ env.GITEA_API }}/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions/$VERSION_ID" || true
               fi
             done
-
-          echo "Container image cleanup completed"
 
       - name: Comment on PR
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
-          curl -X POST \
+          curl -s -X POST \
             -H "Authorization: token $REGISTRY_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{"body": "🧹 Preview environment has been cleaned up."}' \
+            -d '{"body": "Preview environment has been cleaned up."}' \
             "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"

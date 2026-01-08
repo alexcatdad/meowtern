@@ -5,10 +5,8 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  # External URL for Docker registry (needs HTTPS with valid certs)
   REGISTRY: git.escu.dev
   IMAGE_NAME: git.escu.dev/${{ gitea.repository }}
-  # Internal URL for API calls (within cluster)
   GITEA_API: http://gitea.core.svc.cluster.local:3000
   PR_NUMBER: ${{ gitea.event.pull_request.number }}
   PREVIEW_URL: https://pr-${{ gitea.event.pull_request.number }}.preview.escu.dev
@@ -25,228 +23,153 @@ jobs:
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
-          curl -X POST \
+          curl -s -X POST \
             -H "Authorization: token $REGISTRY_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{
-              "state": "pending",
-              "target_url": "${{ env.PREVIEW_URL }}",
-              "description": "Preview deployment in progress...",
-              "context": "preview"
-            }' \
+            -d '{"state": "pending", "target_url": "${{ env.PREVIEW_URL }}", "description": "Preview deployment in progress...", "context": "preview"}' \
             "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
 
-      - name: Login to Gitea Registry
+      - name: Login to Registry
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
           REGISTRY_USER: ${{ vars.REGISTRY_USER }}
         run: |
-          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
+          printf '%s' "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin
 
-          {
-            echo "=== LOGIN DEBUG $(date) ==="
-            echo "Token length: ${#REGISTRY_TOKEN}"
-            echo "User: $REGISTRY_USER"
-            echo "Registry: ${{ env.REGISTRY }}"
-            echo ""
-
-            # Try login with explicit handling
-            printf '%s' "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin 2>&1
-            echo "Login exit code: $?"
-            echo ""
-            echo "Docker config after login:"
-            cat ~/.docker/config.json 2>/dev/null || echo "No config file!"
-          } | tee "$DEBUG_LOG"
-
-      - name: Build Docker image
+      - name: Build and Push
         run: |
-          docker build \
-            -t "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" \
-            -t "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}-${{ gitea.sha }}" \
-            .
-
-      - name: Push Docker image
-        env:
-          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
-          REGISTRY_USER: ${{ vars.REGISTRY_USER }}
-        run: |
-          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
-
-          {
-            echo ""
-            echo "=== PUSH DEBUG $(date) ==="
-            echo "Checking credentials before push..."
-            cat ~/.docker/config.json 2>/dev/null || echo "No config file!"
-            echo ""
-            echo "Pushing first image..."
-            docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" 2>&1 || {
-              echo "Push failed! Re-authenticating..."
-              printf '%s' "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin 2>&1
-              echo "Retry push..."
-              docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" 2>&1
-            }
-            echo ""
-            echo "Pushing second image..."
-            docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}-${{ gitea.sha }}" 2>&1
-          } | tee -a "$DEBUG_LOG"
+          docker build -t "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" .
+          docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}"
 
       - name: Setup kubectl
         run: |
-          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
-          echo "" >> "$DEBUG_LOG"
-          echo "=== KUBECTL SETUP $(date) ===" >> "$DEBUG_LOG"
-          # kubectl should be pre-installed in catthehacker images
-          which kubectl >> "$DEBUG_LOG" 2>&1 || {
-            echo "kubectl not found, installing..." >> "$DEBUG_LOG"
-            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" >> "$DEBUG_LOG" 2>&1
-            chmod +x kubectl && mv kubectl /usr/local/bin/ >> "$DEBUG_LOG" 2>&1
-          }
-          kubectl version --client >> "$DEBUG_LOG" 2>&1
+          curl -sLO "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl && mv kubectl /usr/local/bin/
 
       - name: Configure kubeconfig
         env:
           KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_CONTENT }}
         run: |
-          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
-          echo "" >> "$DEBUG_LOG"
-          echo "=== KUBECONFIG $(date) ===" >> "$DEBUG_LOG"
-          echo "KUBECONFIG_CONTENT length: ${#KUBECONFIG_CONTENT}" >> "$DEBUG_LOG"
-
           mkdir -p ~/.kube
           echo "$KUBECONFIG_CONTENT" > ~/.kube/config
           chmod 600 ~/.kube/config
 
-          echo "Testing cluster connection..." >> "$DEBUG_LOG"
-          kubectl cluster-info >> "$DEBUG_LOG" 2>&1 || echo "Cluster connection FAILED" >> "$DEBUG_LOG"
-          kubectl get nodes >> "$DEBUG_LOG" 2>&1 || echo "Get nodes FAILED" >> "$DEBUG_LOG"
-
-      - name: Setup Helm
+      - name: Deploy Preview
         run: |
-          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
-          echo "" >> "$DEBUG_LOG"
-          echo "=== HELM SETUP $(date) ===" >> "$DEBUG_LOG"
-          which helm >> "$DEBUG_LOG" 2>&1 || {
-            echo "helm not found, installing..." >> "$DEBUG_LOG"
-            curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash >> "$DEBUG_LOG" 2>&1
-          }
-          helm version >> "$DEBUG_LOG" 2>&1
-
-      - name: Clone homelab charts
-        env:
-          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
-        run: |
-          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
-          echo "" >> "$DEBUG_LOG"
-          echo "=== CLONE CHARTS $(date) ===" >> "$DEBUG_LOG"
-          git clone https://oauth2:${REGISTRY_TOKEN}@git.escu.dev/alex/homelab.git /tmp/homelab >> "$DEBUG_LOG" 2>&1
-          ls -la /tmp/homelab >> "$DEBUG_LOG" 2>&1
-
-      - name: Create namespace and copy TLS secret
-        run: |
-          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
           NAMESPACE="preview-pr-${{ env.PR_NUMBER }}"
+          APP_NAME="meowtern"
+          IMAGE="${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}"
+          HOST="pr-${{ env.PR_NUMBER }}.preview.escu.dev"
 
-          {
-            echo ""
-            echo "=== CREATE NAMESPACE $(date) ==="
-            echo "Namespace: $NAMESPACE"
+          # Create namespace
+          kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+          kubectl label namespace "$NAMESPACE" preview.homelab/managed=true preview.homelab/pr-number="${{ env.PR_NUMBER }}" --overwrite
 
-            # Create namespace if it doesn't exist
-            kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f - 2>&1
+          # Copy TLS secret
+          kubectl get secret preview-wildcard-tls-secret -n kube-system -o json | \
+            jq --arg ns "$NAMESPACE" '.metadata.namespace = $ns | del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp)' | \
+            kubectl apply -f -
 
-            # Label the namespace for cleanup identification
-            kubectl label namespace "$NAMESPACE" \
-              preview.homelab/managed=true \
-              preview.homelab/pr-number="${{ env.PR_NUMBER }}" \
-              --overwrite 2>&1
+          # Apply manifests
+          kubectl apply -f - <<EOF
+          ---
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: ${APP_NAME}-pr-${{ env.PR_NUMBER }}
+            namespace: ${NAMESPACE}
+            labels:
+              app: ${APP_NAME}
+              preview: "true"
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: ${APP_NAME}
+            template:
+              metadata:
+                labels:
+                  app: ${APP_NAME}
+              spec:
+                containers:
+                - name: ${APP_NAME}
+                  image: ${IMAGE}
+                  imagePullPolicy: Always
+                  ports:
+                  - containerPort: 80
+                  resources:
+                    limits:
+                      cpu: "500m"
+                      memory: "512Mi"
+                    requests:
+                      cpu: "50m"
+                      memory: "64Mi"
+                nodeSelector:
+                  role: homelab-worker
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: ${APP_NAME}-pr-${{ env.PR_NUMBER }}
+            namespace: ${NAMESPACE}
+          spec:
+            selector:
+              app: ${APP_NAME}
+            ports:
+            - port: 80
+              targetPort: 80
+          ---
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: ${APP_NAME}-pr-${{ env.PR_NUMBER }}
+            namespace: ${NAMESPACE}
+          spec:
+            tls:
+            - hosts:
+              - ${HOST}
+              secretName: preview-wildcard-tls-secret
+            rules:
+            - host: ${HOST}
+              http:
+                paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: ${APP_NAME}-pr-${{ env.PR_NUMBER }}
+                      port:
+                        number: 80
+          EOF
 
-            echo "Checking TLS secret..."
-            # Copy preview wildcard TLS secret to preview namespace
-            kubectl get secret preview-wildcard-tls-secret -n kube-system -o json 2>&1 | \
-              jq --arg ns "$NAMESPACE" '.metadata.namespace = $ns | del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.annotations["kubectl.kubernetes.io/last-applied-configuration"])' | \
-              kubectl apply -f - 2>&1
-          } >> "$DEBUG_LOG" 2>&1
-
-      - name: Deploy preview
-        run: |
-          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
-          {
-            echo ""
-            echo "=== DEPLOY PREVIEW $(date) ==="
-            echo "Chart path: /tmp/homelab/homelab-charts/preview-stack"
-            ls -la /tmp/homelab/homelab-charts/preview-stack 2>&1 || echo "Chart not found!"
-
-            helm upgrade --install \
-              "preview-pr-${{ env.PR_NUMBER }}" \
-              /tmp/homelab/homelab-charts/preview-stack \
-              --namespace "preview-pr-${{ env.PR_NUMBER }}" \
-              --set prNumber="${{ env.PR_NUMBER }}" \
-              --set appName="meowtern" \
-              --set image.repository="${{ env.IMAGE_NAME }}" \
-              --set image.tag="pr-${{ env.PR_NUMBER }}" \
-              --set containerPort=80 \
-              --wait \
-              --timeout=300s 2>&1
-          } >> "$DEBUG_LOG" 2>&1
-
-      - name: Wait for deployment
-        run: |
-          kubectl rollout status deployment/meowtern-pr-${{ env.PR_NUMBER }} \
-            -n preview-pr-${{ env.PR_NUMBER }} \
-            --timeout=120s
+          # Wait for deployment
+          kubectl rollout status deployment/${APP_NAME}-pr-${{ env.PR_NUMBER }} -n ${NAMESPACE} --timeout=120s
 
       - name: Set success status
         if: success()
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
-          curl -X POST \
+          curl -s -X POST \
             -H "Authorization: token $REGISTRY_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{
-              "state": "success",
-              "target_url": "${{ env.PREVIEW_URL }}",
-              "description": "Preview deployed successfully!",
-              "context": "preview"
-            }' \
+            -d '{"state": "success", "target_url": "${{ env.PREVIEW_URL }}", "description": "Preview deployed!", "context": "preview"}' \
             "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
 
-      - name: Comment on PR
-        if: success()
-        env:
-          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
-        run: |
-          # Check if we already commented (to avoid spam on re-runs)
-          EXISTING=$(curl -s \
-            -H "Authorization: token $REGISTRY_TOKEN" \
+          # Comment on PR (update existing or create new)
+          EXISTING=$(curl -s -H "Authorization: token $REGISTRY_TOKEN" \
             "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments" | \
             jq -r '.[] | select(.body | contains("Preview Deployment")) | .id' | head -1)
 
-          # Build comment body
-          BODY=$(cat <<'EOFBODY'
-          ## 🚀 Preview Deployment
-
-          **URL:** ${{ env.PREVIEW_URL }}
-
-          **Commit:** `${{ gitea.sha }}`
-
-          This preview will be automatically destroyed when the PR is closed.
-          EOFBODY
-          )
+          BODY="## Preview Deployment\n\n**URL:** ${{ env.PREVIEW_URL }}\n\n**Commit:** \`${{ gitea.sha }}\`\n\nThis preview will be automatically destroyed when the PR is closed."
 
           if [ -n "$EXISTING" ]; then
-            # Update existing comment
-            curl -X PATCH \
-              -H "Authorization: token $REGISTRY_TOKEN" \
-              -H "Content-Type: application/json" \
-              --data-raw "{\"body\": $(echo "$BODY" | jq -Rs .)}" \
+            curl -s -X PATCH -H "Authorization: token $REGISTRY_TOKEN" -H "Content-Type: application/json" \
+              -d "{\"body\": \"$BODY\"}" \
               "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/comments/$EXISTING"
           else
-            # Create new comment
-            curl -X POST \
-              -H "Authorization: token $REGISTRY_TOKEN" \
-              -H "Content-Type: application/json" \
-              --data-raw "{\"body\": $(echo "$BODY" | jq -Rs .)}" \
+            curl -s -X POST -H "Authorization: token $REGISTRY_TOKEN" -H "Content-Type: application/json" \
+              -d "{\"body\": \"$BODY\"}" \
               "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"
           fi
 
@@ -255,13 +178,8 @@ jobs:
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
-          curl -X POST \
+          curl -s -X POST \
             -H "Authorization: token $REGISTRY_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{
-              "state": "failure",
-              "target_url": "",
-              "description": "Preview deployment failed",
-              "context": "preview"
-            }' \
+            -d '{"state": "failure", "target_url": "", "description": "Preview deployment failed", "context": "preview"}' \
             "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
