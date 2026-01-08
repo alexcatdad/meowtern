@@ -7,7 +7,7 @@ on:
 env:
   REGISTRY: git.escu.dev
   IMAGE_NAME: git.escu.dev/${{ gitea.repository }}
-  GITEA_API: http://gitea.core.svc.cluster.local:3000
+  GITEA_API: https://git.escu.dev
   PR_NUMBER: ${{ gitea.event.pull_request.number }}
   NODE_IP: "10.0.10.5"
 
