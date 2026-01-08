@@ -139,27 +139,31 @@ jobs:
             "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments" | \
             jq -r '.[] | select(.body | contains("Preview Deployment")) | .id' | head -1)
 
-          BODY="## 🚀 Preview Deployment
+          # Build comment body
+          BODY=$(cat <<'EOFBODY'
+          ## 🚀 Preview Deployment
 
-**URL:** ${{ env.PREVIEW_URL }}
+          **URL:** ${{ env.PREVIEW_URL }}
 
-**Commit:** \`${{ gitea.sha }}\`
+          **Commit:** `${{ gitea.sha }}`
 
-This preview will be automatically destroyed when the PR is closed."
+          This preview will be automatically destroyed when the PR is closed.
+          EOFBODY
+          )
 
           if [ -n "$EXISTING" ]; then
             # Update existing comment
             curl -X PATCH \
               -H "Authorization: token $REGISTRY_TOKEN" \
               -H "Content-Type: application/json" \
-              -d "{\"body\": \"$BODY\"}" \
+              --data-raw "{\"body\": $(echo "$BODY" | jq -Rs .)}" \
               "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/comments/$EXISTING"
           else
             # Create new comment
             curl -X POST \
               -H "Authorization: token $REGISTRY_TOKEN" \
               -H "Content-Type: application/json" \
-              -d "{\"body\": \"$BODY\"}" \
+              --data-raw "{\"body\": $(echo "$BODY" | jq -Rs .)}" \
               "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"
           fi
 
