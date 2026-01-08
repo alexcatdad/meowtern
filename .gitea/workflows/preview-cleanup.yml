@@ -5,8 +5,9 @@ on:
     types: [closed]
 
 env:
-  REGISTRY: gitea.core.svc.cluster.local:3000
-  IMAGE_NAME: gitea.core.svc.cluster.local:3000/${{ gitea.repository }}
+  REGISTRY: git.escu.dev
+  IMAGE_NAME: git.escu.dev/${{ gitea.repository }}
+  GITEA_API: http://gitea.core.svc.cluster.local:3000
   PR_NUMBER: ${{ gitea.event.pull_request.number }}
 
 jobs:
@@ -53,23 +54,21 @@ jobs:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
           # Delete PR-specific tags from Gitea container registry
-          # Note: Gitea's container registry API for tag deletion
           REPO_PATH=$(echo "${{ gitea.repository }}" | tr '[:upper:]' '[:lower:]')
 
           echo "Attempting to clean up container images for PR #${{ env.PR_NUMBER }}"
 
           # List and delete tags matching pr-{PR_NUMBER}*
-          # This uses Gitea's package API
           curl -s -X GET \
             -H "Authorization: token $REGISTRY_TOKEN" \
-            "https://gitea.core.svc.cluster.local:3000/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions" | \
+            "${{ env.GITEA_API }}/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions" | \
             jq -r '.[] | select(.version | startswith("pr-${{ env.PR_NUMBER }}")) | .id' | \
             while read -r VERSION_ID; do
               if [ -n "$VERSION_ID" ]; then
                 echo "Deleting image version: $VERSION_ID"
                 curl -s -X DELETE \
                   -H "Authorization: token $REGISTRY_TOKEN" \
-                  "https://gitea.core.svc.cluster.local:3000/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions/$VERSION_ID" || true
+                  "${{ env.GITEA_API }}/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions/$VERSION_ID" || true
               fi
             done
 
@@ -83,4 +82,4 @@ jobs:
             -H "Authorization: token $REGISTRY_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"body": "🧹 Preview environment has been cleaned up."}' \
-            "https://gitea.core.svc.cluster.local:3000/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"
+            "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"
