@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS-Only Interactive - web-tui</title>
+  <link rel="stylesheet" href="../../../packages/web-tui/src/css/web-tui.css">
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <a href="../index.html" style="text-decoration: none;">
+          <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        </a>
+      </div>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="../installation.html">Installation</a>
+        <a href="../theming.html">Theming</a>
+        <div class="docs-nav-section">Components</div>
+        <a href="layout.html">Layout</a>
+        <a href="typography.html">Typography</a>
+        <a href="buttons.html">Buttons</a>
+        <a href="forms.html">Forms</a>
+        <a href="data.html">Data Display</a>
+        <a href="navigation.html">Navigation</a>
+        <a href="overlays.html">Overlays</a>
+        <a href="interactive.html" class="active">CSS-Only Interactive</a>
+      </nav>
+      <div class="docs-theme-switcher">
+        <label>Theme</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>CSS-Only Interactive Components</h1>
+      <p class="tui-text-dim" style="font-size: 1.1rem; margin-bottom: 2rem;">
+        Interactive components that work without JavaScript, using CSS pseudo-classes like <code class="tui-code">:checked</code> and <code class="tui-code">:focus-within</code>.
+      </p>
+
+      <!-- CSS Tabs -->
+      <section class="docs-section">
+        <h2>Tabs (Radio-based)</h2>
+        <p>Tabs using hidden radio inputs and the <code class="tui-code">:checked</code> selector.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-tabs-radio">
+              <input type="radio" name="demo-tabs" id="tab1" class="tui-tab-input" checked>
+              <label for="tab1" class="tui-tab-label">Tab 1</label>
+              <div class="tui-tab-content">
+                <div class="tui-box tui-box-bordered">
+                  <p>Content for Tab 1. This works without any JavaScript!</p>
+                </div>
+              </div>
+
+              <input type="radio" name="demo-tabs" id="tab2" class="tui-tab-input">
+              <label for="tab2" class="tui-tab-label">Tab 2</label>
+              <div class="tui-tab-content">
+                <div class="tui-box tui-box-bordered">
+                  <p>Content for Tab 2. Pure CSS magic!</p>
+                </div>
+              </div>
+
+              <input type="radio" name="demo-tabs" id="tab3" class="tui-tab-input">
+              <label for="tab3" class="tui-tab-label">Tab 3</label>
+              <div class="tui-tab-content">
+                <div class="tui-box tui-box-bordered">
+                  <p>Content for Tab 3. No JavaScript required.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-tabs-radio"&gt;
+  &lt;input type="radio" name="tabs" id="tab1" class="tui-tab-input" checked&gt;
+  &lt;label for="tab1" class="tui-tab-label"&gt;Tab 1&lt;/label&gt;
+  &lt;div class="tui-tab-content"&gt;Content 1&lt;/div&gt;
+
+  &lt;input type="radio" name="tabs" id="tab2" class="tui-tab-input"&gt;
+  &lt;label for="tab2" class="tui-tab-label"&gt;Tab 2&lt;/label&gt;
+  &lt;div class="tui-tab-content"&gt;Content 2&lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Accordion -->
+      <section class="docs-section">
+        <h2>Accordion (Details-based)</h2>
+        <p>Collapsible sections using the native <code class="tui-code">&lt;details&gt;</code> element.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-accordion">
+              <details class="tui-accordion-item" open>
+                <summary class="tui-accordion-header">Section 1</summary>
+                <div class="tui-accordion-content">
+                  <p>This is the content for section 1. Click the header to collapse.</p>
+                </div>
+              </details>
+              <details class="tui-accordion-item">
+                <summary class="tui-accordion-header">Section 2</summary>
+                <div class="tui-accordion-content">
+                  <p>Content for section 2. Uses native HTML5 details element.</p>
+                </div>
+              </details>
+              <details class="tui-accordion-item">
+                <summary class="tui-accordion-header">Section 3</summary>
+                <div class="tui-accordion-content">
+                  <p>Content for section 3. No JavaScript needed!</p>
+                </div>
+              </details>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-accordion"&gt;
+  &lt;details class="tui-accordion-item" open&gt;
+    &lt;summary class="tui-accordion-header"&gt;Section 1&lt;/summary&gt;
+    &lt;div class="tui-accordion-content"&gt;Content&lt;/div&gt;
+  &lt;/details&gt;
+  &lt;details class="tui-accordion-item"&gt;
+    &lt;summary class="tui-accordion-header"&gt;Section 2&lt;/summary&gt;
+    &lt;div class="tui-accordion-content"&gt;Content&lt;/div&gt;
+  &lt;/details&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dropdown -->
+      <section class="docs-section">
+        <h2>Dropdown (Focus-within)</h2>
+        <p>Dropdown menu using <code class="tui-code">:focus-within</code> pseudo-class.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-dropdown">
+              <button class="tui-dropdown-trigger tui-btn">Dropdown Menu</button>
+              <div class="tui-dropdown-content">
+                <a href="#" class="tui-dropdown-item">Option 1</a>
+                <a href="#" class="tui-dropdown-item">Option 2</a>
+                <a href="#" class="tui-dropdown-item">Option 3</a>
+                <div class="tui-separator"></div>
+                <a href="#" class="tui-dropdown-item">More Options</a>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-dropdown"&gt;
+  &lt;button class="tui-dropdown-trigger tui-btn"&gt;Menu&lt;/button&gt;
+  &lt;div class="tui-dropdown-content"&gt;
+    &lt;a href="#" class="tui-dropdown-item"&gt;Option 1&lt;/a&gt;
+    &lt;a href="#" class="tui-dropdown-item"&gt;Option 2&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Modal -->
+      <section class="docs-section">
+        <h2>Modal (Checkbox-based)</h2>
+        <p>Modal dialog using a hidden checkbox for state.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <label for="demo-modal" class="tui-btn tui-btn-primary">Open Modal</label>
+
+            <input type="checkbox" id="demo-modal" class="tui-modal-toggle">
+            <div class="tui-modal">
+              <div class="tui-modal-box">
+                <div class="tui-modal-header">
+                  <span>Modal Title</span>
+                  <label for="demo-modal" class="tui-modal-close">&times;</label>
+                </div>
+                <div class="tui-modal-body">
+                  <p>This modal works entirely with CSS! No JavaScript required.</p>
+                  <p class="tui-text-dim">Click outside or the X to close.</p>
+                </div>
+                <div class="tui-modal-footer">
+                  <label for="demo-modal" class="tui-btn">Cancel</label>
+                  <label for="demo-modal" class="tui-btn tui-btn-primary">Confirm</label>
+                </div>
+              </div>
+              <label for="demo-modal" class="tui-modal-backdrop"></label>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;label for="my-modal" class="tui-btn"&gt;Open Modal&lt;/label&gt;
+
+&lt;input type="checkbox" id="my-modal" class="tui-modal-toggle"&gt;
+&lt;div class="tui-modal"&gt;
+  &lt;div class="tui-modal-box"&gt;
+    &lt;div class="tui-modal-header"&gt;
+      &lt;span&gt;Title&lt;/span&gt;
+      &lt;label for="my-modal" class="tui-modal-close"&gt;&amp;times;&lt;/label&gt;
+    &lt;/div&gt;
+    &lt;div class="tui-modal-body"&gt;Content&lt;/div&gt;
+    &lt;div class="tui-modal-footer"&gt;
+      &lt;label for="my-modal" class="tui-btn"&gt;Close&lt;/label&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;label for="my-modal" class="tui-modal-backdrop"&gt;&lt;/label&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Toggle -->
+      <section class="docs-section">
+        <h2>Toggle Switch</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <label class="tui-toggle">
+                <input type="checkbox" checked>
+                <span class="tui-toggle-slider"></span>
+                <span class="tui-toggle-label">Dark Mode</span>
+              </label>
+              <label class="tui-toggle">
+                <input type="checkbox">
+                <span class="tui-toggle-slider"></span>
+                <span class="tui-toggle-label">Notifications</span>
+              </label>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;label class="tui-toggle"&gt;
+  &lt;input type="checkbox" checked&gt;
+  &lt;span class="tui-toggle-slider"&gt;&lt;/span&gt;
+  &lt;span class="tui-toggle-label"&gt;Dark Mode&lt;/span&gt;
+&lt;/label&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Checkbox & Radio -->
+      <section class="docs-section">
+        <h2>Styled Checkbox & Radio</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: flex; gap: 2rem;">
+              <div>
+                <h4 class="tui-text" style="margin-bottom: 0.5rem;">Checkboxes</h4>
+                <label class="tui-checkbox">
+                  <input type="checkbox" checked>
+                  <span class="tui-checkbox-mark"></span>
+                  <span>Option A</span>
+                </label>
+                <label class="tui-checkbox">
+                  <input type="checkbox">
+                  <span class="tui-checkbox-mark"></span>
+                  <span>Option B</span>
+                </label>
+              </div>
+              <div>
+                <h4 class="tui-text" style="margin-bottom: 0.5rem;">Radio Buttons</h4>
+                <label class="tui-radio">
+                  <input type="radio" name="demo-radio" checked>
+                  <span class="tui-radio-mark"></span>
+                  <span>Choice 1</span>
+                </label>
+                <label class="tui-radio">
+                  <input type="radio" name="demo-radio">
+                  <span class="tui-radio-mark"></span>
+                  <span>Choice 2</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;label class="tui-checkbox"&gt;
+  &lt;input type="checkbox"&gt;
+  &lt;span class="tui-checkbox-mark"&gt;&lt;/span&gt;
+  &lt;span&gt;Label&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;label class="tui-radio"&gt;
+  &lt;input type="radio" name="group"&gt;
+  &lt;span class="tui-radio-mark"&gt;&lt;/span&gt;
+  &lt;span&gt;Label&lt;/span&gt;
+&lt;/label&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tooltip -->
+      <section class="docs-section">
+        <h2>Tooltip</h2>
+        <p>Tooltips using <code class="tui-code">data-tip</code> attribute.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: flex; gap: 1rem;">
+              <span class="tui-tooltip" data-tip="Default tooltip">Hover me</span>
+              <span class="tui-tooltip tui-tooltip-top" data-tip="Top tooltip">Top</span>
+              <span class="tui-tooltip tui-tooltip-bottom" data-tip="Bottom tooltip">Bottom</span>
+              <span class="tui-tooltip tui-tooltip-left" data-tip="Left tooltip">Left</span>
+              <span class="tui-tooltip tui-tooltip-right" data-tip="Right tooltip">Right</span>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;span class="tui-tooltip" data-tip="Tooltip text"&gt;Hover me&lt;/span&gt;
+&lt;span class="tui-tooltip tui-tooltip-top" data-tip="Top"&gt;Top&lt;/span&gt;
+&lt;span class="tui-tooltip tui-tooltip-bottom" data-tip="Bottom"&gt;Bottom&lt;/span&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Range Slider -->
+      <section class="docs-section">
+        <h2>Range Slider</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 300px;">
+              <input type="range" class="tui-range" min="0" max="100" value="50">
+              <input type="range" class="tui-range tui-range-success" min="0" max="100" value="75">
+              <input type="range" class="tui-range tui-range-warning" min="0" max="100" value="25">
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;input type="range" class="tui-range" min="0" max="100" value="50"&gt;
+&lt;input type="range" class="tui-range tui-range-success"&gt;
+&lt;input type="range" class="tui-range tui-range-warning"&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rating -->
+      <section class="docs-section">
+        <h2>Rating (Radio-based)</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-rating">
+              <input type="radio" name="rating" value="1" class="tui-rating-input">
+              <input type="radio" name="rating" value="2" class="tui-rating-input">
+              <input type="radio" name="rating" value="3" class="tui-rating-input" checked>
+              <input type="radio" name="rating" value="4" class="tui-rating-input">
+              <input type="radio" name="rating" value="5" class="tui-rating-input">
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-rating"&gt;
+  &lt;input type="radio" name="rating" value="1" class="tui-rating-input"&gt;
+  &lt;input type="radio" name="rating" value="2" class="tui-rating-input"&gt;
+  &lt;input type="radio" name="rating" value="3" class="tui-rating-input" checked&gt;
+  &lt;input type="radio" name="rating" value="4" class="tui-rating-input"&gt;
+  &lt;input type="radio" name="rating" value="5" class="tui-rating-input"&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Steps -->
+      <section class="docs-section">
+        <h2>Steps Indicator</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-steps">
+              <div class="tui-step tui-step-done">Install</div>
+              <div class="tui-step tui-step-done">Configure</div>
+              <div class="tui-step tui-step-active">Deploy</div>
+              <div class="tui-step">Monitor</div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-steps"&gt;
+  &lt;div class="tui-step tui-step-done"&gt;Install&lt;/div&gt;
+  &lt;div class="tui-step tui-step-done"&gt;Configure&lt;/div&gt;
+  &lt;div class="tui-step tui-step-active"&gt;Deploy&lt;/div&gt;
+  &lt;div class="tui-step"&gt;Monitor&lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="docs-footer">
+        <p class="tui-text-dim">web-tui is MIT licensed.</p>
+      </footer>
+    </main>
+  </div>
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>

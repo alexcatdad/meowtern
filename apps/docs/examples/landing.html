@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page Example - web-tui</title>
+  <link rel="stylesheet" href="../../../packages/web-tui/src/css/web-tui.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; }
+    .hero { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 2rem; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--tui-panel) 0%, var(--tui-bg) 100%); z-index: -1; }
+    .hero-content { max-width: 800px; text-align: center; }
+    .hero-title { font-size: clamp(2rem, 8vw, 4rem); margin-bottom: 1rem; }
+    .hero-subtitle { font-size: 1.25rem; color: var(--tui-dim); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; border-bottom: 1px solid var(--tui-grid-line); }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { color: var(--tui-fg); text-decoration: none; }
+    .nav-links a:hover { color: var(--tui-accent); }
+    .section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .section-title { text-align: center; margin-bottom: 3rem; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .pricing-card { padding: 2rem; border: 1px solid var(--tui-grid-line); border-radius: var(--tui-radius); background: var(--tui-panel); text-align: center; }
+    .pricing-card.featured { border-color: var(--tui-accent); }
+    .pricing-price { font-size: 3rem; color: var(--tui-accent); margin: 1rem 0; }
+    .pricing-features { list-style: none; padding: 0; margin: 1.5rem 0; text-align: left; }
+    .pricing-features li { padding: 0.5rem 0; border-bottom: 1px solid var(--tui-grid-line); }
+    .pricing-features li::before { content: '[+] '; color: var(--tui-success); }
+    .footer { padding: 2rem; border-top: 1px solid var(--tui-grid-line); text-align: center; }
+    .ascii-art { font-size: 0.6rem; line-height: 1.2; color: var(--tui-accent); margin-bottom: 2rem; }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <span style="color: var(--tui-accent); font-weight: bold; font-size: 1.25rem;">&gt;_ CloudTerm</span>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#docs">Docs</a>
+      <a href="#" class="tui-btn tui-btn-primary tui-btn-sm">Sign Up</a>
+    </div>
+    <select class="tui-input-field" id="theme-select" style="width: auto;">
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+      <option value="matrix-green">Matrix</option>
+      <option value="retro-amber">Retro</option>
+    </select>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <pre class="ascii-art">
+   _____ _                 _ _____
+  / ____| |               | |_   _|
+ | |    | | ___  _   _  __| | | |  ___ _ __ _ __ ___
+ | |    | |/ _ \| | | |/ _` | | | / _ \ '__| '_ ` _ \
+ | |____| | (_) | |_| | (_| || ||  __/ |  | | | | | |
+  \_____|_|\___/ \__,_|\__,_\_____\___|_|  |_| |_| |_|</pre>
+
+      <h1 class="hero-title">
+        <span style="color: var(--tui-accent);">Cloud Infrastructure</span><br>
+        <span class="tui-text">Made Simple</span>
+      </h1>
+      <p class="hero-subtitle">
+        Deploy, manage, and monitor your servers with a beautiful terminal-like interface.
+        Built for developers who love the command line.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <button class="tui-btn tui-btn-primary tui-btn-lg">[&gt;] Get Started</button>
+        <button class="tui-btn tui-btn-secondary tui-btn-lg">[?] View Demo</button>
+      </div>
+
+      <div style="margin-top: 3rem;">
+        <div class="tui-window" style="max-width: 600px; margin: 0 auto; text-align: left;">
+          <div class="tui-window-header">
+            <div class="tui-window-controls">
+              <button class="tui-window-control tui-window-control-close"></button>
+              <button class="tui-window-control tui-window-control-minimize"></button>
+              <button class="tui-window-control tui-window-control-maximize"></button>
+            </div>
+            <span class="tui-window-title">user@cloudterm:~</span>
+          </div>
+          <div class="tui-window-body">
+            <div class="tui-terminal-output">
+              <div class="tui-line"><span class="tui-prompt">$</span> cloudterm deploy --app myapp</div>
+              <div class="tui-line" style="color: var(--tui-success);">Deploying myapp to production...</div>
+              <div class="tui-line">Creating container... <span style="color: var(--tui-success);">done</span></div>
+              <div class="tui-line">Configuring network... <span style="color: var(--tui-success);">done</span></div>
+              <div class="tui-line">Starting services... <span style="color: var(--tui-success);">done</span></div>
+              <div class="tui-line" style="color: var(--tui-accent);">App deployed at https://myapp.cloudterm.io</div>
+              <div class="tui-line"><span class="tui-prompt">$</span> <span class="tui-cursor">_</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section" id="features">
+    <h2 class="section-title" style="color: var(--tui-accent);">[ Features ]</h2>
+
+    <div class="feature-grid">
+      <div class="tui-box tui-box-bordered">
+        <div class="tui-box-header">[1] One-Click Deploy</div>
+        <p class="tui-text-dim">Deploy your apps instantly with a single command. Support for Docker, Node.js, Python, and more.</p>
+        <div style="margin-top: 1rem;">
+          <span class="tui-badge">Docker</span>
+          <span class="tui-badge">Node.js</span>
+          <span class="tui-badge">Python</span>
+        </div>
+      </div>
+
+      <div class="tui-box tui-box-bordered">
+        <div class="tui-box-header">[2] Real-time Monitoring</div>
+        <p class="tui-text-dim">Watch your servers in real-time with beautiful terminal-style dashboards and alerts.</p>
+        <div class="tui-progress" style="margin-top: 1rem;">
+          <div class="tui-progress-bar tui-progress-bar-success" style="width: 45%;"></div>
+        </div>
+        <span class="tui-text-dim" style="font-size: 0.8rem;">CPU: 45%</span>
+      </div>
+
+      <div class="tui-box tui-box-bordered">
+        <div class="tui-box-header">[3] Auto-scaling</div>
+        <p class="tui-text-dim">Automatically scale your infrastructure based on traffic. Never worry about capacity again.</p>
+        <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+          <span class="tui-badge tui-badge-success">Auto</span>
+          <span class="tui-badge tui-badge-info">Smart</span>
+        </div>
+      </div>
+
+      <div class="tui-box tui-box-bordered">
+        <div class="tui-box-header">[4] SSH Access</div>
+        <p class="tui-text-dim">Direct SSH access to all your servers. Use your favorite terminal tools and workflows.</p>
+        <code class="tui-code">ssh user@server.cloudterm.io</code>
+      </div>
+
+      <div class="tui-box tui-box-bordered">
+        <div class="tui-box-header">[5] CI/CD Integration</div>
+        <p class="tui-text-dim">Integrate with GitHub, GitLab, and Bitbucket. Automatic deployments on every push.</p>
+        <div style="margin-top: 1rem;">
+          <span class="tui-badge">GitHub</span>
+          <span class="tui-badge">GitLab</span>
+        </div>
+      </div>
+
+      <div class="tui-box tui-box-bordered">
+        <div class="tui-box-header">[6] 99.99% Uptime</div>
+        <p class="tui-text-dim">Enterprise-grade reliability with redundant infrastructure across multiple regions.</p>
+        <div class="tui-stat-value" style="color: var(--tui-success); font-size: 2rem; margin-top: 0.5rem;">99.99%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="section" id="pricing" style="background: var(--tui-panel);">
+    <h2 class="section-title" style="color: var(--tui-accent);">[ Pricing ]</h2>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Starter</h3>
+        <div class="pricing-price">$0</div>
+        <p class="tui-text-dim">Perfect for side projects</p>
+        <ul class="pricing-features">
+          <li>1 Server</li>
+          <li>512MB RAM</li>
+          <li>10GB Storage</li>
+          <li>Community Support</li>
+        </ul>
+        <button class="tui-btn tui-btn-secondary" style="width: 100%;">Get Started</button>
+      </div>
+
+      <div class="pricing-card featured">
+        <span class="tui-badge tui-badge-success" style="margin-bottom: 1rem;">Popular</span>
+        <h3>Pro</h3>
+        <div class="pricing-price">$29</div>
+        <p class="tui-text-dim">For growing teams</p>
+        <ul class="pricing-features">
+          <li>5 Servers</li>
+          <li>4GB RAM each</li>
+          <li>100GB Storage</li>
+          <li>Auto-scaling</li>
+          <li>Priority Support</li>
+        </ul>
+        <button class="tui-btn tui-btn-primary" style="width: 100%;">Start Free Trial</button>
+      </div>
+
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <div class="pricing-price">Custom</div>
+        <p class="tui-text-dim">For large organizations</p>
+        <ul class="pricing-features">
+          <li>Unlimited Servers</li>
+          <li>Custom Resources</li>
+          <li>Dedicated Support</li>
+          <li>SLA Guarantee</li>
+          <li>On-premise Option</li>
+        </ul>
+        <button class="tui-btn tui-btn-secondary" style="width: 100%;">Contact Sales</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section" style="text-align: center;">
+    <h2 style="color: var(--tui-accent); margin-bottom: 1rem;">Ready to get started?</h2>
+    <p class="tui-text-dim" style="margin-bottom: 2rem;">Join thousands of developers building with CloudTerm.</p>
+
+    <form class="tui-form-inline" style="justify-content: center; max-width: 500px; margin: 0 auto;">
+      <div class="tui-input" style="flex: 1;">
+        <span class="tui-input-prefix">@</span>
+        <input type="email" class="tui-input-field" placeholder="your@email.com">
+      </div>
+      <button type="submit" class="tui-btn tui-btn-primary">Sign Up Free</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap;">
+      <a href="#" class="tui-link">Documentation</a>
+      <a href="#" class="tui-link">Blog</a>
+      <a href="#" class="tui-link">GitHub</a>
+      <a href="#" class="tui-link">Twitter</a>
+      <a href="#" class="tui-link">Discord</a>
+    </div>
+    <p class="tui-text-dim">&copy; 2026 CloudTerm. Built with web-tui.</p>
+  </footer>
+
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>

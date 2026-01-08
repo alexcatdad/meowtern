@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation - web-tui</title>
+  <link rel="stylesheet" href="../../../packages/web-tui/src/css/web-tui.css">
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <a href="../index.html" style="text-decoration: none;">
+          <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        </a>
+      </div>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="../installation.html">Installation</a>
+        <a href="../theming.html">Theming</a>
+        <div class="docs-nav-section">Components</div>
+        <a href="layout.html">Layout</a>
+        <a href="typography.html">Typography</a>
+        <a href="buttons.html">Buttons</a>
+        <a href="forms.html">Forms</a>
+        <a href="data.html">Data Display</a>
+        <a href="navigation.html" class="active">Navigation</a>
+        <a href="overlays.html">Overlays</a>
+        <a href="interactive.html">CSS-Only Interactive</a>
+      </nav>
+      <div class="docs-theme-switcher">
+        <label>Theme</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Navigation</h1>
+      <p class="tui-text-dim" style="font-size: 1.1rem; margin-bottom: 2rem;">
+        Tabs, breadcrumbs, pagination, and navigation components.
+      </p>
+
+      <!-- Tabs -->
+      <section class="docs-section">
+        <h2>Tabs (JS-enhanced)</h2>
+        <p>For JS-enhanced tabs with keyboard navigation. For CSS-only tabs, see <a href="interactive.html" class="tui-link">Interactive Components</a>.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-tabs">
+              <div class="tui-tabs-list">
+                <button class="tui-tab active">Overview</button>
+                <button class="tui-tab">Config</button>
+                <button class="tui-tab">Logs</button>
+              </div>
+              <div class="tui-tab-panel">
+                <p>Tab content appears here.</p>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-tabs"&gt;
+  &lt;div class="tui-tabs-list"&gt;
+    &lt;button class="tui-tab active"&gt;Tab 1&lt;/button&gt;
+    &lt;button class="tui-tab"&gt;Tab 2&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="tui-tab-panel"&gt;Content&lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Breadcrumb -->
+      <section class="docs-section">
+        <h2>Breadcrumb</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <nav class="tui-breadcrumb">
+              <a href="#" class="tui-breadcrumb-item">Home</a>
+              <span class="tui-breadcrumb-separator">/</span>
+              <a href="#" class="tui-breadcrumb-item">Components</a>
+              <span class="tui-breadcrumb-separator">/</span>
+              <span class="tui-breadcrumb-item active">Navigation</span>
+            </nav>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;nav class="tui-breadcrumb"&gt;
+  &lt;a href="#" class="tui-breadcrumb-item"&gt;Home&lt;/a&gt;
+  &lt;span class="tui-breadcrumb-separator"&gt;/&lt;/span&gt;
+  &lt;a href="#" class="tui-breadcrumb-item"&gt;Section&lt;/a&gt;
+  &lt;span class="tui-breadcrumb-separator"&gt;/&lt;/span&gt;
+  &lt;span class="tui-breadcrumb-item active"&gt;Current&lt;/span&gt;
+&lt;/nav&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pagination -->
+      <section class="docs-section">
+        <h2>Pagination</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <nav class="tui-pagination">
+              <button class="tui-pagination-btn" disabled>&lt;</button>
+              <button class="tui-pagination-btn active">1</button>
+              <button class="tui-pagination-btn">2</button>
+              <button class="tui-pagination-btn">3</button>
+              <span class="tui-pagination-ellipsis">...</span>
+              <button class="tui-pagination-btn">10</button>
+              <button class="tui-pagination-btn">&gt;</button>
+            </nav>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;nav class="tui-pagination"&gt;
+  &lt;button class="tui-pagination-btn" disabled&gt;&amp;lt;&lt;/button&gt;
+  &lt;button class="tui-pagination-btn active"&gt;1&lt;/button&gt;
+  &lt;button class="tui-pagination-btn"&gt;2&lt;/button&gt;
+  &lt;span class="tui-pagination-ellipsis"&gt;...&lt;/span&gt;
+  &lt;button class="tui-pagination-btn"&gt;10&lt;/button&gt;
+  &lt;button class="tui-pagination-btn"&gt;&amp;gt;&lt;/button&gt;
+&lt;/nav&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Function Key Bar -->
+      <section class="docs-section">
+        <h2>Function Key Bar</h2>
+        <p>Classic terminal-style function key bar, like in Midnight Commander.</p>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-fnbar">
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F1</span><span class="tui-fnbar-label">Help</span></button>
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F2</span><span class="tui-fnbar-label">Menu</span></button>
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F3</span><span class="tui-fnbar-label">View</span></button>
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F4</span><span class="tui-fnbar-label">Edit</span></button>
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F5</span><span class="tui-fnbar-label">Copy</span></button>
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F6</span><span class="tui-fnbar-label">Move</span></button>
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F7</span><span class="tui-fnbar-label">Mkdir</span></button>
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F8</span><span class="tui-fnbar-label">Delete</span></button>
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F9</span><span class="tui-fnbar-label">Pull</span></button>
+              <button class="tui-fnbar-item"><span class="tui-fnbar-key">F10</span><span class="tui-fnbar-label">Quit</span></button>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-fnbar"&gt;
+  &lt;button class="tui-fnbar-item"&gt;
+    &lt;span class="tui-fnbar-key"&gt;F1&lt;/span&gt;
+    &lt;span class="tui-fnbar-label"&gt;Help&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;!-- ... more items --&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Status Bar -->
+      <section class="docs-section">
+        <h2>Status Bar</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-statusbar">
+              <div class="tui-statusbar-left">
+                <span class="tui-badge tui-badge-success">Connected</span>
+                <span>server-01.local</span>
+              </div>
+              <div class="tui-statusbar-right">
+                <span>CPU: 45%</span>
+                <span>MEM: 72%</span>
+                <span>12:34:56</span>
+              </div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-statusbar"&gt;
+  &lt;div class="tui-statusbar-left"&gt;
+    &lt;span class="tui-badge tui-badge-success"&gt;Status&lt;/span&gt;
+    &lt;span&gt;Info&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="tui-statusbar-right"&gt;
+    &lt;span&gt;Data&lt;/span&gt;
+    &lt;span&gt;Time&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Menu -->
+      <section class="docs-section">
+        <h2>Menu</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-menu" style="width: 200px;">
+              <a href="#" class="tui-menu-item active">
+                <span>[*]</span> Dashboard
+              </a>
+              <a href="#" class="tui-menu-item">
+                <span>[>]</span> Servers
+              </a>
+              <a href="#" class="tui-menu-item">
+                <span>[@]</span> Users
+              </a>
+              <div class="tui-separator"></div>
+              <a href="#" class="tui-menu-item">
+                <span>[?]</span> Settings
+              </a>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-menu"&gt;
+  &lt;a href="#" class="tui-menu-item active"&gt;Item 1&lt;/a&gt;
+  &lt;a href="#" class="tui-menu-item"&gt;Item 2&lt;/a&gt;
+  &lt;div class="tui-separator"&gt;&lt;/div&gt;
+  &lt;a href="#" class="tui-menu-item"&gt;Item 3&lt;/a&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="docs-footer">
+        <p class="tui-text-dim">web-tui is MIT licensed.</p>
+      </footer>
+    </main>
+  </div>
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+/* Documentation Site Styles */
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+.docs-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--tui-grid-line);
+  padding: 1rem;
+  background: var(--tui-panel);
+}
+
+.docs-content {
+  padding: 2rem;
+  max-width: 900px;
+}
+
+.docs-nav a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: var(--tui-fg);
+  text-decoration: none;
+  border-radius: var(--tui-radius);
+  font-size: 0.9rem;
+}
+
+.docs-nav a:hover {
+  background: var(--tui-bg);
+  color: var(--tui-accent);
+}
+
+.docs-nav a.active {
+  background: var(--tui-accent);
+  color: var(--tui-bg);
+}
+
+.docs-nav-section {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  color: var(--tui-dim);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.docs-theme-switcher {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--tui-grid-line);
+}
+
+.docs-theme-switcher label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--tui-dim);
+  font-size: 0.85rem;
+}
+
+.docs-section {
+  margin-bottom: 3rem;
+}
+
+.docs-section h2 {
+  color: var(--tui-accent);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--tui-grid-line);
+}
+
+.docs-footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--tui-grid-line);
+}
+
+/* Code blocks */
+.code-block {
+  background: var(--tui-bg);
+  border: 1px solid var(--tui-grid-line);
+  border-radius: var(--tui-radius);
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.code-block code {
+  color: var(--tui-fg);
+  white-space: pre;
+  font-family: var(--tui-font-mono);
+}
+
+/* Component preview */
+.component-preview {
+  border: 1px solid var(--tui-grid-line);
+  border-radius: var(--tui-radius);
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.component-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--tui-panel);
+  border-bottom: 1px solid var(--tui-grid-line);
+  font-size: 0.85rem;
+  color: var(--tui-dim);
+}
+
+.component-preview-demo {
+  padding: 1.5rem;
+  background: var(--tui-bg);
+}
+
+.component-preview-code {
+  border-top: 1px solid var(--tui-grid-line);
+}
+
+.component-preview-code .code-block {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
+
+/* Feature grid */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.feature-card {
+  padding: 1.5rem;
+  background: var(--tui-panel);
+  border: 1px solid var(--tui-grid-line);
+  border-radius: var(--tui-radius);
+  transition: border-color 0.2s;
+}
+
+.feature-card:hover {
+  border-color: var(--tui-accent);
+}
+
+.feature-card h3 {
+  color: var(--tui-accent);
+  margin-bottom: 0.5rem;
+}
+
+/* Theme preview */
+.theme-preview {
+  border-radius: var(--tui-radius);
+  overflow: hidden;
+}
+
+/* Class table */
+.class-table {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.class-table th {
+  text-align: left;
+  padding: 0.75rem;
+  background: var(--tui-panel);
+  border-bottom: 2px solid var(--tui-grid-line);
+}
+
+.class-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--tui-grid-line);
+  vertical-align: top;
+}
+
+.class-table code {
+  background: var(--tui-bg);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--tui-radius);
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .docs-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-sidebar {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--tui-grid-line);
+  }
+
+  .docs-content {
+    padding: 1rem;
+  }
+
+  .component-preview-demo {
+    padding: 1rem;
+  }
+}
+
+/* Copy button */
+.copy-btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--tui-grid-line);
+  color: var(--tui-dim);
+  cursor: pointer;
+  border-radius: var(--tui-radius);
+}
+
+.copy-btn:hover {
+  background: var(--tui-panel);
+  color: var(--tui-fg);
+}
+
+/* Variant showcase */
+.variant-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0;
+}
+
+/* Size demo */
+.size-demo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}

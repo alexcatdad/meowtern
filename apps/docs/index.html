@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>web-tui - Framework-Agnostic Terminal UI</title>
+  <link rel="stylesheet" href="../../packages/web-tui/src/css/web-tui.css">
+  <style>
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+    .docs-sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid var(--tui-grid-line);
+      padding: 1rem;
+    }
+    .docs-content {
+      padding: 2rem;
+      max-width: 900px;
+    }
+    .docs-nav a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: var(--tui-fg);
+      text-decoration: none;
+      border-radius: var(--tui-radius);
+    }
+    .docs-nav a:hover {
+      background: var(--tui-panel);
+      color: var(--tui-accent);
+    }
+    .docs-nav a.active {
+      background: var(--tui-accent);
+      color: var(--tui-bg);
+    }
+    .docs-section {
+      margin-bottom: 3rem;
+    }
+    .docs-hero {
+      text-align: center;
+      padding: 3rem 1rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, var(--tui-panel) 0%, var(--tui-bg) 100%);
+      border: 1px solid var(--tui-grid-line);
+      border-radius: var(--tui-radius);
+    }
+    .docs-hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--tui-accent);
+    }
+    .docs-hero p {
+      font-size: 1.2rem;
+      color: var(--tui-dim);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .feature-card {
+      padding: 1.5rem;
+      background: var(--tui-panel);
+      border: 1px solid var(--tui-grid-line);
+      border-radius: var(--tui-radius);
+    }
+    .feature-card h3 {
+      color: var(--tui-accent);
+      margin-bottom: 0.5rem;
+    }
+    .code-block {
+      background: var(--tui-bg);
+      border: 1px solid var(--tui-grid-line);
+      border-radius: var(--tui-radius);
+      padding: 1rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    .code-block code {
+      color: var(--tui-fg);
+    }
+    .quick-start-steps {
+      counter-reset: step;
+    }
+    .quick-start-steps li {
+      counter-increment: step;
+      margin-bottom: 1.5rem;
+      padding-left: 3rem;
+      position: relative;
+    }
+    .quick-start-steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      width: 2rem;
+      height: 2rem;
+      background: var(--tui-accent);
+      color: var(--tui-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    @media (max-width: 768px) {
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+      .docs-sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--tui-grid-line);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="docs-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        <span class="tui-badge">v0.1.0</span>
+      </div>
+
+      <nav class="docs-nav">
+        <a href="index.html" class="active">Home</a>
+        <a href="installation.html">Installation</a>
+        <a href="theming.html">Theming</a>
+
+        <div style="margin-top: 1rem; padding: 0.5rem 1rem; color: var(--tui-dim); font-size: 0.85rem;">
+          Components
+        </div>
+        <a href="components/layout.html">Layout</a>
+        <a href="components/typography.html">Typography</a>
+        <a href="components/buttons.html">Buttons</a>
+        <a href="components/forms.html">Forms</a>
+        <a href="components/data.html">Data Display</a>
+        <a href="components/navigation.html">Navigation</a>
+        <a href="components/overlays.html">Overlays</a>
+        <a href="components/interactive.html">CSS-Only Interactive</a>
+
+        <div style="margin-top: 1rem; padding: 0.5rem 1rem; color: var(--tui-dim); font-size: 0.85rem;">
+          Examples
+        </div>
+        <a href="examples/dashboard.html">Dashboard</a>
+        <a href="examples/landing.html">Landing Page</a>
+      </nav>
+
+      <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--tui-grid-line);">
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--tui-dim); font-size: 0.85rem;">
+          Theme
+        </label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+          <option value="polar-night">Polar Night</option>
+          <option value="btop-classic">Btop Classic</option>
+          <option value="red-alert">Red Alert</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+      <!-- Hero Section -->
+      <div class="docs-hero">
+        <h1>&gt;_ web-tui</h1>
+        <p>A framework-agnostic terminal UI component library. Build retro terminal interfaces with pure CSS classes, similar to DaisyUI.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="installation.html" class="tui-btn tui-btn-primary">Get Started</a>
+          <a href="components/layout.html" class="tui-btn tui-btn-secondary">Components</a>
+          <a href="https://github.com/alexcatdad/meowtern" class="tui-btn tui-btn-ghost">GitHub</a>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <section class="docs-section">
+        <h2 class="tui-text" style="margin-bottom: 1rem;">Why web-tui?</h2>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>Framework Agnostic</h3>
+            <p class="tui-text-dim">Works with any framework or vanilla HTML. Use with React, Vue, Svelte, or no framework at all.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>CSS-Only Interactive</h3>
+            <p class="tui-text-dim">Tabs, modals, dropdowns, and more - all without JavaScript. Uses native CSS states like :checked and :focus-within.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>7 Terminal Themes</h3>
+            <p class="tui-text-dim">Dark, Light, Matrix Green, Retro Amber, Polar Night, and more. Easy custom theme creation with CSS variables.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>Tailwind Compatible</h3>
+            <p class="tui-text-dim">Use as a Tailwind plugin for terminal color utilities, or use standalone CSS for non-Tailwind projects.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>50+ Components</h3>
+            <p class="tui-text-dim">Windows, boxes, buttons, tables, tabs, menus, dialogs, progress bars, badges, and more terminal UI elements.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>React Components</h3>
+            <p class="tui-text-dim">Optional React components available for those who prefer a component-based approach.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Start -->
+      <section class="docs-section">
+        <h2 class="tui-text" style="margin-bottom: 1rem;">Quick Start</h2>
+
+        <ol class="quick-start-steps" style="list-style: none; padding: 0;">
+          <li>
+            <strong>Install the package</strong>
+            <div class="code-block">
+              <code>npm install web-tui</code>
+            </div>
+          </li>
+
+          <li>
+            <strong>Import the CSS</strong>
+            <div class="code-block">
+              <code>&lt;link rel="stylesheet" href="node_modules/web-tui/src/css/web-tui.css"&gt;</code>
+            </div>
+            <p class="tui-text-dim">Or in your CSS/JS:</p>
+            <div class="code-block">
+              <code>@import 'web-tui/css';</code>
+            </div>
+          </li>
+
+          <li>
+            <strong>Use the classes</strong>
+            <div class="code-block">
+<code>&lt;div class="tui-window"&gt;
+  &lt;div class="tui-window-header"&gt;
+    &lt;span class="tui-window-title"&gt;Terminal&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="tui-window-body"&gt;
+    &lt;p class="tui-text"&gt;Hello, World!&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Live Example -->
+      <section class="docs-section">
+        <h2 class="tui-text" style="margin-bottom: 1rem;">Live Example</h2>
+
+        <div class="tui-window">
+          <div class="tui-window-header">
+            <div class="tui-window-controls">
+              <button class="tui-window-control tui-window-control-close"></button>
+              <button class="tui-window-control tui-window-control-minimize"></button>
+              <button class="tui-window-control tui-window-control-maximize"></button>
+            </div>
+            <span class="tui-window-title">user@web-tui:~</span>
+          </div>
+          <div class="tui-window-body">
+            <div class="tui-box tui-box-bordered" style="margin-bottom: 1rem;">
+              <div class="tui-box-header">System Status</div>
+              <div class="tui-kv">
+                <div class="tui-kv-item">
+                  <span class="tui-kv-key">CPU</span>
+                  <span class="tui-kv-value">
+                    <div class="tui-progress" style="width: 150px;">
+                      <div class="tui-progress-bar" style="width: 45%;"></div>
+                    </div>
+                    45%
+                  </span>
+                </div>
+                <div class="tui-kv-item">
+                  <span class="tui-kv-key">Memory</span>
+                  <span class="tui-kv-value">
+                    <div class="tui-progress" style="width: 150px;">
+                      <div class="tui-progress-bar tui-progress-bar-warning" style="width: 72%;"></div>
+                    </div>
+                    72%
+                  </span>
+                </div>
+                <div class="tui-kv-item">
+                  <span class="tui-kv-key">Disk</span>
+                  <span class="tui-kv-value">
+                    <div class="tui-progress" style="width: 150px;">
+                      <div class="tui-progress-bar tui-progress-bar-success" style="width: 23%;"></div>
+                    </div>
+                    23%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <span class="tui-badge tui-badge-success">Online</span>
+              <span class="tui-badge tui-badge-info">3 Processes</span>
+              <span class="tui-badge">Ubuntu 22.04</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage Options -->
+      <section class="docs-section">
+        <h2 class="tui-text" style="margin-bottom: 1rem;">Usage Options</h2>
+
+        <div class="tui-tabs-radio" style="width: 100%;">
+          <input type="radio" name="usage-tabs" id="usage-css" class="tui-tab-input" checked>
+          <label for="usage-css" class="tui-tab-label">Pure CSS</label>
+          <div class="tui-tab-content">
+            <div class="code-block">
+<code>&lt;!-- Just include the CSS file --&gt;
+&lt;link rel="stylesheet" href="web-tui/css"&gt;
+
+&lt;!-- Then use classes --&gt;
+&lt;button class="tui-btn tui-btn-primary"&gt;Click Me&lt;/button&gt;</code>
+            </div>
+          </div>
+
+          <input type="radio" name="usage-tabs" id="usage-tailwind" class="tui-tab-input">
+          <label for="usage-tailwind" class="tui-tab-label">Tailwind</label>
+          <div class="tui-tab-content">
+            <div class="code-block">
+<code>// tailwind.config.js
+module.exports = {
+  plugins: [
+    require('web-tui/plugin')
+  ]
+}
+
+// Then use terminal colors
+&lt;div class="bg-terminal-panel text-terminal-cyan"&gt;...&lt;/div&gt;</code>
+            </div>
+          </div>
+
+          <input type="radio" name="usage-tabs" id="usage-react" class="tui-tab-input">
+          <label for="usage-react" class="tui-tab-label">React</label>
+          <div class="tui-tab-content">
+            <div class="code-block">
+<code>import { TerminalWindow, Box, Button } from 'web-tui/react';
+
+function App() {
+  return (
+    &lt;TerminalWindow title="My App"&gt;
+      &lt;Box bordered title="Welcome"&gt;
+        &lt;Button variant="primary"&gt;Click Me&lt;/Button&gt;
+      &lt;/Box&gt;
+    &lt;/TerminalWindow&gt;
+  );
+}</code>
+            </div>
+          </div>
+
+          <input type="radio" name="usage-tabs" id="usage-js" class="tui-tab-input">
+          <label for="usage-js" class="tui-tab-label">Vanilla JS</label>
+          <div class="tui-tab-content">
+            <div class="code-block">
+<code>import { initTheme, initDialog } from 'web-tui/js';
+
+// Initialize theme switcher
+const theme = initTheme({ defaultTheme: 'dark' });
+theme.setTheme('matrix-green');
+
+// Initialize dialog (for enhanced behavior)
+const dialog = initDialog('.my-dialog');
+dialog.open();</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--tui-grid-line);">
+        <p class="tui-text-dim">
+          web-tui is MIT licensed. Made with <span style="color: var(--tui-danger);">&#9829;</span> for terminal enthusiasts.
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Theme switcher
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>

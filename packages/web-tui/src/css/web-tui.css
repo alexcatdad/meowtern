@@ -1,0 +1,2907 @@
+/**
+ * web-tui - Framework-agnostic Terminal UI Components
+ * Version: 1.0.0
+ *
+ * This is the standalone CSS version.
+ * For Tailwind users, use the plugin instead: require('web-tui/plugin')
+ *
+ * Usage:
+ *   <link rel="stylesheet" href="web-tui.css">
+ *   or
+ *   @import 'web-tui/css';
+ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (THEMING)
+   ============================================ */
+:root,
+[data-theme="dark"] {
+  /* ANSI 16 colors */
+  --tui-black: #03040a;
+  --tui-red: #ff5c7c;
+  --tui-green: #5bff8e;
+  --tui-yellow: #ffcb6b;
+  --tui-blue: #68d1ff;
+  --tui-magenta: #ff8cc1;
+  --tui-cyan: #15f1ff;
+  --tui-white: #f7f6fb;
+  --tui-bright-black: #2f3247;
+  --tui-bright-red: #ff7894;
+  --tui-bright-green: #80ffa9;
+  --tui-bright-yellow: #ffe08f;
+  --tui-bright-blue: #8bdcff;
+  --tui-bright-magenta: #ff9fd2;
+  --tui-bright-cyan: #5cfff5;
+  --tui-bright-white: #ffffff;
+
+  /* Semantic colors */
+  --tui-accent: #15f1ff;
+  --tui-accent-muted: #00a5bb;
+  --tui-success: #7bff69;
+  --tui-warning: #ffcb6b;
+  --tui-danger: #ff5c7c;
+  --tui-info: #68d1ff;
+
+  /* Layout colors */
+  --tui-bg: #03040a;
+  --tui-fg: #f7f6fb;
+  --tui-panel: #080b18;
+  --tui-overlay: rgba(3, 4, 10, 0.92);
+  --tui-grid-line: rgba(255, 255, 255, 0.08);
+
+  /* Design tokens */
+  --tui-radius: 4px;
+  --tui-font-mono: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+
+  /* Spacing scale */
+  --tui-space-1: 0.25rem;
+  --tui-space-2: 0.5rem;
+  --tui-space-3: 0.75rem;
+  --tui-space-4: 1rem;
+  --tui-space-6: 1.5rem;
+  --tui-space-8: 2rem;
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --tui-black: #ffffff;
+  --tui-white: #1a1a2e;
+  --tui-bg: #f5f5f7;
+  --tui-fg: #1a1a2e;
+  --tui-panel: #e8e8ec;
+  --tui-bright-black: #c0c0c8;
+  --tui-grid-line: rgba(0, 0, 0, 0.08);
+  --tui-overlay: rgba(245, 245, 247, 0.92);
+}
+
+/* Theme presets */
+[data-theme="btop-classic"] {
+  --tui-bg: #0a0e14;
+  --tui-fg: #b3b1ad;
+  --tui-accent: #39bae6;
+  --tui-success: #c2d94c;
+  --tui-warning: #ffb454;
+  --tui-danger: #ff3333;
+  --tui-info: #59c2ff;
+  --tui-panel: #0d1117;
+  --tui-grid-line: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="polar-night"] {
+  --tui-bg: #2e3440;
+  --tui-fg: #eceff4;
+  --tui-accent: #88c0d0;
+  --tui-success: #a3be8c;
+  --tui-warning: #ebcb8b;
+  --tui-danger: #bf616a;
+  --tui-info: #81a1c1;
+  --tui-panel: #3b4252;
+  --tui-grid-line: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="retro-amber"] {
+  --tui-bg: #1a1200;
+  --tui-fg: #ffb000;
+  --tui-accent: #ffcc00;
+  --tui-success: #80ff00;
+  --tui-warning: #ff8000;
+  --tui-danger: #ff4000;
+  --tui-info: #ffdd55;
+  --tui-panel: #261a00;
+  --tui-grid-line: rgba(255, 176, 0, 0.15);
+}
+
+[data-theme="matrix-green"] {
+  --tui-bg: #0d0d0d;
+  --tui-fg: #00ff00;
+  --tui-accent: #00ff66;
+  --tui-success: #00ff00;
+  --tui-warning: #66ff00;
+  --tui-danger: #ff0000;
+  --tui-info: #00ffcc;
+  --tui-panel: #0a1a0a;
+  --tui-grid-line: rgba(0, 255, 0, 0.1);
+}
+
+[data-theme="red-alert"] {
+  --tui-bg: #1a0000;
+  --tui-fg: #ff4444;
+  --tui-accent: #ff6666;
+  --tui-success: #00ff88;
+  --tui-warning: #ffaa00;
+  --tui-danger: #ff0000;
+  --tui-info: #ff8888;
+  --tui-panel: #260000;
+  --tui-grid-line: rgba(255, 0, 0, 0.15);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes tui-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tui-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes tui-glow {
+  0% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes tui-scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes tui-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+.tui-base {
+  font-family: var(--tui-font-mono);
+  background-color: var(--tui-bg);
+  color: var(--tui-fg);
+  line-height: 1.5;
+}
+
+/* ============================================
+   TEXT COMPONENTS
+   ============================================ */
+.tui-text {
+  font-family: var(--tui-font-mono);
+  color: var(--tui-fg);
+}
+
+.tui-text-dim {
+  color: var(--tui-bright-black);
+}
+
+.tui-text-bold {
+  font-weight: 700;
+  color: var(--tui-bright-white);
+}
+
+.tui-text-error {
+  color: var(--tui-red);
+}
+
+.tui-text-success {
+  color: var(--tui-green);
+}
+
+.tui-text-warning {
+  color: var(--tui-yellow);
+}
+
+.tui-text-info {
+  color: var(--tui-blue);
+}
+
+.tui-text-accent {
+  color: var(--tui-accent);
+}
+
+/* ============================================
+   BOX / CONTAINER COMPONENTS
+   ============================================ */
+.tui-box {
+  font-family: var(--tui-font-mono);
+  background-color: var(--tui-bg);
+  color: var(--tui-fg);
+  border-radius: var(--tui-radius);
+  padding: var(--tui-space-4);
+}
+
+.tui-box-bordered {
+  border: 1px solid var(--tui-grid-line);
+}
+
+.tui-box-titled {
+  position: relative;
+  padding-top: var(--tui-space-6);
+}
+
+.tui-box-title {
+  position: absolute;
+  top: -0.5rem;
+  left: 0.75rem;
+  background-color: var(--tui-bg);
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+  color: var(--tui-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   SURFACE COMPONENTS
+   ============================================ */
+.tui-surface {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--tui-radius);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--tui-fg);
+  transition: all 200ms;
+  background: linear-gradient(to bottom right, #0f1933, #070c18, #05060f);
+}
+
+.tui-surface-sunken {
+  background: linear-gradient(to bottom, #080e1c, #050810, #05060c);
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6);
+}
+
+.tui-surface-raised {
+  background: linear-gradient(to bottom, #12213e, #081021, #05070f);
+  box-shadow: 0 18px 45px rgba(21, 241, 255, 0.15);
+}
+
+.tui-surface-crt {
+  background: linear-gradient(to bottom, #0a0f1a, #050810, #030408);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 0 8px rgba(22, 198, 12, 0.2),
+    inset 0 0 20px rgba(22, 198, 12, 0.05);
+}
+
+.tui-surface-crt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  opacity: 0.6;
+}
+
+.tui-surface-crt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(22, 198, 12, 0.08),
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+}
+
+.tui-surface-padded {
+  padding: var(--tui-space-3);
+}
+
+@media (min-width: 640px) {
+  .tui-surface-padded {
+    padding: var(--tui-space-4);
+  }
+}
+
+.tui-surface-interactive {
+  cursor: pointer;
+}
+
+.tui-surface-interactive:hover {
+  box-shadow: 0 0 35px rgba(21, 241, 255, 0.32);
+}
+
+/* ============================================
+   BUTTON COMPONENTS
+   ============================================ */
+.tui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--tui-radius);
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 150ms;
+  text-decoration: none;
+  background-color: var(--tui-bright-black);
+  color: var(--tui-fg);
+}
+
+.tui-btn:hover {
+  opacity: 0.9;
+}
+
+.tui-btn:disabled,
+.tui-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tui-btn-primary {
+  background-color: var(--tui-accent);
+  color: var(--tui-black);
+}
+
+.tui-btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--tui-bright-black);
+  color: var(--tui-fg);
+}
+
+.tui-btn-secondary:hover {
+  border-color: var(--tui-accent);
+  color: var(--tui-accent);
+}
+
+.tui-btn-danger {
+  background-color: var(--tui-danger);
+  color: var(--tui-black);
+}
+
+.tui-btn-success {
+  background-color: var(--tui-success);
+  color: var(--tui-black);
+}
+
+.tui-btn-ghost {
+  background-color: transparent;
+  color: var(--tui-fg);
+}
+
+.tui-btn-ghost:hover {
+  background-color: var(--tui-bright-black);
+}
+
+.tui-btn-sm {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.tui-btn-lg {
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+/* ============================================
+   INPUT COMPONENTS
+   ============================================ */
+.tui-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  background-color: var(--tui-bg);
+  color: var(--tui-fg);
+  border: 1px solid var(--tui-bright-black);
+  border-radius: var(--tui-radius);
+  padding: 0.5rem 0.75rem;
+  outline: none;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.tui-input:focus,
+.tui-input:focus-within {
+  border-color: var(--tui-accent);
+  box-shadow: 0 0 0 2px rgba(21, 241, 255, 0.2);
+}
+
+.tui-input::placeholder {
+  color: var(--tui-bright-black);
+}
+
+.tui-input-prefix {
+  color: var(--tui-accent);
+  user-select: none;
+}
+
+.tui-input-field {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.tui-input-field::placeholder {
+  color: var(--tui-bright-black);
+}
+
+/* ============================================
+   BADGE COMPONENTS
+   ============================================ */
+.tui-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--tui-font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--tui-bright-black);
+  color: var(--tui-fg);
+}
+
+.tui-badge-success {
+  background-color: rgba(91, 255, 142, 0.2);
+  color: var(--tui-success);
+}
+
+.tui-badge-warning {
+  background-color: rgba(255, 203, 107, 0.2);
+  color: var(--tui-warning);
+}
+
+.tui-badge-danger {
+  background-color: rgba(255, 92, 124, 0.2);
+  color: var(--tui-danger);
+}
+
+.tui-badge-info {
+  background-color: rgba(104, 209, 255, 0.2);
+  color: var(--tui-info);
+}
+
+.tui-badge-accent {
+  background-color: rgba(21, 241, 255, 0.2);
+  color: var(--tui-accent);
+}
+
+/* ============================================
+   SEPARATOR
+   ============================================ */
+.tui-separator {
+  border: none;
+  border-top: 1px solid var(--tui-grid-line);
+  margin: 0.5rem 0;
+}
+
+.tui-separator-vertical {
+  border-top: none;
+  border-left: 1px solid var(--tui-grid-line);
+  height: 100%;
+  width: 1px;
+  margin: 0 0.5rem;
+}
+
+/* ============================================
+   TERMINAL WINDOW
+   ============================================ */
+.tui-window {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--tui-font-mono);
+  background-color: var(--tui-bg);
+  color: var(--tui-fg);
+  border-radius: var(--tui-radius);
+  border: 1px solid var(--tui-grid-line);
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.tui-window-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--tui-panel);
+  border-bottom: 1px solid var(--tui-grid-line);
+}
+
+.tui-window-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tui-window-control {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--tui-bright-black);
+  border: none;
+  cursor: pointer;
+}
+
+.tui-window-control-close {
+  background-color: var(--tui-red);
+}
+
+.tui-window-control-minimize {
+  background-color: var(--tui-yellow);
+}
+
+.tui-window-control-maximize {
+  background-color: var(--tui-green);
+}
+
+.tui-window-title {
+  flex: 1;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--tui-bright-black);
+}
+
+.tui-window-body {
+  flex: 1;
+  padding: 1rem;
+  overflow: auto;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+.tui-tabs {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--tui-font-mono);
+}
+
+.tui-tabs-list {
+  display: flex;
+  border-bottom: 1px solid var(--tui-grid-line);
+  gap: 0.25rem;
+}
+
+.tui-tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--tui-bright-black);
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.tui-tab:hover {
+  color: var(--tui-fg);
+}
+
+.tui-tab[data-active="true"],
+.tui-tab.active,
+.tui-tab[aria-selected="true"] {
+  color: var(--tui-accent);
+  border-bottom-color: var(--tui-accent);
+}
+
+.tui-tab-panel {
+  display: none;
+  padding: 1rem 0;
+}
+
+.tui-tab-panel[data-active="true"],
+.tui-tab-panel.active {
+  display: block;
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+.tui-progress {
+  position: relative;
+  width: 100%;
+  height: 0.5rem;
+  background-color: var(--tui-bright-black);
+  border-radius: var(--tui-radius);
+  overflow: hidden;
+}
+
+.tui-progress-bar {
+  height: 100%;
+  background-color: var(--tui-accent);
+  transition: width 300ms ease-out;
+  border-radius: var(--tui-radius);
+}
+
+.tui-progress-bar-success {
+  background-color: var(--tui-success);
+}
+
+.tui-progress-bar-warning {
+  background-color: var(--tui-warning);
+}
+
+.tui-progress-bar-danger {
+  background-color: var(--tui-danger);
+}
+
+.tui-progress-label {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.625rem;
+  color: var(--tui-fg);
+}
+
+.tui-progress-lg {
+  height: 1rem;
+}
+
+.tui-progress-sm {
+  height: 0.25rem;
+}
+
+.tui-progress-pixelated .tui-progress-bar {
+  image-rendering: pixelated;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--tui-accent) 0px,
+    var(--tui-accent) 8px,
+    var(--tui-accent-muted) 8px,
+    var(--tui-accent-muted) 10px
+  );
+}
+
+/* ============================================
+   DATA TABLE
+   ============================================ */
+.tui-table {
+  width: 100%;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  border-collapse: collapse;
+  color: var(--tui-fg);
+}
+
+.tui-table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--tui-grid-line);
+  color: var(--tui-bright-black);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.tui-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--tui-grid-line);
+}
+
+.tui-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tui-table-striped tr:nth-child(even) td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tui-table th[data-sortable] {
+  cursor: pointer;
+}
+
+.tui-table th[data-sortable]:hover {
+  color: var(--tui-accent);
+}
+
+.tui-table th[data-sort="asc"]::after {
+  content: " \2191";
+}
+
+.tui-table th[data-sort="desc"]::after {
+  content: " \2193";
+}
+
+/* ============================================
+   TOOLTIP
+   ============================================ */
+.tui-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tui-tooltip-content {
+  position: absolute;
+  z-index: 50;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.75rem;
+  font-family: var(--tui-font-mono);
+  background-color: var(--tui-panel);
+  color: var(--tui-fg);
+  border-radius: var(--tui-radius);
+  border: 1px solid var(--tui-grid-line);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 150ms, visibility 150ms;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5rem;
+}
+
+.tui-tooltip:hover .tui-tooltip-content,
+.tui-tooltip[data-show] .tui-tooltip-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================
+   DIALOG / MODAL
+   ============================================ */
+.tui-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tui-overlay);
+}
+
+.tui-dialog[open],
+.tui-dialog[data-open="true"],
+.tui-dialog.open {
+  display: flex;
+}
+
+.tui-dialog-content {
+  position: relative;
+  max-width: 32rem;
+  width: 100%;
+  margin: 1rem;
+  background-color: var(--tui-panel);
+  border-radius: var(--tui-radius);
+  border: 1px solid var(--tui-grid-line);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.tui-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid var(--tui-grid-line);
+}
+
+.tui-dialog-title {
+  font-family: var(--tui-font-mono);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--tui-fg);
+  margin: 0;
+}
+
+.tui-dialog-close {
+  background-color: transparent;
+  border: none;
+  color: var(--tui-bright-black);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.tui-dialog-close:hover {
+  color: var(--tui-fg);
+}
+
+.tui-dialog-body {
+  padding: 1rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+}
+
+.tui-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--tui-grid-line);
+}
+
+/* ============================================
+   BREADCRUMB
+   ============================================ */
+.tui-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+}
+
+.tui-breadcrumb-item {
+  color: var(--tui-bright-black);
+  text-decoration: none;
+}
+
+.tui-breadcrumb-item:hover {
+  color: var(--tui-accent);
+}
+
+.tui-breadcrumb-item[data-current="true"],
+.tui-breadcrumb-item.current {
+  color: var(--tui-fg);
+}
+
+.tui-breadcrumb-separator {
+  color: var(--tui-bright-black);
+}
+
+/* ============================================
+   STAT CARD
+   ============================================ */
+.tui-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-family: var(--tui-font-mono);
+}
+
+.tui-stat-label {
+  font-size: 0.75rem;
+  color: var(--tui-bright-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tui-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--tui-fg);
+}
+
+.tui-stat-value-success {
+  color: var(--tui-success);
+}
+
+.tui-stat-value-warning {
+  color: var(--tui-warning);
+}
+
+.tui-stat-value-danger {
+  color: var(--tui-danger);
+}
+
+.tui-stat-change {
+  font-size: 0.75rem;
+}
+
+.tui-stat-change-positive {
+  color: var(--tui-success);
+}
+
+.tui-stat-change-negative {
+  color: var(--tui-danger);
+}
+
+/* ============================================
+   KEY-VALUE LIST
+   ============================================ */
+.tui-kv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+}
+
+.tui-kv-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.tui-kv-key {
+  color: var(--tui-bright-black);
+  min-width: 8rem;
+}
+
+.tui-kv-value {
+  color: var(--tui-fg);
+}
+
+.tui-kv-separator {
+  flex: 1;
+  border-bottom: 1px dotted var(--tui-grid-line);
+  margin-bottom: 0.25rem;
+}
+
+/* ============================================
+   MENU / DROPDOWN
+   ============================================ */
+.tui-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.tui-menu-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 50;
+  min-width: 12rem;
+  margin-top: 0.25rem;
+  background-color: var(--tui-panel);
+  border-radius: var(--tui-radius);
+  border: 1px solid var(--tui-grid-line);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.5rem);
+  transition: opacity 150ms, visibility 150ms, transform 150ms;
+}
+
+.tui-menu[data-open="true"] .tui-menu-content,
+.tui-menu.open .tui-menu-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.tui-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+}
+
+.tui-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tui-menu-item[data-active="true"],
+.tui-menu-item.active {
+  background-color: rgba(21, 241, 255, 0.1);
+  color: var(--tui-accent);
+}
+
+.tui-menu-item:disabled,
+.tui-menu-item[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tui-menu-separator {
+  height: 1px;
+  background-color: var(--tui-grid-line);
+  margin: 0.25rem 0;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+.tui-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 16rem;
+  height: 100%;
+  background-color: var(--tui-panel);
+  border-right: 1px solid var(--tui-grid-line);
+  transition: width 200ms;
+}
+
+.tui-sidebar[data-collapsed="true"],
+.tui-sidebar.collapsed {
+  width: 4rem;
+}
+
+.tui-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid var(--tui-grid-line);
+}
+
+.tui-sidebar-content {
+  flex: 1;
+  overflow: auto;
+  padding: 0.5rem;
+}
+
+.tui-sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--tui-grid-line);
+}
+
+.tui-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  color: var(--tui-bright-black);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--tui-radius);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+}
+
+.tui-sidebar-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--tui-fg);
+}
+
+.tui-sidebar-item[data-active="true"],
+.tui-sidebar-item.active {
+  background-color: rgba(21, 241, 255, 0.1);
+  color: var(--tui-accent);
+}
+
+/* ============================================
+   AVATAR
+   ============================================ */
+.tui-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--tui-bright-black);
+  color: var(--tui-fg);
+  font-family: var(--tui-font-mono);
+  font-size: 1rem;
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.tui-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tui-avatar-sm {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.625rem;
+}
+
+.tui-avatar-lg {
+  width: 4rem;
+  height: 4rem;
+  font-size: 1.5rem;
+}
+
+.tui-avatar-square {
+  border-radius: var(--tui-radius);
+}
+
+/* ============================================
+   PAGINATION
+   ============================================ */
+.tui-pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--tui-font-mono);
+}
+
+.tui-pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--tui-bright-black);
+  background-color: transparent;
+  border: 1px solid var(--tui-grid-line);
+  border-radius: var(--tui-radius);
+  cursor: pointer;
+}
+
+.tui-pagination-btn:hover {
+  color: var(--tui-fg);
+  border-color: var(--tui-bright-black);
+}
+
+.tui-pagination-btn[data-active="true"],
+.tui-pagination-btn.active {
+  background-color: var(--tui-accent);
+  border-color: var(--tui-accent);
+  color: var(--tui-black);
+}
+
+.tui-pagination-btn:disabled,
+.tui-pagination-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   FUNCTION KEY BAR
+   ============================================ */
+.tui-fnbar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background-color: var(--tui-panel);
+  border-top: 1px solid var(--tui-grid-line);
+  font-family: var(--tui-font-mono);
+  font-size: 0.75rem;
+}
+
+.tui-fnbar-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.tui-fnbar-key {
+  padding: 0.125rem 0.375rem;
+  background-color: var(--tui-bright-black);
+  color: var(--tui-fg);
+  border-radius: 2px;
+}
+
+.tui-fnbar-label {
+  padding: 0.125rem 0.375rem;
+  color: var(--tui-bright-black);
+}
+
+/* ============================================
+   STATUS BAR
+   ============================================ */
+.tui-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--tui-panel);
+  border-top: 1px solid var(--tui-grid-line);
+  font-family: var(--tui-font-mono);
+  font-size: 0.75rem;
+  color: var(--tui-bright-black);
+}
+
+.tui-statusbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tui-statusbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tui-statusbar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ============================================
+   SCROLLABLE AREA
+   ============================================ */
+.tui-scroll {
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--tui-bright-black) transparent;
+}
+
+.tui-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.tui-scroll::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.tui-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--tui-bright-black);
+  border-radius: 4px;
+}
+
+.tui-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--tui-accent-muted);
+}
+
+/* ============================================
+   GRID LAYOUTS
+   ============================================ */
+.tui-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.tui-grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tui-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tui-grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.tui-grid-fluid {
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+@media (max-width: 768px) {
+  .tui-grid-2,
+  .tui-grid-3,
+  .tui-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   LOADING / SPINNER
+   ============================================ */
+.tui-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--tui-bright-black);
+  border-top-color: var(--tui-accent);
+  border-radius: 50%;
+  animation: tui-spin 0.6s linear infinite;
+}
+
+.tui-spinner-sm {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.tui-spinner-lg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* ============================================
+   CODE / PRE
+   ============================================ */
+.tui-code {
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  padding: 0.125rem 0.375rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: var(--tui-radius);
+  color: var(--tui-accent);
+}
+
+.tui-pre {
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  padding: 1rem;
+  background-color: var(--tui-panel);
+  border-radius: var(--tui-radius);
+  border: 1px solid var(--tui-grid-line);
+  overflow: auto;
+  white-space: pre;
+  color: var(--tui-fg);
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+.tui-glow {
+  box-shadow: 0 0 8px rgba(21, 241, 255, 0.45);
+}
+
+.tui-glow-lg {
+  box-shadow: 0 0 20px rgba(21, 241, 255, 0.5);
+}
+
+.tui-animate-glow {
+  animation: tui-glow 1.5s ease-in-out infinite alternate;
+}
+
+.tui-animate-pulse {
+  animation: tui-pulse 2s ease-in-out infinite;
+}
+
+.tui-animate-blink {
+  animation: tui-blink 1s step-end infinite;
+}
+
+.tui-pixelated {
+  image-rendering: pixelated;
+}
+
+/* Focus visible utilities */
+.tui-focus-ring:focus-visible {
+  outline: 2px solid var(--tui-accent);
+  outline-offset: 2px;
+}
+
+/* Screen reader only */
+.tui-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================
+   TREE VIEW
+   ============================================ */
+.tui-tree {
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+}
+
+.tui-tree-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  border-radius: var(--tui-radius);
+}
+
+.tui-tree-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tui-tree-item[data-selected="true"],
+.tui-tree-item.selected {
+  background-color: rgba(21, 241, 255, 0.1);
+  color: var(--tui-accent);
+}
+
+.tui-tree-toggle {
+  width: 1rem;
+  text-align: center;
+  color: var(--tui-bright-black);
+}
+
+.tui-tree-icon {
+  width: 1rem;
+  text-align: center;
+}
+
+.tui-tree-children {
+  padding-left: 1.5rem;
+}
+
+/* ============================================
+   LOG VIEWER
+   ============================================ */
+.tui-log {
+  font-family: var(--tui-font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  background-color: var(--tui-bg);
+  color: var(--tui-fg);
+}
+
+.tui-log-entry {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.125rem 0.5rem;
+}
+
+.tui-log-entry:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tui-log-timestamp {
+  color: var(--tui-bright-black);
+  white-space: nowrap;
+}
+
+.tui-log-level {
+  min-width: 4rem;
+  text-transform: uppercase;
+}
+
+.tui-log-level-debug {
+  color: var(--tui-bright-black);
+}
+
+.tui-log-level-info {
+  color: var(--tui-info);
+}
+
+.tui-log-level-warn {
+  color: var(--tui-warning);
+}
+
+.tui-log-level-error {
+  color: var(--tui-danger);
+}
+
+.tui-log-message {
+  flex: 1;
+}
+
+/* ============================================
+   GAUGE
+   ============================================ */
+.tui-gauge {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  font-family: var(--tui-font-mono);
+}
+
+.tui-gauge-track {
+  fill: none;
+  stroke: var(--tui-bright-black);
+  stroke-width: 8;
+}
+
+.tui-gauge-fill {
+  fill: none;
+  stroke: var(--tui-accent);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 300ms ease-out;
+}
+
+.tui-gauge-fill-success {
+  stroke: var(--tui-success);
+}
+
+.tui-gauge-fill-warning {
+  stroke: var(--tui-warning);
+}
+
+.tui-gauge-fill-danger {
+  stroke: var(--tui-danger);
+}
+
+.tui-gauge-value {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--tui-fg);
+}
+
+.tui-gauge-label {
+  position: absolute;
+  bottom: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--tui-bright-black);
+}
+
+/* ============================================
+   COMMAND PALETTE
+   ============================================ */
+.tui-palette {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: 100%;
+  max-width: 32rem;
+  background-color: var(--tui-panel);
+  border-radius: var(--tui-radius);
+  border: 1px solid var(--tui-grid-line);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 150ms, visibility 150ms;
+}
+
+.tui-palette[data-open="true"],
+.tui-palette.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tui-palette-input {
+  width: 100%;
+  padding: 1rem;
+  font-family: var(--tui-font-mono);
+  font-size: 1rem;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--tui-grid-line);
+  color: var(--tui-fg);
+  outline: none;
+}
+
+.tui-palette-input::placeholder {
+  color: var(--tui-bright-black);
+}
+
+.tui-palette-results {
+  max-height: 20rem;
+  overflow: auto;
+}
+
+.tui-palette-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+  cursor: pointer;
+}
+
+.tui-palette-item:hover,
+.tui-palette-item[data-active="true"],
+.tui-palette-item.active {
+  background-color: rgba(21, 241, 255, 0.1);
+}
+
+.tui-palette-item-icon {
+  color: var(--tui-bright-black);
+}
+
+.tui-palette-item-shortcut {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--tui-bright-black);
+}
+
+/* ============================================
+   FLEX UTILITIES
+   ============================================ */
+.tui-flex {
+  display: flex;
+}
+
+.tui-flex-col {
+  flex-direction: column;
+}
+
+.tui-flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.tui-flex-between {
+  justify-content: space-between;
+}
+
+.tui-gap-1 {
+  gap: var(--tui-space-1);
+}
+
+.tui-gap-2 {
+  gap: var(--tui-space-2);
+}
+
+.tui-gap-3 {
+  gap: var(--tui-space-3);
+}
+
+.tui-gap-4 {
+  gap: var(--tui-space-4);
+}
+
+/* ============================================
+   SPACING UTILITIES
+   ============================================ */
+.tui-p-1 {
+  padding: var(--tui-space-1);
+}
+.tui-p-2 {
+  padding: var(--tui-space-2);
+}
+.tui-p-3 {
+  padding: var(--tui-space-3);
+}
+.tui-p-4 {
+  padding: var(--tui-space-4);
+}
+
+.tui-m-1 {
+  margin: var(--tui-space-1);
+}
+.tui-m-2 {
+  margin: var(--tui-space-2);
+}
+.tui-m-3 {
+  margin: var(--tui-space-3);
+}
+.tui-m-4 {
+  margin: var(--tui-space-4);
+}
+
+/* ============================================
+   CSS-ONLY INTERACTIVE COMPONENTS
+   These components use pure CSS for state management
+   via :checked, :focus-within, :target, and <details>
+   ============================================ */
+
+/* ============================================
+   CSS-ONLY TABS (Radio-based)
+   Usage:
+   <div class="tui-tabs-radio">
+     <input type="radio" name="tabs" id="tab1" class="tui-tab-input" checked>
+     <label for="tab1" class="tui-tab-label">Tab 1</label>
+     <div class="tui-tab-content">Content 1</div>
+
+     <input type="radio" name="tabs" id="tab2" class="tui-tab-input">
+     <label for="tab2" class="tui-tab-label">Tab 2</label>
+     <div class="tui-tab-content">Content 2</div>
+   </div>
+   ============================================ */
+.tui-tabs-radio {
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--tui-font-mono);
+  border-bottom: 1px solid var(--tui-grid-line);
+}
+
+.tui-tab-input {
+  display: none;
+}
+
+.tui-tab-label {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--tui-bright-black);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 150ms;
+  order: -1;
+}
+
+.tui-tab-label:hover {
+  color: var(--tui-fg);
+}
+
+.tui-tab-input:checked + .tui-tab-label {
+  color: var(--tui-accent);
+  border-bottom-color: var(--tui-accent);
+}
+
+.tui-tab-content {
+  display: none;
+  width: 100%;
+  padding: 1rem 0;
+  order: 1;
+}
+
+.tui-tab-input:checked + .tui-tab-label + .tui-tab-content {
+  display: block;
+}
+
+/* Boxed variant */
+.tui-tabs-radio.tui-tabs-boxed {
+  border-bottom: none;
+  background-color: var(--tui-panel);
+  padding: 0.25rem;
+  border-radius: var(--tui-radius);
+  gap: 0.25rem;
+}
+
+.tui-tabs-boxed .tui-tab-label {
+  border-bottom: none;
+  border-radius: var(--tui-radius);
+  padding: 0.375rem 0.75rem;
+}
+
+.tui-tabs-boxed .tui-tab-input:checked + .tui-tab-label {
+  background-color: var(--tui-accent);
+  color: var(--tui-black);
+}
+
+.tui-tabs-boxed .tui-tab-content {
+  background-color: transparent;
+  padding: 1rem;
+}
+
+/* ============================================
+   CSS-ONLY ACCORDION / COLLAPSE (Details-based)
+   Usage:
+   <details class="tui-collapse">
+     <summary class="tui-collapse-title">Title</summary>
+     <div class="tui-collapse-content">Content</div>
+   </details>
+   ============================================ */
+.tui-collapse {
+  font-family: var(--tui-font-mono);
+  border: 1px solid var(--tui-grid-line);
+  border-radius: var(--tui-radius);
+  background-color: var(--tui-bg);
+}
+
+.tui-collapse + .tui-collapse {
+  margin-top: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.tui-collapse:not(:last-child) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.tui-collapse-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--tui-fg);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background-color 150ms;
+}
+
+.tui-collapse-title::-webkit-details-marker {
+  display: none;
+}
+
+.tui-collapse-title::after {
+  content: "+";
+  font-size: 1rem;
+  color: var(--tui-bright-black);
+  transition: transform 200ms;
+}
+
+.tui-collapse[open] .tui-collapse-title::after {
+  content: "-";
+}
+
+.tui-collapse-title:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tui-collapse-content {
+  padding: 0 1rem 1rem;
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+  border-top: 1px solid var(--tui-grid-line);
+}
+
+/* Arrow variant */
+.tui-collapse-arrow .tui-collapse-title::after {
+  content: "▶";
+  font-size: 0.625rem;
+}
+
+.tui-collapse-arrow[open] .tui-collapse-title::after {
+  content: "▼";
+}
+
+/* Checkbox-based accordion for exclusive open */
+.tui-accordion {
+  font-family: var(--tui-font-mono);
+}
+
+.tui-accordion-input {
+  display: none;
+}
+
+.tui-accordion-item {
+  border: 1px solid var(--tui-grid-line);
+  border-radius: var(--tui-radius);
+  background-color: var(--tui-bg);
+  margin-bottom: -1px;
+}
+
+.tui-accordion-item:first-child {
+  border-top-left-radius: var(--tui-radius);
+  border-top-right-radius: var(--tui-radius);
+}
+
+.tui-accordion-item:last-child {
+  border-bottom-left-radius: var(--tui-radius);
+  border-bottom-right-radius: var(--tui-radius);
+}
+
+.tui-accordion-item:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+
+.tui-accordion-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--tui-fg);
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.tui-accordion-title::after {
+  content: "+";
+  font-size: 1rem;
+  color: var(--tui-bright-black);
+}
+
+.tui-accordion-title:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tui-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 200ms ease-out;
+}
+
+.tui-accordion-content-inner {
+  padding: 0 1rem 1rem;
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+  border-top: 1px solid var(--tui-grid-line);
+}
+
+.tui-accordion-input:checked + .tui-accordion-title::after {
+  content: "-";
+}
+
+.tui-accordion-input:checked ~ .tui-accordion-content {
+  max-height: 500px;
+}
+
+/* ============================================
+   CSS-ONLY DROPDOWN (Focus-within based)
+   Usage:
+   <div class="tui-dropdown">
+     <button class="tui-dropdown-trigger">Menu</button>
+     <div class="tui-dropdown-content">
+       <a href="#" class="tui-dropdown-item">Item 1</a>
+       <a href="#" class="tui-dropdown-item">Item 2</a>
+     </div>
+   </div>
+   ============================================ */
+.tui-dropdown {
+  position: relative;
+  display: inline-block;
+  font-family: var(--tui-font-mono);
+}
+
+.tui-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  background-color: var(--tui-bright-black);
+  color: var(--tui-fg);
+  border: none;
+  border-radius: var(--tui-radius);
+  cursor: pointer;
+}
+
+.tui-dropdown-trigger::after {
+  content: "▼";
+  font-size: 0.5rem;
+  transition: transform 200ms;
+}
+
+.tui-dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 50;
+  min-width: 12rem;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0;
+  background-color: var(--tui-panel);
+  border: 1px solid var(--tui-grid-line);
+  border-radius: var(--tui-radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.5rem);
+  transition: opacity 150ms, visibility 150ms, transform 150ms;
+}
+
+/* Open on focus-within (click trigger to focus, click away to close) */
+.tui-dropdown:focus-within .tui-dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.tui-dropdown:focus-within .tui-dropdown-trigger::after {
+  transform: rotate(180deg);
+}
+
+/* Alternative: hover-based dropdown */
+.tui-dropdown-hover:hover .tui-dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.tui-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 100ms;
+}
+
+.tui-dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tui-dropdown-item:focus {
+  background-color: rgba(21, 241, 255, 0.1);
+  color: var(--tui-accent);
+  outline: none;
+}
+
+.tui-dropdown-divider {
+  height: 1px;
+  margin: 0.25rem 0;
+  background-color: var(--tui-grid-line);
+}
+
+/* Right-aligned dropdown */
+.tui-dropdown-end .tui-dropdown-content {
+  left: auto;
+  right: 0;
+}
+
+/* Top dropdown */
+.tui-dropdown-top .tui-dropdown-content {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  transform: translateY(0.5rem);
+}
+
+.tui-dropdown-top:focus-within .tui-dropdown-content,
+.tui-dropdown-top.tui-dropdown-hover:hover .tui-dropdown-content {
+  transform: translateY(0);
+}
+
+/* ============================================
+   CSS-ONLY MODAL (Checkbox-based)
+   Usage:
+   <input type="checkbox" id="modal1" class="tui-modal-toggle">
+   <div class="tui-modal">
+     <label for="modal1" class="tui-modal-backdrop"></label>
+     <div class="tui-modal-box">
+       <h3 class="tui-modal-title">Title</h3>
+       <p>Content</p>
+       <div class="tui-modal-actions">
+         <label for="modal1" class="tui-btn">Close</label>
+       </div>
+     </div>
+   </div>
+
+   Trigger with: <label for="modal1" class="tui-btn">Open</label>
+   ============================================ */
+.tui-modal-toggle {
+  display: none;
+}
+
+.tui-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms, visibility 200ms;
+  pointer-events: none;
+}
+
+.tui-modal-toggle:checked + .tui-modal {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.tui-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: var(--tui-overlay);
+  cursor: pointer;
+}
+
+.tui-modal-box {
+  position: relative;
+  z-index: 1;
+  max-width: 28rem;
+  width: calc(100% - 2rem);
+  padding: 1.5rem;
+  background-color: var(--tui-panel);
+  border: 1px solid var(--tui-grid-line);
+  border-radius: var(--tui-radius);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  font-family: var(--tui-font-mono);
+  transform: scale(0.95);
+  transition: transform 200ms;
+}
+
+.tui-modal-toggle:checked + .tui-modal .tui-modal-box {
+  transform: scale(1);
+}
+
+.tui-modal-title {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--tui-fg);
+}
+
+.tui-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Modal with close button in corner */
+.tui-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 1rem;
+  color: var(--tui-bright-black);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 150ms;
+}
+
+.tui-modal-close:hover {
+  color: var(--tui-fg);
+}
+
+/* Bottom sheet variant */
+.tui-modal-bottom .tui-modal-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: none;
+  width: 100%;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  transform: translateY(100%);
+}
+
+.tui-modal-toggle:checked + .tui-modal.tui-modal-bottom .tui-modal-box {
+  transform: translateY(0);
+}
+
+/* ============================================
+   CSS-ONLY TOGGLE / SWITCH (Checkbox-based)
+   Usage:
+   <label class="tui-toggle">
+     <input type="checkbox">
+     <span class="tui-toggle-slider"></span>
+   </label>
+   ============================================ */
+.tui-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tui-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.tui-toggle-slider {
+  position: relative;
+  width: 2.5rem;
+  height: 1.25rem;
+  background-color: var(--tui-bright-black);
+  border-radius: 9999px;
+  transition: background-color 200ms;
+}
+
+.tui-toggle-slider::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--tui-fg);
+  border-radius: 50%;
+  transition: transform 200ms;
+}
+
+.tui-toggle input:checked + .tui-toggle-slider {
+  background-color: var(--tui-accent);
+}
+
+.tui-toggle input:checked + .tui-toggle-slider::before {
+  transform: translateX(1.25rem);
+}
+
+.tui-toggle input:focus-visible + .tui-toggle-slider {
+  outline: 2px solid var(--tui-accent);
+  outline-offset: 2px;
+}
+
+.tui-toggle input:disabled + .tui-toggle-slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Toggle with label */
+.tui-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+  cursor: pointer;
+}
+
+/* Size variants */
+.tui-toggle-sm .tui-toggle-slider {
+  width: 1.75rem;
+  height: 1rem;
+}
+
+.tui-toggle-sm .tui-toggle-slider::before {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.tui-toggle-sm input:checked + .tui-toggle-slider::before {
+  transform: translateX(0.75rem);
+}
+
+.tui-toggle-lg .tui-toggle-slider {
+  width: 3.5rem;
+  height: 1.75rem;
+}
+
+.tui-toggle-lg .tui-toggle-slider::before {
+  width: 1.5rem;
+  height: 1.5rem;
+  top: 2px;
+  left: 2px;
+}
+
+.tui-toggle-lg input:checked + .tui-toggle-slider::before {
+  transform: translateX(1.75rem);
+}
+
+/* Color variants */
+.tui-toggle-success input:checked + .tui-toggle-slider {
+  background-color: var(--tui-success);
+}
+
+.tui-toggle-warning input:checked + .tui-toggle-slider {
+  background-color: var(--tui-warning);
+}
+
+.tui-toggle-danger input:checked + .tui-toggle-slider {
+  background-color: var(--tui-danger);
+}
+
+/* ============================================
+   CSS-ONLY CHECKBOX / RADIO (Styled)
+   Usage:
+   <label class="tui-checkbox">
+     <input type="checkbox">
+     <span class="tui-checkbox-mark"></span>
+     Label text
+   </label>
+   ============================================ */
+.tui-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+  cursor: pointer;
+}
+
+.tui-checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.tui-checkbox-mark {
+  position: relative;
+  width: 1.125rem;
+  height: 1.125rem;
+  background-color: var(--tui-bg);
+  border: 1px solid var(--tui-bright-black);
+  border-radius: 2px;
+  transition: all 150ms;
+}
+
+.tui-checkbox-mark::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--tui-black);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 150ms;
+}
+
+.tui-checkbox input:checked + .tui-checkbox-mark {
+  background-color: var(--tui-accent);
+  border-color: var(--tui-accent);
+}
+
+.tui-checkbox input:checked + .tui-checkbox-mark::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.tui-checkbox input:focus-visible + .tui-checkbox-mark {
+  outline: 2px solid var(--tui-accent);
+  outline-offset: 2px;
+}
+
+.tui-checkbox input:disabled + .tui-checkbox-mark {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Radio button */
+.tui-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  color: var(--tui-fg);
+  cursor: pointer;
+}
+
+.tui-radio input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.tui-radio-mark {
+  position: relative;
+  width: 1.125rem;
+  height: 1.125rem;
+  background-color: var(--tui-bg);
+  border: 1px solid var(--tui-bright-black);
+  border-radius: 50%;
+  transition: all 150ms;
+}
+
+.tui-radio-mark::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--tui-black);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 150ms;
+}
+
+.tui-radio input:checked + .tui-radio-mark {
+  background-color: var(--tui-accent);
+  border-color: var(--tui-accent);
+}
+
+.tui-radio input:checked + .tui-radio-mark::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.tui-radio input:focus-visible + .tui-radio-mark {
+  outline: 2px solid var(--tui-accent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   CSS-ONLY DRAWER / SIDEBAR (Checkbox-based)
+   Usage:
+   <input type="checkbox" id="drawer" class="tui-drawer-toggle">
+   <div class="tui-drawer">
+     <div class="tui-drawer-content">
+       Main content here
+     </div>
+     <div class="tui-drawer-side">
+       <label for="drawer" class="tui-drawer-overlay"></label>
+       <div class="tui-drawer-panel">
+         Sidebar content
+       </div>
+     </div>
+   </div>
+
+   Toggle: <label for="drawer" class="tui-btn">Toggle</label>
+   ============================================ */
+.tui-drawer-toggle {
+  display: none;
+}
+
+.tui-drawer {
+  display: flex;
+  position: relative;
+  min-height: 100%;
+}
+
+.tui-drawer-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.tui-drawer-side {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 90;
+  display: flex;
+  pointer-events: none;
+}
+
+.tui-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--tui-overlay);
+  opacity: 0;
+  transition: opacity 200ms;
+  cursor: pointer;
+}
+
+.tui-drawer-panel {
+  position: relative;
+  z-index: 1;
+  width: 16rem;
+  max-width: 80vw;
+  background-color: var(--tui-panel);
+  border-right: 1px solid var(--tui-grid-line);
+  transform: translateX(-100%);
+  transition: transform 200ms;
+  overflow-y: auto;
+}
+
+.tui-drawer-toggle:checked ~ .tui-drawer .tui-drawer-side {
+  pointer-events: auto;
+}
+
+.tui-drawer-toggle:checked ~ .tui-drawer .tui-drawer-overlay {
+  opacity: 1;
+}
+
+.tui-drawer-toggle:checked ~ .tui-drawer .tui-drawer-panel {
+  transform: translateX(0);
+}
+
+/* Right-side drawer */
+.tui-drawer-end .tui-drawer-side {
+  left: auto;
+  right: 0;
+}
+
+.tui-drawer-end .tui-drawer-panel {
+  border-right: none;
+  border-left: 1px solid var(--tui-grid-line);
+  transform: translateX(100%);
+}
+
+.tui-drawer-toggle:checked ~ .tui-drawer.tui-drawer-end .tui-drawer-panel {
+  transform: translateX(0);
+}
+
+/* Always visible on larger screens */
+@media (min-width: 1024px) {
+  .tui-drawer-responsive .tui-drawer-side {
+    position: static;
+    pointer-events: auto;
+  }
+
+  .tui-drawer-responsive .tui-drawer-overlay {
+    display: none;
+  }
+
+  .tui-drawer-responsive .tui-drawer-panel {
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   CSS-ONLY TOOLTIP (Hover/Focus-based)
+   These work without any JS - pure CSS
+   Usage:
+   <span class="tui-tip" data-tip="Tooltip text">Hover me</span>
+   ============================================ */
+.tui-tip {
+  position: relative;
+  display: inline-block;
+}
+
+.tui-tip::before {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-0.25rem);
+  padding: 0.375rem 0.625rem;
+  font-family: var(--tui-font-mono);
+  font-size: 0.75rem;
+  font-weight: normal;
+  white-space: nowrap;
+  color: var(--tui-fg);
+  background-color: var(--tui-panel);
+  border: 1px solid var(--tui-grid-line);
+  border-radius: var(--tui-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 150ms, visibility 150ms;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.tui-tip:hover::before,
+.tui-tip:focus::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Tooltip positions */
+.tui-tip-bottom::before {
+  bottom: auto;
+  top: 100%;
+  transform: translateX(-50%) translateY(0.25rem);
+}
+
+.tui-tip-left::before {
+  bottom: auto;
+  top: 50%;
+  left: auto;
+  right: 100%;
+  transform: translateY(-50%) translateX(-0.25rem);
+}
+
+.tui-tip-right::before {
+  bottom: auto;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%) translateX(0.25rem);
+}
+
+/* Color variants */
+.tui-tip-accent::before {
+  background-color: var(--tui-accent);
+  color: var(--tui-black);
+  border-color: var(--tui-accent);
+}
+
+.tui-tip-success::before {
+  background-color: var(--tui-success);
+  color: var(--tui-black);
+  border-color: var(--tui-success);
+}
+
+.tui-tip-warning::before {
+  background-color: var(--tui-warning);
+  color: var(--tui-black);
+  border-color: var(--tui-warning);
+}
+
+.tui-tip-error::before {
+  background-color: var(--tui-danger);
+  color: var(--tui-black);
+  border-color: var(--tui-danger);
+}
+
+/* Always open tooltip */
+.tui-tip-open::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================
+   CSS-ONLY RATING (Radio-based)
+   Usage:
+   <div class="tui-rating">
+     <input type="radio" name="rating" class="tui-rating-input" value="1">
+     <input type="radio" name="rating" class="tui-rating-input" value="2">
+     <input type="radio" name="rating" class="tui-rating-input" value="3">
+     <input type="radio" name="rating" class="tui-rating-input" value="4">
+     <input type="radio" name="rating" class="tui-rating-input" value="5">
+   </div>
+   ============================================ */
+.tui-rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  gap: 0.125rem;
+}
+
+.tui-rating-input {
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: var(--tui-bright-black);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  cursor: pointer;
+  transition: background-color 100ms;
+}
+
+.tui-rating-input:checked,
+.tui-rating-input:checked ~ .tui-rating-input {
+  background-color: var(--tui-warning);
+}
+
+.tui-rating:hover .tui-rating-input:hover,
+.tui-rating:hover .tui-rating-input:hover ~ .tui-rating-input {
+  background-color: var(--tui-warning);
+}
+
+.tui-rating:hover .tui-rating-input {
+  background-color: var(--tui-bright-black);
+}
+
+/* Half stars variant */
+.tui-rating-half {
+  flex-direction: row-reverse;
+}
+
+.tui-rating-half .tui-rating-input {
+  width: 0.75rem;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 24'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77V2z' transform='scale(0.5)'/%3E%3C/svg%3E");
+}
+
+/* ============================================
+   CSS-ONLY CAROUSEL / SLIDER (Radio-based)
+   Usage:
+   <div class="tui-carousel">
+     <input type="radio" name="carousel" id="slide1" class="tui-carousel-input" checked>
+     <input type="radio" name="carousel" id="slide2" class="tui-carousel-input">
+     <input type="radio" name="carousel" id="slide3" class="tui-carousel-input">
+     <div class="tui-carousel-track">
+       <div class="tui-carousel-slide">Slide 1</div>
+       <div class="tui-carousel-slide">Slide 2</div>
+       <div class="tui-carousel-slide">Slide 3</div>
+     </div>
+     <div class="tui-carousel-nav">
+       <label for="slide1" class="tui-carousel-dot"></label>
+       <label for="slide2" class="tui-carousel-dot"></label>
+       <label for="slide3" class="tui-carousel-dot"></label>
+     </div>
+   </div>
+   ============================================ */
+.tui-carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.tui-carousel-input {
+  display: none;
+}
+
+.tui-carousel-track {
+  display: flex;
+  transition: transform 300ms ease;
+}
+
+.tui-carousel-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+}
+
+/* Slide positions - supports up to 5 slides */
+.tui-carousel-input:nth-of-type(1):checked ~ .tui-carousel-track {
+  transform: translateX(0%);
+}
+
+.tui-carousel-input:nth-of-type(2):checked ~ .tui-carousel-track {
+  transform: translateX(-100%);
+}
+
+.tui-carousel-input:nth-of-type(3):checked ~ .tui-carousel-track {
+  transform: translateX(-200%);
+}
+
+.tui-carousel-input:nth-of-type(4):checked ~ .tui-carousel-track {
+  transform: translateX(-300%);
+}
+
+.tui-carousel-input:nth-of-type(5):checked ~ .tui-carousel-track {
+  transform: translateX(-400%);
+}
+
+.tui-carousel-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tui-carousel-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--tui-bright-black);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.tui-carousel-dot:hover {
+  background-color: var(--tui-accent-muted);
+}
+
+/* Active dot indicator */
+.tui-carousel-input:nth-of-type(1):checked ~ .tui-carousel-nav .tui-carousel-dot:nth-of-type(1),
+.tui-carousel-input:nth-of-type(2):checked ~ .tui-carousel-nav .tui-carousel-dot:nth-of-type(2),
+.tui-carousel-input:nth-of-type(3):checked ~ .tui-carousel-nav .tui-carousel-dot:nth-of-type(3),
+.tui-carousel-input:nth-of-type(4):checked ~ .tui-carousel-nav .tui-carousel-dot:nth-of-type(4),
+.tui-carousel-input:nth-of-type(5):checked ~ .tui-carousel-nav .tui-carousel-dot:nth-of-type(5) {
+  background-color: var(--tui-accent);
+}
+
+/* ============================================
+   CSS-ONLY STEPS / PROGRESS INDICATOR
+   Usage:
+   <div class="tui-steps">
+     <div class="tui-step tui-step-done">Step 1</div>
+     <div class="tui-step tui-step-active">Step 2</div>
+     <div class="tui-step">Step 3</div>
+   </div>
+   ============================================ */
+.tui-steps {
+  display: flex;
+  font-family: var(--tui-font-mono);
+  font-size: 0.875rem;
+  counter-reset: step;
+}
+
+.tui-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  color: var(--tui-bright-black);
+}
+
+.tui-step::before {
+  counter-increment: step;
+  content: counter(step);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.5rem;
+  background-color: var(--tui-bright-black);
+  color: var(--tui-fg);
+  border-radius: 50%;
+  font-weight: 600;
+  z-index: 1;
+}
+
+.tui-step::after {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  left: calc(50% + 1rem);
+  right: calc(-50% + 1rem);
+  height: 2px;
+  background-color: var(--tui-bright-black);
+}
+
+.tui-step:last-child::after {
+  display: none;
+}
+
+.tui-step-done::before {
+  background-color: var(--tui-success);
+  color: var(--tui-black);
+  content: "✓";
+}
+
+.tui-step-done::after {
+  background-color: var(--tui-success);
+}
+
+.tui-step-done {
+  color: var(--tui-success);
+}
+
+.tui-step-active::before {
+  background-color: var(--tui-accent);
+  color: var(--tui-black);
+}
+
+.tui-step-active {
+  color: var(--tui-fg);
+}
+
+/* Vertical steps */
+.tui-steps-vertical {
+  flex-direction: column;
+  gap: 0;
+}
+
+.tui-steps-vertical .tui-step {
+  flex-direction: row;
+  align-items: flex-start;
+  padding-left: 2.5rem;
+  padding-bottom: 2rem;
+}
+
+.tui-steps-vertical .tui-step::before {
+  position: absolute;
+  left: 0;
+  margin-bottom: 0;
+}
+
+.tui-steps-vertical .tui-step::after {
+  top: 2rem;
+  left: 0.9375rem;
+  right: auto;
+  width: 2px;
+  height: calc(100% - 1rem);
+}
+
+/* ============================================
+   CSS-ONLY RANGE SLIDER
+   Styled native input[type="range"]
+   ============================================ */
+.tui-range {
+  appearance: none;
+  width: 100%;
+  height: 0.5rem;
+  background-color: var(--tui-bright-black);
+  border-radius: var(--tui-radius);
+  cursor: pointer;
+}
+
+.tui-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: var(--tui-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 150ms;
+}
+
+.tui-range::-moz-range-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: var(--tui-accent);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 150ms;
+}
+
+.tui-range::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.tui-range::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
+
+.tui-range:focus-visible {
+  outline: 2px solid var(--tui-accent);
+  outline-offset: 2px;
+}
+
+/* Color variants */
+.tui-range-success::-webkit-slider-thumb {
+  background-color: var(--tui-success);
+}
+
+.tui-range-warning::-webkit-slider-thumb {
+  background-color: var(--tui-warning);
+}
+
+.tui-range-danger::-webkit-slider-thumb {
+  background-color: var(--tui-danger);
+}

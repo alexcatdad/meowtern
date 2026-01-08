@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typography - web-tui</title>
+  <link rel="stylesheet" href="../../../packages/web-tui/src/css/web-tui.css">
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <a href="../index.html" style="text-decoration: none;">
+          <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        </a>
+      </div>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="../installation.html">Installation</a>
+        <a href="../theming.html">Theming</a>
+        <div class="docs-nav-section">Components</div>
+        <a href="layout.html">Layout</a>
+        <a href="typography.html" class="active">Typography</a>
+        <a href="buttons.html">Buttons</a>
+        <a href="forms.html">Forms</a>
+        <a href="data.html">Data Display</a>
+        <a href="navigation.html">Navigation</a>
+        <a href="overlays.html">Overlays</a>
+        <a href="interactive.html">CSS-Only Interactive</a>
+      </nav>
+      <div class="docs-theme-switcher">
+        <label>Theme</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Typography</h1>
+      <p class="tui-text-dim" style="font-size: 1.1rem; margin-bottom: 2rem;">
+        Text styles, code blocks, and other typography elements.
+      </p>
+
+      <!-- Text Variants -->
+      <section class="docs-section">
+        <h2>Text Variants</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <p class="tui-text">Default text style</p>
+            <p class="tui-text-dim">Dimmed text for secondary content</p>
+            <p class="tui-text-bold">Bold text for emphasis</p>
+            <p class="tui-text-success">Success message</p>
+            <p class="tui-text-warning">Warning message</p>
+            <p class="tui-text-error">Error message</p>
+            <p class="tui-text-info">Info message</p>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;p class="tui-text"&gt;Default text&lt;/p&gt;
+&lt;p class="tui-text-dim"&gt;Dimmed text&lt;/p&gt;
+&lt;p class="tui-text-bold"&gt;Bold text&lt;/p&gt;
+&lt;p class="tui-text-success"&gt;Success&lt;/p&gt;
+&lt;p class="tui-text-warning"&gt;Warning&lt;/p&gt;
+&lt;p class="tui-text-error"&gt;Error&lt;/p&gt;
+&lt;p class="tui-text-info"&gt;Info&lt;/p&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inline Code -->
+      <section class="docs-section">
+        <h2>Inline Code</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <p class="tui-text">
+              Use the <code class="tui-code">npm install</code> command to install packages.
+              The config file is at <code class="tui-code">~/.config/app.json</code>.
+            </p>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;p&gt;Use the &lt;code class="tui-code"&gt;npm install&lt;/code&gt; command.&lt;/p&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Code Blocks -->
+      <section class="docs-section">
+        <h2>Code Blocks</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <pre class="tui-pre"><code>function hello() {
+  console.log("Hello, World!");
+}
+
+hello();</code></pre>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;pre class="tui-pre"&gt;&lt;code&gt;function hello() {
+  console.log("Hello, World!");
+}
+
+hello();&lt;/code&gt;&lt;/pre&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ASCII Art -->
+      <section class="docs-section">
+        <h2>ASCII Art</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <pre class="tui-pre tui-ascii" style="color: var(--tui-accent);">
+ _    _  ____  ____       _____  _   _  ___
+| |  | || __ )| __ )     |_   _|| | | ||_ _|
+| |/\| ||  _ \|  _ \ _____ | |  | | | | | |
+\  /\  /| |_) | |_) |_____|| |  | |_| | | |
+ \/  \/ |____/|____/       |_|   \___/ |___|</pre>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;pre class="tui-pre tui-ascii"&gt;ASCII art here&lt;/pre&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Links -->
+      <section class="docs-section">
+        <h2>Links</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <p class="tui-text">
+              Visit <a href="#" class="tui-link">our documentation</a> for more info.
+            </p>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;a href="#" class="tui-link"&gt;Link text&lt;/a&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Keyboard Shortcuts -->
+      <section class="docs-section">
+        <h2>Keyboard Shortcuts</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <p class="tui-text">
+              Press <kbd class="tui-kbd">Ctrl</kbd> + <kbd class="tui-kbd">C</kbd> to copy,
+              <kbd class="tui-kbd">Ctrl</kbd> + <kbd class="tui-kbd">V</kbd> to paste.
+            </p>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;kbd class="tui-kbd"&gt;Ctrl&lt;/kbd&gt; + &lt;kbd class="tui-kbd"&gt;C&lt;/kbd&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Terminal Output -->
+      <section class="docs-section">
+        <h2>Terminal Output</h2>
+
+        <div class="component-preview">
+          <div class="component-preview-header"><span>Preview</span></div>
+          <div class="component-preview-demo">
+            <div class="tui-terminal-output">
+              <div class="tui-line"><span class="tui-prompt">$</span> ls -la</div>
+              <div class="tui-line">total 32</div>
+              <div class="tui-line">drwxr-xr-x  5 user user 4096 Jan  7 10:00 <span style="color: var(--tui-info);">.</span></div>
+              <div class="tui-line">drwxr-xr-x  3 user user 4096 Jan  7 09:00 <span style="color: var(--tui-info);">..</span></div>
+              <div class="tui-line">-rw-r--r--  1 user user  220 Jan  7 10:00 <span style="color: var(--tui-success);">README.md</span></div>
+              <div class="tui-line"><span class="tui-prompt">$</span> <span class="tui-cursor">_</span></div>
+            </div>
+          </div>
+          <div class="component-preview-code">
+            <div class="code-block">
+<code>&lt;div class="tui-terminal-output"&gt;
+  &lt;div class="tui-line"&gt;
+    &lt;span class="tui-prompt"&gt;$&lt;/span&gt; ls -la
+  &lt;/div&gt;
+  &lt;div class="tui-line"&gt;output here...&lt;/div&gt;
+&lt;/div&gt;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="docs-footer">
+        <p class="tui-text-dim">web-tui is MIT licensed.</p>
+      </footer>
+    </main>
+  </div>
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>
