@@ -69,18 +69,18 @@ jobs:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
           REGISTRY_USER: ${{ vars.REGISTRY_USER }}
         run: |
-          echo "$REGISTRY_TOKEN" | docker login gitea.escu.dev -u "$REGISTRY_USER" --password-stdin
+          echo "$REGISTRY_TOKEN" | docker login git.escu.dev -u "$REGISTRY_USER" --password-stdin
 
       - name: Build Docker image
         env:
-          IMAGE_NAME: gitea.escu.dev/${{ gitea.repository }}
+          IMAGE_NAME: git.escu.dev/${{ gitea.repository }}
           IMAGE_TAG: ${{ gitea.sha }}
         run: |
           docker build -t "$IMAGE_NAME:latest" -t "$IMAGE_NAME:$IMAGE_TAG" .
 
       - name: Push Docker image
         env:
-          IMAGE_NAME: gitea.escu.dev/${{ gitea.repository }}
+          IMAGE_NAME: git.escu.dev/${{ gitea.repository }}
           IMAGE_TAG: ${{ gitea.sha }}
         run: |
           docker push "$IMAGE_NAME:latest"
@@ -107,7 +107,7 @@ jobs:
 
       - name: Deploy to Kubernetes
         env:
-          IMAGE_NAME: gitea.escu.dev/${{ gitea.repository }}
+          IMAGE_NAME: git.escu.dev/${{ gitea.repository }}
         run: |
           NAMESPACE="meowtern-prod"
           APP_NAME="meowtern"
