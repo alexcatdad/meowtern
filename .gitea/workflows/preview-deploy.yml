@@ -42,6 +42,10 @@ jobs:
           REGISTRY_USER: ${{ vars.REGISTRY_USER }}
         run: |
           echo "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin
+          echo "Login exit code: $?"
+          echo "Checking docker config..."
+          ls -la ~/.docker/ 2>/dev/null || echo "No .docker dir after login!"
+          cat ~/.docker/config.json 2>/dev/null | grep -o '"auths":{[^}]*}' || echo "No auths in config!"
 
       - name: Build Docker image
         run: |
@@ -51,8 +55,19 @@ jobs:
             .
 
       - name: Push Docker image
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+          REGISTRY_USER: ${{ vars.REGISTRY_USER }}
         run: |
-          docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}"
+          echo "Checking credentials before push..."
+          cat ~/.docker/config.json 2>/dev/null | grep -o '"auths":{[^}]*}' || echo "WARNING: No auths found!"
+
+          echo "Pushing images..."
+          docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" || {
+            echo "Push failed, re-authenticating..."
+            echo "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin
+            docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}"
+          }
           docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}-${{ gitea.sha }}"
 
       - name: Setup kubectl
