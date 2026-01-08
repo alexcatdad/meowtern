@@ -150,16 +150,38 @@ jobs:
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
+          DEBUG_FILE="/.cache/comment-debug-${{ gitea.sha }}.log"
+          exec > >(tee -a "$DEBUG_FILE") 2>&1
+
+          echo "=== COMMENT DEBUG $(date) ==="
           PREVIEW_URL=$(cat /tmp/preview_url)
+          echo "Preview URL: ${PREVIEW_URL}"
+          echo "Gitea API: ${{ env.GITEA_API }}"
+          echo "Repository: ${{ gitea.repository }}"
+          echo "PR Number: ${{ env.PR_NUMBER }}"
+          echo "Token length: ${#REGISTRY_TOKEN}"
 
           # Create comment body with proper JSON escaping (no jq needed)
           BODY="## Preview Deployment\n\n**URL:** ${PREVIEW_URL}\n\n**Commit:** \`${{ gitea.sha }}\`\n\n_(Internal network only)_\n\nThis preview will be automatically destroyed when the PR is closed."
 
-          curl -s -X POST \
+          echo "Posting comment..."
+          RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST \
             -H "Authorization: token $REGISTRY_TOKEN" \
             -H "Content-Type: application/json" \
             -d "{\"body\": \"${BODY}\"}" \
-            "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments" || echo "Failed to post comment, but preview is available"
+            "${{ env.GITEA_API }}/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments")
+
+          HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_CODE:" | cut -d: -f2)
+          BODY_RESPONSE=$(echo "$RESPONSE" | grep -v "HTTP_CODE:")
+
+          echo "Response code: $HTTP_CODE"
+          echo "Response body: $BODY_RESPONSE"
+
+          if [ "$HTTP_CODE" = "201" ]; then
+            echo "Comment posted successfully!"
+          else
+            echo "Failed to post comment (HTTP $HTTP_CODE)"
+          fi
 
       - name: Set failure status
         if: failure()
