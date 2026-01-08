@@ -5,8 +5,8 @@ on:
     types: [closed]
 
 env:
-  REGISTRY: gitea.escu.dev
-  IMAGE_NAME: gitea.escu.dev/${{ gitea.repository }}
+  REGISTRY: gitea.core.svc.cluster.local:3000
+  IMAGE_NAME: gitea.core.svc.cluster.local:3000/${{ gitea.repository }}
   PR_NUMBER: ${{ gitea.event.pull_request.number }}
 
 jobs:
@@ -62,14 +62,14 @@ jobs:
           # This uses Gitea's package API
           curl -s -X GET \
             -H "Authorization: token $REGISTRY_TOKEN" \
-            "https://gitea.escu.dev/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions" | \
+            "https://gitea.core.svc.cluster.local:3000/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions" | \
             jq -r '.[] | select(.version | startswith("pr-${{ env.PR_NUMBER }}")) | .id' | \
             while read -r VERSION_ID; do
               if [ -n "$VERSION_ID" ]; then
                 echo "Deleting image version: $VERSION_ID"
                 curl -s -X DELETE \
                   -H "Authorization: token $REGISTRY_TOKEN" \
-                  "https://gitea.escu.dev/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions/$VERSION_ID" || true
+                  "https://gitea.core.svc.cluster.local:3000/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions/$VERSION_ID" || true
               fi
             done
 
@@ -83,4 +83,4 @@ jobs:
             -H "Authorization: token $REGISTRY_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"body": "🧹 Preview environment has been cleaned up."}' \
-            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"
+            "https://gitea.core.svc.cluster.local:3000/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"

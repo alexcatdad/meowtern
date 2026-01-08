@@ -5,8 +5,8 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  REGISTRY: gitea.escu.dev
-  IMAGE_NAME: gitea.escu.dev/${{ gitea.repository }}
+  REGISTRY: gitea.core.svc.cluster.local:3000
+  IMAGE_NAME: gitea.core.svc.cluster.local:3000/${{ gitea.repository }}
   PR_NUMBER: ${{ gitea.event.pull_request.number }}
   PREVIEW_URL: https://pr-${{ gitea.event.pull_request.number }}.preview.escu.dev
 
@@ -31,7 +31,7 @@ jobs:
               "description": "Preview deployment in progress...",
               "context": "preview"
             }' \
-            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
+            "http://gitea.core.svc.cluster.local:3000/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
 
       - name: Login to Gitea Registry
         env:
@@ -72,7 +72,7 @@ jobs:
         env:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
-          git clone https://oauth2:${REGISTRY_TOKEN}@gitea.escu.dev/alex/homelab.git /tmp/homelab
+          git clone http://oauth2:${REGISTRY_TOKEN}@gitea.core.svc.cluster.local:3000/alex/homelab.git /tmp/homelab
 
       - name: Create namespace and copy TLS secret
         run: |
@@ -126,7 +126,7 @@ jobs:
               "description": "Preview deployed successfully!",
               "context": "preview"
             }' \
-            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
+            "http://gitea.core.svc.cluster.local:3000/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
 
       - name: Comment on PR
         if: success()
@@ -136,7 +136,7 @@ jobs:
           # Check if we already commented (to avoid spam on re-runs)
           EXISTING=$(curl -s \
             -H "Authorization: token $REGISTRY_TOKEN" \
-            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments" | \
+            "http://gitea.core.svc.cluster.local:3000/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments" | \
             jq -r '.[] | select(.body | contains("Preview Deployment")) | .id' | head -1)
 
           # Build comment body
@@ -157,14 +157,14 @@ jobs:
               -H "Authorization: token $REGISTRY_TOKEN" \
               -H "Content-Type: application/json" \
               --data-raw "{\"body\": $(echo "$BODY" | jq -Rs .)}" \
-              "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/comments/$EXISTING"
+              "http://gitea.core.svc.cluster.local:3000/api/v1/repos/${{ gitea.repository }}/issues/comments/$EXISTING"
           else
             # Create new comment
             curl -X POST \
               -H "Authorization: token $REGISTRY_TOKEN" \
               -H "Content-Type: application/json" \
               --data-raw "{\"body\": $(echo "$BODY" | jq -Rs .)}" \
-              "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"
+              "http://gitea.core.svc.cluster.local:3000/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"
           fi
 
       - name: Set failure status
@@ -181,4 +181,4 @@ jobs:
               "description": "Preview deployment failed",
               "context": "preview"
             }' \
-            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
+            "http://gitea.core.svc.cluster.local:3000/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
