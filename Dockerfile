@@ -1,6 +1,10 @@
 # Build stage
 FROM oven/bun:1 AS builder
 
+# Base path for Vite build (/ for production, /meowtern/ for subpath deployments)
+ARG VITE_BASE_PATH=/
+ENV VITE_BASE_PATH=${VITE_BASE_PATH}
+
 WORKDIR /app
 
 # Copy package files
