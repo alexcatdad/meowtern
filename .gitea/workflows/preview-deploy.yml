@@ -41,11 +41,22 @@ jobs:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
           REGISTRY_USER: ${{ vars.REGISTRY_USER }}
         run: |
-          echo "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin
-          echo "Login exit code: $?"
-          echo "Checking docker config..."
-          ls -la ~/.docker/ 2>/dev/null || echo "No .docker dir after login!"
-          cat ~/.docker/config.json 2>/dev/null | grep -o '"auths":{[^}]*}' || echo "No auths in config!"
+          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
+
+          {
+            echo "=== LOGIN DEBUG $(date) ==="
+            echo "Token length: ${#REGISTRY_TOKEN}"
+            echo "User: $REGISTRY_USER"
+            echo "Registry: ${{ env.REGISTRY }}"
+            echo ""
+
+            # Try login with explicit handling
+            printf '%s' "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin 2>&1
+            echo "Login exit code: $?"
+            echo ""
+            echo "Docker config after login:"
+            cat ~/.docker/config.json 2>/dev/null || echo "No config file!"
+          } | tee "$DEBUG_LOG"
 
       - name: Build Docker image
         run: |
@@ -59,16 +70,25 @@ jobs:
           REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
           REGISTRY_USER: ${{ vars.REGISTRY_USER }}
         run: |
-          echo "Checking credentials before push..."
-          cat ~/.docker/config.json 2>/dev/null | grep -o '"auths":{[^}]*}' || echo "WARNING: No auths found!"
+          DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
 
-          echo "Pushing images..."
-          docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" || {
-            echo "Push failed, re-authenticating..."
-            echo "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin
-            docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}"
-          }
-          docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}-${{ gitea.sha }}"
+          {
+            echo ""
+            echo "=== PUSH DEBUG $(date) ==="
+            echo "Checking credentials before push..."
+            cat ~/.docker/config.json 2>/dev/null || echo "No config file!"
+            echo ""
+            echo "Pushing first image..."
+            docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" 2>&1 || {
+              echo "Push failed! Re-authenticating..."
+              printf '%s' "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin 2>&1
+              echo "Retry push..."
+              docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" 2>&1
+            }
+            echo ""
+            echo "Pushing second image..."
+            docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}-${{ gitea.sha }}" 2>&1
+          } | tee -a "$DEBUG_LOG"
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
