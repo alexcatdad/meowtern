@@ -1,0 +1,86 @@
+name: Preview Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  REGISTRY: gitea.escu.dev
+  IMAGE_NAME: gitea.escu.dev/${{ gitea.repository }}
+  PR_NUMBER: ${{ gitea.event.pull_request.number }}
+
+jobs:
+  cleanup-preview:
+    name: Cleanup Preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Configure kubeconfig
+        env:
+          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_CONTENT }}
+        run: |
+          mkdir -p ~/.kube
+          echo "$KUBECONFIG_CONTENT" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'v3.13.0'
+
+      - name: Delete preview deployment
+        run: |
+          NAMESPACE="preview-pr-${{ env.PR_NUMBER }}"
+
+          # Uninstall Helm release
+          helm uninstall "preview-pr-${{ env.PR_NUMBER }}" \
+            --namespace "$NAMESPACE" \
+            --wait \
+            --timeout=120s || echo "Helm release not found or already deleted"
+
+          # Delete namespace (cascades all resources)
+          kubectl delete namespace "$NAMESPACE" \
+            --ignore-not-found=true \
+            --wait=true \
+            --timeout=120s
+
+          echo "Preview environment for PR #${{ env.PR_NUMBER }} has been cleaned up"
+
+      - name: Delete preview images from registry
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          # Delete PR-specific tags from Gitea container registry
+          # Note: Gitea's container registry API for tag deletion
+          REPO_PATH=$(echo "${{ gitea.repository }}" | tr '[:upper:]' '[:lower:]')
+
+          echo "Attempting to clean up container images for PR #${{ env.PR_NUMBER }}"
+
+          # List and delete tags matching pr-{PR_NUMBER}*
+          # This uses Gitea's package API
+          curl -s -X GET \
+            -H "Authorization: token $REGISTRY_TOKEN" \
+            "https://gitea.escu.dev/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions" | \
+            jq -r '.[] | select(.version | startswith("pr-${{ env.PR_NUMBER }}")) | .id' | \
+            while read -r VERSION_ID; do
+              if [ -n "$VERSION_ID" ]; then
+                echo "Deleting image version: $VERSION_ID"
+                curl -s -X DELETE \
+                  -H "Authorization: token $REGISTRY_TOKEN" \
+                  "https://gitea.escu.dev/api/v1/packages/${{ gitea.repository_owner }}/container/${REPO_PATH##*/}/versions/$VERSION_ID" || true
+              fi
+            done
+
+          echo "Container image cleanup completed"
+
+      - name: Comment on PR
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token $REGISTRY_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"body": "🧹 Preview environment has been cleaned up."}' \
+            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"

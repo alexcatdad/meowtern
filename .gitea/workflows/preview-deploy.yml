@@ -1,0 +1,180 @@
+name: Preview Deploy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  REGISTRY: gitea.escu.dev
+  IMAGE_NAME: gitea.escu.dev/${{ gitea.repository }}
+  PR_NUMBER: ${{ gitea.event.pull_request.number }}
+  PREVIEW_URL: https://pr-${{ gitea.event.pull_request.number }}.preview.escu.dev
+
+jobs:
+  deploy-preview:
+    name: Deploy Preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set pending status
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token $REGISTRY_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "state": "pending",
+              "target_url": "${{ env.PREVIEW_URL }}",
+              "description": "Preview deployment in progress...",
+              "context": "preview"
+            }' \
+            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
+
+      - name: Login to Gitea Registry
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+          REGISTRY_USER: ${{ vars.REGISTRY_USER }}
+        run: |
+          echo "$REGISTRY_TOKEN" | docker login ${{ env.REGISTRY }} -u "$REGISTRY_USER" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}" \
+            -t "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}-${{ gitea.sha }}" \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}"
+          docker push "${{ env.IMAGE_NAME }}:pr-${{ env.PR_NUMBER }}-${{ gitea.sha }}"
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Configure kubeconfig
+        env:
+          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_CONTENT }}
+        run: |
+          mkdir -p ~/.kube
+          echo "$KUBECONFIG_CONTENT" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'v3.13.0'
+
+      - name: Clone homelab charts
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          git clone https://oauth2:${REGISTRY_TOKEN}@gitea.escu.dev/alex/homelab.git /tmp/homelab
+
+      - name: Create namespace and copy TLS secret
+        run: |
+          NAMESPACE="preview-pr-${{ env.PR_NUMBER }}"
+
+          # Create namespace if it doesn't exist
+          kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+
+          # Label the namespace for cleanup identification
+          kubectl label namespace "$NAMESPACE" \
+            preview.homelab/managed=true \
+            preview.homelab/pr-number="${{ env.PR_NUMBER }}" \
+            --overwrite
+
+          # Copy preview wildcard TLS secret to preview namespace
+          kubectl get secret preview-wildcard-tls-secret -n kube-system -o json | \
+            jq --arg ns "$NAMESPACE" '.metadata.namespace = $ns | del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.annotations["kubectl.kubernetes.io/last-applied-configuration"])' | \
+            kubectl apply -f -
+
+      - name: Deploy preview
+        run: |
+          helm upgrade --install \
+            "preview-pr-${{ env.PR_NUMBER }}" \
+            /tmp/homelab/homelab-charts/preview-stack \
+            --namespace "preview-pr-${{ env.PR_NUMBER }}" \
+            --set prNumber="${{ env.PR_NUMBER }}" \
+            --set appName="meowtern" \
+            --set image.repository="${{ env.IMAGE_NAME }}" \
+            --set image.tag="pr-${{ env.PR_NUMBER }}" \
+            --set containerPort=80 \
+            --wait \
+            --timeout=300s
+
+      - name: Wait for deployment
+        run: |
+          kubectl rollout status deployment/meowtern-pr-${{ env.PR_NUMBER }} \
+            -n preview-pr-${{ env.PR_NUMBER }} \
+            --timeout=120s
+
+      - name: Set success status
+        if: success()
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token $REGISTRY_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "state": "success",
+              "target_url": "${{ env.PREVIEW_URL }}",
+              "description": "Preview deployed successfully!",
+              "context": "preview"
+            }' \
+            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
+
+      - name: Comment on PR
+        if: success()
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          # Check if we already commented (to avoid spam on re-runs)
+          EXISTING=$(curl -s \
+            -H "Authorization: token $REGISTRY_TOKEN" \
+            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments" | \
+            jq -r '.[] | select(.body | contains("Preview Deployment")) | .id' | head -1)
+
+          BODY="## 🚀 Preview Deployment
+
+**URL:** ${{ env.PREVIEW_URL }}
+
+**Commit:** \`${{ gitea.sha }}\`
+
+This preview will be automatically destroyed when the PR is closed."
+
+          if [ -n "$EXISTING" ]; then
+            # Update existing comment
+            curl -X PATCH \
+              -H "Authorization: token $REGISTRY_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"body\": \"$BODY\"}" \
+              "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/comments/$EXISTING"
+          else
+            # Create new comment
+            curl -X POST \
+              -H "Authorization: token $REGISTRY_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"body\": \"$BODY\"}" \
+              "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/issues/${{ env.PR_NUMBER }}/comments"
+          fi
+
+      - name: Set failure status
+        if: failure()
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token $REGISTRY_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "state": "failure",
+              "target_url": "",
+              "description": "Preview deployment failed",
+              "context": "preview"
+            }' \
+            "https://gitea.escu.dev/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}"
