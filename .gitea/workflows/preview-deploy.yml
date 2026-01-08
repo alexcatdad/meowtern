@@ -138,7 +138,7 @@ jobs:
           DEBUG_LOG="/.cache/preview-debug-${{ gitea.sha }}.log"
           echo "" >> "$DEBUG_LOG"
           echo "=== CLONE CHARTS $(date) ===" >> "$DEBUG_LOG"
-          git clone http://oauth2:${REGISTRY_TOKEN}@gitea.core.svc.cluster.local:3000/alex/homelab.git /tmp/homelab >> "$DEBUG_LOG" 2>&1
+          git clone https://oauth2:${REGISTRY_TOKEN}@git.escu.dev/alex/homelab.git /tmp/homelab >> "$DEBUG_LOG" 2>&1
           ls -la /tmp/homelab >> "$DEBUG_LOG" 2>&1
 
       - name: Create namespace and copy TLS secret
