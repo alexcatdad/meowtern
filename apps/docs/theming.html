@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theming - web-tui</title>
+  <link rel="stylesheet" href="../../packages/web-tui/src/css/web-tui.css">
+  <link rel="stylesheet" href="styles/docs.css">
+</head>
+<body>
+  <div class="docs-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <a href="index.html" style="text-decoration: none;">
+          <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        </a>
+        <span class="tui-badge">v0.1.0</span>
+      </div>
+
+      <nav class="docs-nav">
+        <a href="index.html">Home</a>
+        <a href="installation.html">Installation</a>
+        <a href="theming.html" class="active">Theming</a>
+
+        <div class="docs-nav-section">Components</div>
+        <a href="components/layout.html">Layout</a>
+        <a href="components/typography.html">Typography</a>
+        <a href="components/buttons.html">Buttons</a>
+        <a href="components/forms.html">Forms</a>
+        <a href="components/data.html">Data Display</a>
+        <a href="components/navigation.html">Navigation</a>
+        <a href="components/overlays.html">Overlays</a>
+        <a href="components/interactive.html">CSS-Only Interactive</a>
+
+        <div class="docs-nav-section">Examples</div>
+        <a href="examples/dashboard.html">Dashboard</a>
+        <a href="examples/landing.html">Landing Page</a>
+      </nav>
+
+      <div class="docs-theme-switcher">
+        <label>Theme</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+          <option value="polar-night">Polar Night</option>
+          <option value="btop-classic">Btop Classic</option>
+          <option value="red-alert">Red Alert</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+      <h1>Theming</h1>
+      <p class="tui-text-dim" style="font-size: 1.1rem; margin-bottom: 2rem;">
+        Customize the look of your terminal UI with built-in themes or create your own.
+      </p>
+
+      <!-- Using Themes -->
+      <section class="docs-section">
+        <h2>Using Themes</h2>
+        <p>Set the theme using the <code class="tui-code">data-theme</code> attribute on any parent element:</p>
+        <div class="code-block">
+<code>&lt;!-- On the html element (recommended) --&gt;
+&lt;html data-theme="dark"&gt;
+
+&lt;!-- Or on body --&gt;
+&lt;body data-theme="matrix-green"&gt;
+
+&lt;!-- Or on a specific container --&gt;
+&lt;div data-theme="retro-amber"&gt;
+  &lt;!-- This section uses retro-amber theme --&gt;
+&lt;/div&gt;</code>
+        </div>
+      </section>
+
+      <!-- Available Themes -->
+      <section class="docs-section">
+        <h2>Available Themes</h2>
+        <p>web-tui includes 7 built-in themes. Click to preview:</p>
+
+        <div class="tui-grid tui-grid-2" style="gap: 1rem; margin: 1.5rem 0;">
+          <!-- Dark Theme -->
+          <div class="theme-preview" data-theme="dark">
+            <div class="tui-box tui-box-bordered">
+              <div class="tui-box-header">dark (default)</div>
+              <p class="tui-text">Classic dark terminal</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <span class="tui-badge tui-badge-success">Online</span>
+                <span class="tui-badge tui-badge-info">Info</span>
+              </div>
+              <button class="tui-btn tui-btn-primary tui-btn-sm" style="margin-top: 0.5rem;">Button</button>
+            </div>
+          </div>
+
+          <!-- Light Theme -->
+          <div class="theme-preview" data-theme="light">
+            <div class="tui-box tui-box-bordered">
+              <div class="tui-box-header">light</div>
+              <p class="tui-text">Light mode terminal</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <span class="tui-badge tui-badge-success">Online</span>
+                <span class="tui-badge tui-badge-info">Info</span>
+              </div>
+              <button class="tui-btn tui-btn-primary tui-btn-sm" style="margin-top: 0.5rem;">Button</button>
+            </div>
+          </div>
+
+          <!-- Matrix Green -->
+          <div class="theme-preview" data-theme="matrix-green">
+            <div class="tui-box tui-box-bordered">
+              <div class="tui-box-header">matrix-green</div>
+              <p class="tui-text">The Matrix aesthetic</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <span class="tui-badge tui-badge-success">Online</span>
+                <span class="tui-badge tui-badge-info">Info</span>
+              </div>
+              <button class="tui-btn tui-btn-primary tui-btn-sm" style="margin-top: 0.5rem;">Button</button>
+            </div>
+          </div>
+
+          <!-- Retro Amber -->
+          <div class="theme-preview" data-theme="retro-amber">
+            <div class="tui-box tui-box-bordered">
+              <div class="tui-box-header">retro-amber</div>
+              <p class="tui-text">Vintage amber CRT</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <span class="tui-badge tui-badge-success">Online</span>
+                <span class="tui-badge tui-badge-info">Info</span>
+              </div>
+              <button class="tui-btn tui-btn-primary tui-btn-sm" style="margin-top: 0.5rem;">Button</button>
+            </div>
+          </div>
+
+          <!-- Polar Night -->
+          <div class="theme-preview" data-theme="polar-night">
+            <div class="tui-box tui-box-bordered">
+              <div class="tui-box-header">polar-night</div>
+              <p class="tui-text">Nord-inspired theme</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <span class="tui-badge tui-badge-success">Online</span>
+                <span class="tui-badge tui-badge-info">Info</span>
+              </div>
+              <button class="tui-btn tui-btn-primary tui-btn-sm" style="margin-top: 0.5rem;">Button</button>
+            </div>
+          </div>
+
+          <!-- Btop Classic -->
+          <div class="theme-preview" data-theme="btop-classic">
+            <div class="tui-box tui-box-bordered">
+              <div class="tui-box-header">btop-classic</div>
+              <p class="tui-text">btop-inspired palette</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <span class="tui-badge tui-badge-success">Online</span>
+                <span class="tui-badge tui-badge-info">Info</span>
+              </div>
+              <button class="tui-btn tui-btn-primary tui-btn-sm" style="margin-top: 0.5rem;">Button</button>
+            </div>
+          </div>
+
+          <!-- Red Alert -->
+          <div class="theme-preview" data-theme="red-alert" style="grid-column: span 2;">
+            <div class="tui-box tui-box-bordered">
+              <div class="tui-box-header">red-alert</div>
+              <p class="tui-text">Warning/alert mode</p>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <span class="tui-badge tui-badge-success">Online</span>
+                <span class="tui-badge tui-badge-info">Info</span>
+                <span class="tui-badge tui-badge-danger">Alert</span>
+              </div>
+              <button class="tui-btn tui-btn-primary tui-btn-sm" style="margin-top: 0.5rem;">Button</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CSS Variables -->
+      <section class="docs-section">
+        <h2>CSS Custom Properties</h2>
+        <p>All themes use CSS custom properties that you can override:</p>
+
+        <table class="tui-table tui-table-striped" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Description</th>
+              <th>Default (dark)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="tui-code">--tui-bg</code></td>
+              <td>Background color</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: #03040a; border: 1px solid var(--tui-grid-line);"></span>#03040a</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-fg</code></td>
+              <td>Foreground/text color</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: #d1d5db; border: 1px solid var(--tui-grid-line);"></span>#d1d5db</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-accent</code></td>
+              <td>Accent color (links, highlights)</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: #22d3ee; border: 1px solid var(--tui-grid-line);"></span>#22d3ee</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-panel</code></td>
+              <td>Panel/card background</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: #111827; border: 1px solid var(--tui-grid-line);"></span>#111827</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-grid-line</code></td>
+              <td>Border/grid line color</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: rgba(255,255,255,0.1); border: 1px solid var(--tui-grid-line);"></span>rgba(255,255,255,0.1)</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-dim</code></td>
+              <td>Dimmed text color</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: #6b7280; border: 1px solid var(--tui-grid-line);"></span>#6b7280</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-success</code></td>
+              <td>Success color</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: #5bff8e; border: 1px solid var(--tui-grid-line);"></span>#5bff8e</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-warning</code></td>
+              <td>Warning color</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: #ffd45b; border: 1px solid var(--tui-grid-line);"></span>#ffd45b</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-danger</code></td>
+              <td>Danger/error color</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: #ff5c7c; border: 1px solid var(--tui-grid-line);"></span>#ff5c7c</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-info</code></td>
+              <td>Info color</td>
+              <td><span style="display: inline-flex; align-items: center; gap: 0.5rem;"><span style="width: 1rem; height: 1rem; background: #5b8cff; border: 1px solid var(--tui-grid-line);"></span>#5b8cff</span></td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-radius</code></td>
+              <td>Border radius</td>
+              <td>4px</td>
+            </tr>
+            <tr>
+              <td><code class="tui-code">--tui-font-mono</code></td>
+              <td>Monospace font stack</td>
+              <td>'JetBrains Mono', monospace</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Creating Custom Themes -->
+      <section class="docs-section">
+        <h2>Creating Custom Themes</h2>
+        <p>Create your own theme by defining the CSS custom properties:</p>
+
+        <div class="code-block">
+<code>/* Define a new theme */
+[data-theme="cyberpunk"] {
+  --tui-bg: #0a0a0f;
+  --tui-fg: #f0f0f0;
+  --tui-accent: #ff00ff;
+  --tui-panel: #1a1a2e;
+  --tui-grid-line: rgba(255, 0, 255, 0.2);
+  --tui-dim: #888;
+  --tui-success: #00ff00;
+  --tui-warning: #ffff00;
+  --tui-danger: #ff0000;
+  --tui-info: #00ffff;
+}
+
+/* Use it */
+&lt;html data-theme="cyberpunk"&gt;</code>
+        </div>
+
+        <!-- Live Theme Builder -->
+        <div class="tui-box tui-box-bordered" style="margin-top: 1.5rem;">
+          <div class="tui-box-header">Theme Preview</div>
+          <p class="tui-text-dim">This box demonstrates current theme colors:</p>
+
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin: 1rem 0;">
+            <div style="padding: 1rem; background: var(--tui-bg); border: 1px solid var(--tui-grid-line); text-align: center;">
+              <small>bg</small>
+            </div>
+            <div style="padding: 1rem; background: var(--tui-panel); border: 1px solid var(--tui-grid-line); text-align: center;">
+              <small>panel</small>
+            </div>
+            <div style="padding: 1rem; background: var(--tui-accent); color: var(--tui-bg); text-align: center;">
+              <small>accent</small>
+            </div>
+            <div style="padding: 1rem; background: var(--tui-success); color: var(--tui-bg); text-align: center;">
+              <small>success</small>
+            </div>
+            <div style="padding: 1rem; background: var(--tui-danger); color: var(--tui-bg); text-align: center;">
+              <small>danger</small>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="tui-btn tui-btn-primary">Primary</button>
+            <button class="tui-btn tui-btn-secondary">Secondary</button>
+            <button class="tui-btn tui-btn-success">Success</button>
+            <button class="tui-btn tui-btn-danger">Danger</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- JavaScript Theme Switching -->
+      <section class="docs-section">
+        <h2>JavaScript Theme Switching</h2>
+        <p>Use the theme utility for programmatic control:</p>
+
+        <div class="code-block">
+<code>import { initTheme } from 'web-tui/js';
+
+// Initialize with options
+const theme = initTheme({
+  defaultTheme: 'dark',
+  storageKey: 'my-app-theme',  // localStorage key
+  onChange: (newTheme) => {
+    console.log('Theme changed to:', newTheme);
+  }
+});
+
+// Get current theme
+console.log(theme.getTheme()); // 'dark'
+
+// Set theme
+theme.setTheme('matrix-green');
+
+// Toggle between themes
+theme.toggle(['dark', 'light']);
+
+// Get available themes
+console.log(theme.getAvailableThemes());
+// ['dark', 'light', 'matrix-green', 'retro-amber', ...]</code>
+        </div>
+
+        <p>Or use vanilla JavaScript:</p>
+        <div class="code-block">
+<code>// Simple theme toggle
+function setTheme(name) {
+  document.documentElement.setAttribute('data-theme', name);
+  localStorage.setItem('theme', name);
+}
+
+// Load saved theme on page load
+const savedTheme = localStorage.getItem('theme') || 'dark';
+setTheme(savedTheme);</code>
+        </div>
+      </section>
+
+      <!-- System Preference Detection -->
+      <section class="docs-section">
+        <h2>System Preference Detection</h2>
+        <p>Automatically detect user's system color scheme preference:</p>
+
+        <div class="code-block">
+<code>// Detect system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+function setThemeFromSystem() {
+  const theme = prefersDark.matches ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+}
+
+// Set initial theme
+setThemeFromSystem();
+
+// Listen for changes
+prefersDark.addEventListener('change', setThemeFromSystem);</code>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="docs-footer">
+        <p class="tui-text-dim">
+          web-tui is MIT licensed. Made with <span style="color: var(--tui-danger);">&#9829;</span> for terminal enthusiasts.
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>

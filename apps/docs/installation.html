@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Installation - web-tui</title>
+  <link rel="stylesheet" href="../../packages/web-tui/src/css/web-tui.css">
+  <link rel="stylesheet" href="styles/docs.css">
+</head>
+<body>
+  <div class="docs-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="docs-sidebar">
+      <div style="margin-bottom: 2rem;">
+        <a href="index.html" style="text-decoration: none;">
+          <h2 class="tui-text" style="color: var(--tui-accent);">&gt;_ web-tui</h2>
+        </a>
+        <span class="tui-badge">v0.1.0</span>
+      </div>
+
+      <nav class="docs-nav">
+        <a href="index.html">Home</a>
+        <a href="installation.html" class="active">Installation</a>
+        <a href="theming.html">Theming</a>
+
+        <div class="docs-nav-section">Components</div>
+        <a href="components/layout.html">Layout</a>
+        <a href="components/typography.html">Typography</a>
+        <a href="components/buttons.html">Buttons</a>
+        <a href="components/forms.html">Forms</a>
+        <a href="components/data.html">Data Display</a>
+        <a href="components/navigation.html">Navigation</a>
+        <a href="components/overlays.html">Overlays</a>
+        <a href="components/interactive.html">CSS-Only Interactive</a>
+
+        <div class="docs-nav-section">Examples</div>
+        <a href="examples/dashboard.html">Dashboard</a>
+        <a href="examples/landing.html">Landing Page</a>
+      </nav>
+
+      <div class="docs-theme-switcher">
+        <label>Theme</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix Green</option>
+          <option value="retro-amber">Retro Amber</option>
+          <option value="polar-night">Polar Night</option>
+          <option value="btop-classic">Btop Classic</option>
+          <option value="red-alert">Red Alert</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+      <h1>Installation</h1>
+      <p class="tui-text-dim" style="font-size: 1.1rem; margin-bottom: 2rem;">
+        Get started with web-tui in your project. Choose the installation method that fits your setup.
+      </p>
+
+      <!-- Package Installation -->
+      <section class="docs-section">
+        <h2>Package Installation</h2>
+
+        <p>Install web-tui using your preferred package manager:</p>
+
+        <div class="tui-tabs-radio" style="width: 100%;">
+          <input type="radio" name="pkg-tabs" id="pkg-npm" class="tui-tab-input" checked>
+          <label for="pkg-npm" class="tui-tab-label">npm</label>
+          <div class="tui-tab-content">
+            <div class="code-block"><code>npm install web-tui</code></div>
+          </div>
+
+          <input type="radio" name="pkg-tabs" id="pkg-bun" class="tui-tab-input">
+          <label for="pkg-bun" class="tui-tab-label">bun</label>
+          <div class="tui-tab-content">
+            <div class="code-block"><code>bun add web-tui</code></div>
+          </div>
+
+          <input type="radio" name="pkg-tabs" id="pkg-yarn" class="tui-tab-input">
+          <label for="pkg-yarn" class="tui-tab-label">yarn</label>
+          <div class="tui-tab-content">
+            <div class="code-block"><code>yarn add web-tui</code></div>
+          </div>
+
+          <input type="radio" name="pkg-tabs" id="pkg-pnpm" class="tui-tab-input">
+          <label for="pkg-pnpm" class="tui-tab-label">pnpm</label>
+          <div class="tui-tab-content">
+            <div class="code-block"><code>pnpm add web-tui</code></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage Options -->
+      <section class="docs-section">
+        <h2>Usage Options</h2>
+        <p>web-tui can be used in multiple ways depending on your project setup:</p>
+
+        <!-- Option 1: Pure CSS -->
+        <div class="tui-box tui-box-bordered" style="margin: 1.5rem 0;">
+          <div class="tui-box-header">Option 1: Pure CSS (No Framework)</div>
+          <p>Import the CSS file directly in your HTML:</p>
+          <div class="code-block">
+<code>&lt;link rel="stylesheet" href="node_modules/web-tui/src/css/web-tui.css"&gt;</code>
+          </div>
+
+          <p>Or import in your CSS/JavaScript:</p>
+          <div class="code-block">
+<code>/* In CSS */
+@import 'web-tui/css';
+
+/* Or in JavaScript (with bundler) */
+import 'web-tui/css';</code>
+          </div>
+
+          <p>Then use the classes in your HTML:</p>
+          <div class="code-block">
+<code>&lt;div class="tui-window"&gt;
+  &lt;div class="tui-window-header"&gt;
+    &lt;div class="tui-window-controls"&gt;
+      &lt;button class="tui-window-control tui-window-control-close"&gt;&lt;/button&gt;
+      &lt;button class="tui-window-control tui-window-control-minimize"&gt;&lt;/button&gt;
+      &lt;button class="tui-window-control tui-window-control-maximize"&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;span class="tui-window-title"&gt;Terminal&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="tui-window-body"&gt;
+    &lt;p class="tui-text"&gt;Hello, World!&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+          </div>
+        </div>
+
+        <!-- Option 2: Tailwind Plugin -->
+        <div class="tui-box tui-box-bordered" style="margin: 1.5rem 0;">
+          <div class="tui-box-header">Option 2: Tailwind Plugin</div>
+          <p>Add the plugin to your <code class="tui-code">tailwind.config.js</code>:</p>
+          <div class="code-block">
+<code>module.exports = {
+  plugins: [
+    require('web-tui/plugin')
+  ]
+}</code>
+          </div>
+
+          <p>This gives you:</p>
+          <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+            <li>All <code class="tui-code">.tui-*</code> component classes</li>
+            <li><code class="tui-code">terminal-*</code> color utilities (e.g., <code class="tui-code">text-terminal-cyan</code>, <code class="tui-code">bg-terminal-panel</code>)</li>
+            <li>CSS custom properties for theming</li>
+            <li>Extended theme with terminal-specific values</li>
+          </ul>
+
+          <p>Use terminal colors with Tailwind:</p>
+          <div class="code-block">
+<code>&lt;div class="bg-terminal-panel text-terminal-cyan border-terminal-grid"&gt;
+  &lt;span class="text-terminal-success"&gt;Success!&lt;/span&gt;
+  &lt;span class="text-terminal-brightRed"&gt;Error&lt;/span&gt;
+&lt;/div&gt;</code>
+          </div>
+        </div>
+
+        <!-- Option 3: React Components -->
+        <div class="tui-box tui-box-bordered" style="margin: 1.5rem 0;">
+          <div class="tui-box-header">Option 3: React Components</div>
+          <p>Import and use React components directly:</p>
+          <div class="code-block">
+<code>import {
+  TerminalWindow,
+  Box,
+  Text,
+  Button,
+  TerminalProvider
+} from 'web-tui/react';
+
+function App() {
+  return (
+    &lt;TerminalProvider&gt;
+      &lt;TerminalWindow title="My App"&gt;
+        &lt;Box bordered title="Welcome"&gt;
+          &lt;Text variant="success"&gt;Hello, World!&lt;/Text&gt;
+          &lt;Button variant="primary"&gt;Click Me&lt;/Button&gt;
+        &lt;/Box&gt;
+      &lt;/TerminalWindow&gt;
+    &lt;/TerminalProvider&gt;
+  );
+}</code>
+          </div>
+
+          <div class="tui-box" style="background: var(--tui-bg); padding: 1rem; margin-top: 1rem;">
+            <p class="tui-text-dim" style="margin: 0;">
+              <strong>Note:</strong> React is an optional peer dependency. The library works without React if you only use CSS classes.
+            </p>
+          </div>
+        </div>
+
+        <!-- Option 4: Vanilla JS -->
+        <div class="tui-box tui-box-bordered" style="margin: 1.5rem 0;">
+          <div class="tui-box-header">Option 4: Vanilla JS Utilities</div>
+          <p>For enhanced interactive components, import the minimal JS utilities:</p>
+          <div class="code-block">
+<code>import {
+  initTabs,
+  initDialog,
+  initMenu,
+  initTheme
+} from 'web-tui/js';
+
+// Initialize tabs with JS enhancement
+const tabs = initTabs('.my-tabs');
+tabs.activate('tab-2');
+
+// Initialize dialog
+const dialog = initDialog('.my-dialog');
+document.querySelector('#open-btn').onclick = () => dialog.open();
+
+// Initialize theme switcher
+const theme = initTheme({ defaultTheme: 'dark' });
+theme.setTheme('matrix-green');</code>
+          </div>
+
+          <p>Or use auto-initialization:</p>
+          <div class="code-block">
+<code>&lt;body data-tui-auto-init&gt;
+  &lt;div class="tui-tabs" data-auto-init&gt;
+    &lt;!-- tabs content --&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+
+&lt;script type="module"&gt;
+  import { autoInit } from 'web-tui/js';
+  autoInit();
+&lt;/script&gt;</code>
+          </div>
+
+          <div class="tui-box" style="background: var(--tui-bg); padding: 1rem; margin-top: 1rem;">
+            <p class="tui-text-dim" style="margin: 0;">
+              <strong>Note:</strong> Most components work with CSS-only. JS utilities are optional and provide enhanced behavior like keyboard navigation and programmatic control.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CDN Usage -->
+      <section class="docs-section">
+        <h2>CDN Usage</h2>
+        <p>For quick prototyping, you can use a CDN (once published to npm):</p>
+        <div class="code-block">
+<code>&lt;!-- CSS only --&gt;
+&lt;link rel="stylesheet" href="https://unpkg.com/web-tui/src/css/web-tui.css"&gt;
+
+&lt;!-- With JS utilities --&gt;
+&lt;script type="module"&gt;
+  import { initTheme } from 'https://unpkg.com/web-tui/src/css/web-tui.js';
+  initTheme();
+&lt;/script&gt;</code>
+        </div>
+      </section>
+
+      <!-- Browser Support -->
+      <section class="docs-section">
+        <h2>Browser Support</h2>
+        <table class="tui-table tui-table-striped" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>Browser</th>
+              <th>Minimum Version</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chrome</td>
+              <td>88+</td>
+            </tr>
+            <tr>
+              <td>Firefox</td>
+              <td>78+</td>
+            </tr>
+            <tr>
+              <td>Safari</td>
+              <td>14+</td>
+            </tr>
+            <tr>
+              <td>Edge</td>
+              <td>88+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Next Steps -->
+      <section class="docs-section">
+        <h2>Next Steps</h2>
+        <div class="feature-grid">
+          <a href="theming.html" class="feature-card" style="text-decoration: none;">
+            <h3>Theming</h3>
+            <p class="tui-text-dim">Learn how to customize colors and create your own themes.</p>
+          </a>
+          <a href="components/layout.html" class="feature-card" style="text-decoration: none;">
+            <h3>Components</h3>
+            <p class="tui-text-dim">Explore all available components with live examples.</p>
+          </a>
+          <a href="components/interactive.html" class="feature-card" style="text-decoration: none;">
+            <h3>CSS-Only Interactive</h3>
+            <p class="tui-text-dim">Build interactive UIs without JavaScript.</p>
+          </a>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="docs-footer">
+        <p class="tui-text-dim">
+          web-tui is MIT licensed. Made with <span style="color: var(--tui-danger);">&#9829;</span> for terminal enthusiasts.
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+</body>
+</html>

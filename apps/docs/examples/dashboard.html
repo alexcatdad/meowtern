@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Example - web-tui</title>
+  <link rel="stylesheet" href="../../../packages/web-tui/src/css/web-tui.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
+    .dashboard { display: grid; grid-template-columns: 220px 1fr; grid-template-rows: auto 1fr auto; min-height: 100vh; }
+    .dashboard-header { grid-column: 1 / -1; padding: 0.75rem 1rem; background: var(--tui-panel); border-bottom: 1px solid var(--tui-grid-line); display: flex; justify-content: space-between; align-items: center; }
+    .dashboard-sidebar { padding: 1rem; border-right: 1px solid var(--tui-grid-line); background: var(--tui-panel); }
+    .dashboard-main { padding: 1.5rem; overflow-y: auto; }
+    .dashboard-footer { grid-column: 1 / -1; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .chart-placeholder { height: 200px; background: var(--tui-panel); border: 1px solid var(--tui-grid-line); border-radius: var(--tui-radius); display: flex; align-items: center; justify-content: center; color: var(--tui-dim); }
+    @media (max-width: 768px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .dashboard-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <span style="color: var(--tui-accent); font-weight: bold;">&gt;_ SysMonitor</span>
+        <span class="tui-badge tui-badge-success">v2.1.0</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="tui-input" style="width: 250px;">
+          <span class="tui-input-prefix">$</span>
+          <input type="text" class="tui-input-field" placeholder="Search...">
+        </div>
+        <div class="tui-avatar" style="width: 2rem; height: 2rem;">A</div>
+      </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <nav class="tui-menu">
+        <a href="#" class="tui-menu-item active">[*] Dashboard</a>
+        <a href="#" class="tui-menu-item">[>] Servers</a>
+        <a href="#" class="tui-menu-item">[#] Processes</a>
+        <a href="#" class="tui-menu-item">[@] Network</a>
+        <a href="#" class="tui-menu-item">[~] Storage</a>
+        <div class="tui-separator" style="margin: 0.5rem 0;"></div>
+        <a href="#" class="tui-menu-item">[!] Alerts</a>
+        <a href="#" class="tui-menu-item">[?] Settings</a>
+      </nav>
+
+      <div style="margin-top: 2rem;">
+        <label style="display: block; margin-bottom: 0.5rem; color: var(--tui-dim); font-size: 0.8rem;">THEME</label>
+        <select class="tui-input-field" id="theme-select" style="width: 100%;">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="matrix-green">Matrix</option>
+          <option value="btop-classic">Btop</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="tui-stat">
+          <div class="tui-stat-label">CPU Usage</div>
+          <div class="tui-stat-value" style="color: var(--tui-success);">45.2%</div>
+          <div class="tui-progress" style="margin-top: 0.5rem;">
+            <div class="tui-progress-bar tui-progress-bar-success" style="width: 45%;"></div>
+          </div>
+        </div>
+        <div class="tui-stat">
+          <div class="tui-stat-label">Memory</div>
+          <div class="tui-stat-value" style="color: var(--tui-warning);">72.8%</div>
+          <div class="tui-progress" style="margin-top: 0.5rem;">
+            <div class="tui-progress-bar tui-progress-bar-warning" style="width: 72%;"></div>
+          </div>
+        </div>
+        <div class="tui-stat">
+          <div class="tui-stat-label">Disk I/O</div>
+          <div class="tui-stat-value">125 MB/s</div>
+          <div class="tui-stat-desc tui-text-dim">Read: 80 | Write: 45</div>
+        </div>
+        <div class="tui-stat">
+          <div class="tui-stat-label">Network</div>
+          <div class="tui-stat-value">1.2 Gbps</div>
+          <div class="tui-stat-desc tui-text-dim">In: 800 | Out: 400</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tui-tabs-radio" style="margin-bottom: 1.5rem;">
+        <input type="radio" name="main-tabs" id="overview" class="tui-tab-input" checked>
+        <label for="overview" class="tui-tab-label">Overview</label>
+        <div class="tui-tab-content">
+          <div class="tui-grid tui-grid-2" style="gap: 1rem;">
+            <!-- Process List -->
+            <div class="tui-box tui-box-bordered">
+              <div class="tui-box-header">Top Processes</div>
+              <table class="tui-table tui-table-striped" style="width: 100%;">
+                <thead>
+                  <tr><th>PID</th><th>Name</th><th>CPU</th><th>MEM</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1234</td><td>node</td><td>12.5%</td><td>256M</td></tr>
+                  <tr><td>5678</td><td>postgres</td><td>8.2%</td><td>512M</td></tr>
+                  <tr><td>9012</td><td>nginx</td><td>2.1%</td><td>64M</td></tr>
+                  <tr><td>3456</td><td>redis</td><td>1.8%</td><td>128M</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Server Status -->
+            <div class="tui-box tui-box-bordered">
+              <div class="tui-box-header">Server Status</div>
+              <div class="tui-kv">
+                <div class="tui-kv-item">
+                  <span class="tui-kv-key">web-01</span>
+                  <span class="tui-kv-value"><span class="tui-badge tui-badge-success">Online</span></span>
+                </div>
+                <div class="tui-kv-item">
+                  <span class="tui-kv-key">web-02</span>
+                  <span class="tui-kv-value"><span class="tui-badge tui-badge-success">Online</span></span>
+                </div>
+                <div class="tui-kv-item">
+                  <span class="tui-kv-key">db-01</span>
+                  <span class="tui-kv-value"><span class="tui-badge tui-badge-warning">High Load</span></span>
+                </div>
+                <div class="tui-kv-item">
+                  <span class="tui-kv-key">cache-01</span>
+                  <span class="tui-kv-value"><span class="tui-badge tui-badge-success">Online</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <input type="radio" name="main-tabs" id="alerts" class="tui-tab-input">
+        <label for="alerts" class="tui-tab-label">Alerts <span class="tui-badge tui-badge-danger" style="margin-left: 0.25rem;">3</span></label>
+        <div class="tui-tab-content">
+          <div class="tui-box tui-box-bordered">
+            <div class="tui-toast tui-toast-warning" style="margin-bottom: 0.5rem;">
+              <span class="tui-toast-icon">[!]</span>
+              <span class="tui-toast-message">High memory usage on db-01 (>80%)</span>
+            </div>
+            <div class="tui-toast tui-toast-danger" style="margin-bottom: 0.5rem;">
+              <span class="tui-toast-icon">[X]</span>
+              <span class="tui-toast-message">Disk space critical on storage-02 (95%)</span>
+            </div>
+            <div class="tui-toast tui-toast-warning">
+              <span class="tui-toast-icon">[!]</span>
+              <span class="tui-toast-message">SSL certificate expires in 7 days</span>
+            </div>
+          </div>
+        </div>
+
+        <input type="radio" name="main-tabs" id="logs" class="tui-tab-input">
+        <label for="logs" class="tui-tab-label">Logs</label>
+        <div class="tui-tab-content">
+          <div class="tui-box tui-box-bordered">
+            <pre class="tui-pre" style="margin: 0; max-height: 300px; overflow-y: auto;">
+[2026-01-07 12:34:56] INFO  Server started on port 3000
+[2026-01-07 12:34:57] INFO  Connected to database
+[2026-01-07 12:35:01] WARN  High memory usage detected (72%)
+[2026-01-07 12:35:15] INFO  Request: GET /api/users (200)
+[2026-01-07 12:35:16] INFO  Request: POST /api/data (201)
+[2026-01-07 12:35:20] ERROR Connection timeout to cache-02
+[2026-01-07 12:35:21] INFO  Retrying connection...
+[2026-01-07 12:35:22] INFO  Connection restored</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="tui-box tui-box-bordered">
+        <div class="tui-box-header">Recent Activity</div>
+        <div class="tui-terminal-output">
+          <div class="tui-line"><span style="color: var(--tui-dim);">[12:34:56]</span> <span style="color: var(--tui-success);">admin</span> deployed <span style="color: var(--tui-accent);">web-app v2.1.0</span></div>
+          <div class="tui-line"><span style="color: var(--tui-dim);">[12:30:12]</span> <span style="color: var(--tui-success);">system</span> completed backup of <span style="color: var(--tui-accent);">db-01</span></div>
+          <div class="tui-line"><span style="color: var(--tui-dim);">[12:15:45]</span> <span style="color: var(--tui-warning);">monitor</span> triggered alert for <span style="color: var(--tui-accent);">high-memory</span></div>
+          <div class="tui-line"><span style="color: var(--tui-dim);">[12:00:00]</span> <span style="color: var(--tui-success);">cron</span> executed scheduled task <span style="color: var(--tui-accent);">cleanup-logs</span></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Status Bar -->
+    <footer class="dashboard-footer">
+      <div class="tui-statusbar">
+        <div class="tui-statusbar-left">
+          <span class="tui-badge tui-badge-success">Connected</span>
+          <span>server-01.datacenter.local</span>
+        </div>
+        <div class="tui-statusbar-right">
+          <span>Uptime: 45d 12:34:56</span>
+          <span>|</span>
+          <span>Load: 0.45 0.52 0.48</span>
+          <span>|</span>
+          <span id="clock">12:34:56</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Theme switcher
+    document.getElementById('theme-select').addEventListener('change', function(e) {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+
+    // Clock
+    function updateClock() {
+      document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
